@@ -3,310 +3,530 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>متجر Tarzanalwaqdiy الفاخر</title>
-    <!-- TailwindCSS لجماليات التصميم الفاخر -->
+    <title>Tarzanalwaqdiy Luxury Store | متجر طرزان الوقدي الفاخر</title>
+    
+    <!-- مكتبات التصميم والأيقونات والخطوط الفاخرة -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- مكتبة الأيقونات الفخمة FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- خط Tajawal العربي الأنيق -->
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    <link rel="manifest" href="/manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Playfair+Display:ital,wght@0,600;1,700&display=swap" rel="stylesheet">
+    
+    <!-- إعدادات الـ PWA لتثبيت الموقع كتطبيق هاتف -->
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIm1hdGphciBUYXJ6YW5hbHdhcWRpeSIsCiAgInNob3J0X25hbWUiOiAiVGFyemFuU3RvcmUiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzAzMDcxMiIsCiAgInRoZW1lX2NvbG9yIjogIiNENkFDMjkiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJodHRwczovL2Nkbi1pY29ucy1wbmcuZmxhdGljb24uY29tLzUxMi8zMDgxLzMwODE4NDAucG5nIiwKICAgICAgInNpemVzIjogIjE5MngxOTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciCiAgICB9CiAgXQp9">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            50: '#fdfbf7',
+                            100: '#fbf7ed',
+                            200: '#f4ebd2',
+                            300: '#e8dab2',
+                            400: '#d6be8c',
+                            500: '#d4af37', // الذهب الملكي المعتمد
+                            600: '#b8922c',
+                            700: '#997424',
+                            800: '#7a5a1f',
+                            900: '#64481c',
+                        },
+                        dark: {
+                            950: '#03050a', // سواد ملكي خالص للعمق
+                            900: '#080d1a',
+                            800: '#0f172a',
+                            700: '#1e293b',
+                        }
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
         body {
-            font-family: 'Tajawal', sans-serif;
-            background-color: #090d16;
+            font-family: 'Cairo', sans-serif;
+            background-color: #03050a;
+            color: #f1f5f9;
+            overflow-x: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: #d4af37 #03050a;
         }
-        /* تأثير زجاجي فخم */
-        .glass-panel {
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(217, 119, 6, 0.15);
+        
+        /* تصميم شريط التمرير الفاخر */
+        ::-webkit-scrollbar {
+            width: 6px;
         }
-        .luxury-gradient {
-            background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+        ::-webkit-scrollbar-track {
+            background: #03050a;
         }
-        .gold-glow:hover {
-            box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
-            border-color: rgba(245, 158, 11, 0.6);
+        ::-webkit-scrollbar-thumb {
+            background: #d4af37;
+            border-radius: 10px;
+        }
+
+        /* تأثير التوهج الذهبي الفخم للغاية */
+        .gold-border-glow {
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .gold-border-glow:hover {
+            border-color: rgba(212, 175, 55, 0.6);
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.25);
+            transform: translateY(-5px);
+        }
+
+        .gold-text-glow {
+            text-shadow: 0 0 12px rgba(212, 175, 55, 0.4);
+        }
+
+        /* خلفية زجاجية مشوشة */
+        .glassmorphism {
+            background: rgba(8, 13, 26, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        /* أنيميشن الظهور السلس */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-up {
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
     </style>
 </head>
-<body class="text-slate-100 min-h-screen flex">
+<body class="min-h-screen flex flex-col lg:flex-row">
 
-    <!-- زر منبثق أعلى الشاشة لتثبيت المتجر كتطبيق للهاتف PWA -->
-    <div id="pwa-install-banner" class="fixed top-4 left-4 right-4 md:left-auto md:right-4 md:w-96 bg-gradient-to-r from-amber-600 to-amber-800 text-white p-4 rounded-2xl shadow-2xl z-50 transform translate-y-[-150%] transition-transform duration-500 flex items-center justify-between border border-amber-400">
-        <div class="flex items-center gap-3">
-            <div class="bg-slate-900 p-2 rounded-xl text-amber-400 text-xl">
-                <i class="fa-solid fa-cloud-arrow-down"></i>
-            </div>
-            <div>
-                <h4 class="font-bold text-sm">تثبيت متجر طرزان الوقدي</h4>
-                <p class="text-xs text-amber-100">تصفح المتجر كتطبيق سريع على هاتفك</p>
-            </div>
+    <!-- نظام التنبيهات المخصص والفاخر جداً (Toasts) -->
+    <div id="toast-container" class="fixed top-5 left-5 z-50 flex flex-col gap-3 pointer-events-none"></div>
+
+    <!-- لافتة التثبيت الفاخرة (PWA Install Banner) - تظهر أعلى الشاشة كعنصر تفاعلي ذهبي -->
+    <div id="pwa-banner" class="fixed top-4 left-4 right-4 md:left-auto md:right-4 md:w-[420px] glassmorphism p-5 rounded-2xl z-50 shadow-2xl border-l-4 border-l-gold-500 transform -translate-y-[180%] transition-all duration-700 ease-out flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center text-dark-950 shadow-lg text-xl">
+            <i class="fa-solid fa-cloud-arrow-down animate-bounce"></i>
         </div>
-        <div class="flex gap-2">
-            <button onclick="dismissInstallBanner()" class="text-xs bg-transparent hover:bg-white/10 px-2 py-1.5 rounded-lg">إغلاق</button>
-            <button onclick="triggerPWAInstall()" class="text-xs bg-slate-950 text-amber-400 font-bold px-3 py-1.5 rounded-lg hover:bg-slate-900 transition">تثبيت الآن</button>
+        <div class="flex-1">
+            <h4 class="text-sm font-bold text-white">تثبيت تطبيق Tarzanalwaqdiy</h4>
+            <p class="text-xs text-slate-400 mt-1">احصل على متجرنا مباشرة على شاشتك الرئيسية لتصفح أسرع وفخامة مطلقة!</p>
+            <div class="flex gap-3 mt-3">
+                <button onclick="triggerInstall()" class="bg-gold-500 hover:bg-gold-400 text-dark-950 font-bold text-xs px-4 py-2 rounded-lg transition-all shadow-md shadow-gold-500/10">تثبيت الآن</button>
+                <button onclick="dismissBanner()" class="text-xs text-slate-400 hover:text-white px-3 py-2 rounded-lg transition">ليس الآن</button>
+            </div>
         </div>
     </div>
 
-    <!-- القائمة الجانبية الفخمة (Sidebar) -->
-    <aside id="sidebar" class="w-80 luxury-gradient border-l border-amber-500/20 flex flex-col justify-between fixed inset-y-0 right-0 z-40 transform translate-x-full lg:translate-x-0 transition-transform duration-300">
+    <!-- زر فتح القائمة الجانبية (للجوال والشاشات الصغيرة) -->
+    <div class="lg:hidden w-full bg-dark-950/90 border-b border-gold-500/15 p-4 flex justify-between items-center sticky top-0 z-40 backdrop-blur-md">
+        <h1 class="text-xl font-bold text-gold-500 tracking-wider flex items-center gap-2">
+            <span class="font-serif italic text-2xl">Tarzan</span> <i class="fa-solid fa-crown text-sm"></i>
+        </h1>
+        <div class="flex items-center gap-4">
+            <button onclick="toggleCartDrawer()" class="relative text-gold-500 text-xl">
+                <i class="fa-solid fa-basket-shopping"></i>
+                <span id="mobile-cart-count" class="absolute -top-2 -left-2 bg-red-600 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold">0</span>
+            </button>
+            <button onclick="toggleMobileSidebar()" class="text-gold-500 text-2xl focus:outline-none">
+                <i class="fa-solid fa-bars-staggered"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- القائمة الجانبية الإمبراطورية الفخمة جداً (Sidebar) -->
+    <aside id="sidebar" class="w-80 bg-dark-950 border-l border-gold-500/15 flex flex-col justify-between fixed lg:sticky inset-y-0 right-0 z-50 transform translate-x-full lg:translate-x-0 transition-transform duration-500 ease-out shadow-2xl lg:shadow-none">
+        
+        <!-- الهيدر الخاص بالقائمة الجانبية -->
         <div>
-            <!-- شعار المتجر الفخم -->
-            <div class="p-6 text-center border-b border-amber-500/10">
-                <h1 class="text-2xl font-black text-amber-500 tracking-wider flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-gem animate-pulse"></i> Tarzan Store
+            <div class="p-8 text-center border-b border-gold-500/10 relative">
+                <button onclick="toggleMobileSidebar()" class="lg:hidden absolute top-4 left-4 text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+                <div class="w-20 h-20 mx-auto mb-4 bg-gradient-to-tr from-gold-500 to-amber-600 rounded-2xl flex items-center justify-center text-dark-950 text-3xl font-serif italic shadow-lg shadow-gold-500/10">
+                    T
+                </div>
+                <h1 class="text-2xl font-black text-gold-500 tracking-wider uppercase flex items-center justify-center gap-2">
+                    Tarzanalwaqdiy
                 </h1>
-                <p class="text-xs text-slate-400 mt-1 uppercase tracking-widest">مملكة الأكواد والملفات الفخمة</p>
+                <p class="text-[10px] text-slate-500 tracking-[0.3em] uppercase mt-1">Premium Code & Software Oasis</p>
             </div>
 
-            <!-- روابط الملاحة -->
+            <!-- أزرار التصفح الفخمة جداً مع تأثيرات انتقالية مذهلة -->
             <nav class="p-6 space-y-3">
-                <button onclick="switchTab('store')" class="w-full flex items-center gap-4 px-4 py-3.5 rounded-xl bg-amber-500/10 text-amber-400 font-semibold transition border border-amber-500/20" id="btn-tab-store">
+                <button onclick="changeSection('store')" id="nav-store" class="w-full flex items-center gap-4 px-5 py-4 rounded-xl bg-gold-500/10 text-gold-500 border border-gold-500/30 font-bold transition-all duration-300">
                     <i class="fa-solid fa-store text-lg"></i>
-                    <span>المعرض الرقمي</span>
+                    <span>المعرض الملكي</span>
                 </button>
-                <button onclick="toggleCartDrawer()" class="w-full flex items-center justify-between px-4 py-3.5 rounded-xl hover:bg-slate-800/50 text-slate-300 hover:text-amber-400 transition" id="btn-tab-cart">
+                <button onclick="toggleCartDrawer()" class="w-full flex items-center justify-between px-5 py-4 rounded-xl hover:bg-gold-500/5 text-slate-400 hover:text-gold-400 border border-transparent hover:border-gold-500/10 transition-all duration-300">
                     <div class="flex items-center gap-4">
-                        <i class="fa-solid fa-shopping-bag text-lg"></i>
-                        <span>سلة المشتريات</span>
+                        <i class="fa-solid fa-cart-shopping text-lg"></i>
+                        <span>حقيبة مشترياتك</span>
                     </div>
-                    <span id="cart-badge" class="bg-amber-600 text-slate-950 font-bold text-xs px-2.5 py-1 rounded-full">0</span>
+                    <span id="sidebar-cart-count" class="bg-gold-500 text-dark-950 font-bold text-xs w-6 h-6 rounded-lg flex items-center justify-center shadow-md shadow-gold-500/10">0</span>
+                </button>
+                <button onclick="changeSection('order-tracker')" id="nav-tracker" class="w-full flex items-center gap-4 px-5 py-4 rounded-xl hover:bg-gold-500/5 text-slate-400 hover:text-gold-400 border border-transparent hover:border-gold-500/10 transition-all duration-300">
+                    <i class="fa-solid fa-truck-ramp-box text-lg"></i>
+                    <span>تتبع طلبياتك</span>
                 </button>
             </nav>
         </div>
 
-        <!-- زر الإدارة الفاخر المحمي بكلمة مرور -->
-        <div class="p-6 border-t border-amber-500/10">
-            <button onclick="promptAdminAccess()" class="w-full py-4 px-4 rounded-xl bg-slate-900/90 border border-amber-500/30 text-amber-500 font-bold hover:bg-amber-500 hover:text-slate-950 transition-all duration-300 flex items-center justify-center gap-3 shadow-lg shadow-amber-500/5">
-                <i class="fa-solid fa-user-shield text-lg"></i>
-                <span>بوابة الإدارة</span>
+        <!-- زر الإدارة الفاخر المحمي بكلمة مرور في القاع -->
+        <div class="p-6 border-t border-gold-500/10 bg-dark-900/40">
+            <button onclick="loginAdminPrompt()" class="w-full py-4 rounded-xl bg-gradient-to-r from-gold-600 to-gold-500 text-dark-950 font-black tracking-wide hover:from-gold-500 hover:to-gold-400 transition-all duration-300 shadow-xl shadow-gold-500/5 flex items-center justify-center gap-3">
+                <i class="fa-solid fa-fingerprint text-lg"></i>
+                <span>بوابة الإدارة الملكية</span>
             </button>
         </div>
     </aside>
 
-    <!-- زر فتح القائمة الجانبية على الجوال -->
-    <button onclick="toggleSidebar()" class="lg:hidden fixed top-4 right-4 z-50 bg-amber-500 text-slate-950 p-3.5 rounded-xl shadow-lg">
-        <i class="fa-solid fa-bars text-xl"></i>
-    </button>
-
-    <!-- المحتوى الرئيسي للمتجر -->
-    <main class="flex-1 lg:margin-right-aside lg:mr-80 p-6 lg:p-12 min-h-screen flex flex-col justify-between">
-        <div>
-            <!-- الهيدر والترحيب الفاخر -->
-            <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-12">
+    <!-- مساحة المحتوى الكلية لمتصفح العميل -->
+    <main class="flex-1 p-6 md:p-12 lg:max-h-screen lg:overflow-y-auto">
+        
+        <!-- قسم المتجر الرئيسي -->
+        <div id="store-section" class="animate-fade-up">
+            <!-- الهيدر وبانر الترحيب الفاخر جداً -->
+            <header class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12 border-b border-gold-500/10 pb-8">
                 <div>
-                    <h2 class="text-3xl font-extrabold text-white">مرحباً بك في عالم الفخامة البرمجية</h2>
-                    <p class="text-slate-400 mt-2">اختر أرقى وأجود الأكواد المكتوبة والملفات الجاهزة لتنطلق بمشروعك.</p>
+                    <h2 class="text-3xl md:text-4xl font-black text-white leading-tight">مملكة الأكواد والبرمجيات الفاخرة</h2>
+                    <p class="text-slate-400 mt-2 text-sm md:text-base">استثمر في أقوى الأكواد والملفات الرقمية المبرمجة بحرفية لا متناهية لتضمن صدارة مشروعك.</p>
                 </div>
-                <!-- الفلترة السريعة -->
-                <div class="flex gap-2">
-                    <button onclick="filterProducts('all')" class="px-5 py-2.5 rounded-xl bg-slate-900 text-slate-300 hover:bg-amber-500 hover:text-slate-950 font-medium transition">الكل</button>
-                    <button onclick="filterProducts('code')" class="px-5 py-2.5 rounded-xl bg-slate-900 text-slate-300 hover:bg-amber-500 hover:text-slate-950 font-medium transition">أكواد برمجية</button>
-                    <button onclick="filterProducts('file')" class="px-5 py-2.5 rounded-xl bg-slate-900 text-slate-300 hover:bg-amber-500 hover:text-slate-950 font-medium transition">ملفات رقمية</button>
+                
+                <!-- تصنيف المنتجات الفخم -->
+                <div class="flex p-1.5 rounded-xl bg-dark-900 border border-gold-500/10">
+                    <button onclick="filterProducts('all')" class="px-5 py-2.5 rounded-lg text-xs md:text-sm font-bold bg-gold-500 text-dark-950 shadow-md shadow-gold-500/10 transition-all duration-300" id="filter-all">الكل</button>
+                    <button onclick="filterProducts('code')" class="px-5 py-2.5 rounded-lg text-xs md:text-sm font-bold text-slate-400 hover:text-white transition" id="filter-code">أكواد</button>
+                    <button onclick="filterProducts('file')" class="px-5 py-2.5 rounded-lg text-xs md:text-sm font-bold text-slate-400 hover:text-white transition" id="filter-file">ملفات</button>
                 </div>
             </header>
 
-            <!-- واجهة المنتجات (الرئيسية) -->
-            <section id="store-section" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-                <!-- المنتجات سيتم توليدها تلقائياً هنا -->
-            </section>
+            <!-- شبكة عرض المنتجات الفاخرة -->
+            <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                <!-- المنتجات يتم إنشاؤها عبر الجافا سكربت بشكل ديناميكي مذهل -->
+            </div>
+        </div>
 
-            <!-- واجهة لوحة التحكم (مخفية بشكل افتراضي وتظهر للمسؤول) -->
-            <section id="admin-section" class="hidden space-y-12">
-                <div class="flex items-center justify-between border-b border-amber-500/20 pb-4">
-                    <h3 class="text-2xl font-bold text-amber-400 flex items-center gap-2">
-                        <i class="fa-solid fa-screwdriver-wrench"></i> لوحة التحكم الكاملة
-                    </h3>
-                    <button onclick="logoutAdmin()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-semibold transition">خروج الإدارة</button>
+        <!-- قسم تتبع حالة الطلبات للعملاء -->
+        <div id="tracker-section" class="hidden animate-fade-up max-w-4xl mx-auto">
+            <h2 class="text-3xl font-black text-gold-500 mb-6 flex items-center gap-3">
+                <i class="fa-solid fa-magnifying-glass-location"></i> تتبع وتحميل منتجاتك المشتراة
+            </h2>
+            <p class="text-slate-400 mb-8 text-sm">أدخل رقم هاتفك أو معرف التليجرام الذي أتممت الدفع من خلاله لعرض حالة عمليات الشراء الخاصة بك وتحميل أكوادك مباشرة بمجرد قبول الإدارة لعملية الدفع.</p>
+            
+            <div class="glassmorphism p-8 rounded-2xl border border-gold-500/20 mb-8">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <input type="text" id="tracker-input" placeholder="أدخل حساب التليجرام أو رقم الهاتف المستخدم..." class="flex-1 bg-dark-950 border border-gold-500/20 rounded-xl p-4 text-white focus:border-gold-500 focus:ring-1 focus:ring-gold-500 outline-none text-sm font-semibold transition">
+                    <button onclick="trackMyOrders()" class="bg-gold-500 hover:bg-gold-400 text-dark-950 font-black px-8 py-4 rounded-xl transition shadow-lg shadow-gold-500/10 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-magnifying-glass"></i> ابحث عن مشترياتي
+                    </button>
                 </div>
+            </div>
 
-                <!-- نموذج إضافة منتج جديد -->
-                <div class="glass-panel p-8 rounded-2xl">
-                    <h4 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                        <i class="fa-solid fa-plus text-amber-500"></i> إضافة منتج رقمي جديد
-                    </h4>
-                    <form id="add-product-form" onsubmit="submitNewProduct(event)" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div id="tracker-results" class="space-y-6">
+                <!-- نتائج البحث تظهر هنا -->
+            </div>
+        </div>
+
+        <!-- لوحة التحكم الإدارية الملكية (مؤمنة) -->
+        <div id="admin-section" class="hidden animate-fade-up space-y-12">
+            <div class="flex items-center justify-between border-b border-gold-500/20 pb-6">
+                <div>
+                    <h2 class="text-3xl font-black text-gold-500 flex items-center gap-3">
+                        <i class="fa-solid fa-fingerprint"></i> مركز التحكم الملكي للإدارة
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-1">أهلاً بك يا طرزان. تحكم بكافة جوانب المتجر وطلبات المبيعات.</p>
+                </div>
+                <button onclick="logoutAdmin()" class="bg-red-600/10 text-red-500 border border-red-500/30 hover:bg-red-600 hover:text-white px-5 py-2.5 rounded-xl font-bold transition">خروج آمن</button>
+            </div>
+
+            <!-- أزرار التبديل السريع داخل الإدارة -->
+            <div class="flex gap-4 border-b border-slate-800 pb-4">
+                <button onclick="toggleAdminTab('orders')" id="btn-admin-orders" class="px-6 py-3 rounded-xl bg-gold-500 text-dark-950 font-black text-sm transition">إدارة الطلبات المالية</button>
+                <button onclick="toggleAdminTab('products')" id="btn-admin-products" class="px-6 py-3 rounded-xl text-slate-400 hover:text-white font-bold text-sm transition">إدارة المنتجات والأكواد</button>
+            </div>
+
+            <!-- تبويب إدارة الطلبات -->
+            <div id="admin-tab-orders" class="space-y-6">
+                <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-receipt text-gold-500"></i> مراجعة فواتير الدفع (محفظة جيب 737996293)</h3>
+                
+                <div class="overflow-x-auto glassmorphism rounded-2xl border border-gold-500/15">
+                    <table class="w-full text-right text-sm">
+                        <thead class="bg-dark-900 border-b border-gold-500/10 text-gold-500">
+                            <tr>
+                                <th class="p-5 font-bold">معلومات العميل</th>
+                                <th class="p-5 font-bold">المنتجات المطلوبة</th>
+                                <th class="p-5 font-bold">السعر الكلي</th>
+                                <th class="p-5 font-bold">إيصال الدفع</th>
+                                <th class="p-5 font-bold text-center">التحكم بالإجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-orders-rows" class="divide-y divide-slate-800">
+                            <!-- الطلبات تولد تلقائياً هنا -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- تبويب إدارة المنتجات -->
+            <div id="admin-tab-products" class="hidden space-y-8">
+                <!-- فورم إضافة منتج جديد -->
+                <div class="glassmorphism p-8 rounded-2xl border border-gold-500/20">
+                    <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                        <i class="fa-solid fa-plus text-gold-500"></i> إضافة منتج / كود برمجي جديد للمتجر
+                    </h3>
+                    <form id="product-form" onsubmit="adminAddProduct(event)" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-2">
-                            <label class="block text-sm text-slate-400">اسم المنتج الفخم</label>
-                            <input type="text" id="p-title" required class="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-white outline-none transition">
+                            <label class="block text-xs font-semibold text-slate-400">اسم المنتج البرمجي</label>
+                            <input type="text" id="new-prod-title" required class="w-full bg-dark-950 border border-gold-500/20 focus:border-gold-500 rounded-xl p-3.5 text-white outline-none transition text-sm">
                         </div>
                         <div class="space-y-2">
-                            <label class="block text-sm text-slate-400">سعر المنتج (بالدولار $)</label>
-                            <input type="number" step="0.01" id="p-price" required class="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-white outline-none transition">
+                            <label class="block text-xs font-semibold text-slate-400">سعر المنتج بالدولار ($)</label>
+                            <input type="number" step="0.01" id="new-prod-price" required class="w-full bg-dark-950 border border-gold-500/20 focus:border-gold-500 rounded-xl p-3.5 text-white outline-none transition text-sm">
                         </div>
                         <div class="space-y-2">
-                            <label class="block text-sm text-slate-400">نوع المنتج</label>
-                            <select id="p-type" required class="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-white outline-none transition">
+                            <label class="block text-xs font-semibold text-slate-400">تصنيف المنتج</label>
+                            <select id="new-prod-type" required class="w-full bg-dark-950 border border-gold-500/20 focus:border-gold-500 rounded-xl p-3.5 text-white outline-none transition text-sm">
                                 <option value="code">كود برمجي</option>
                                 <option value="file">ملف رقمي جاهز</option>
                             </select>
                         </div>
                         <div class="space-y-2">
-                            <label class="block text-sm text-slate-400">رابط تحميل الملف مباشرة بعد القبول</label>
-                            <input type="url" id="p-downloadUrl" required class="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-white outline-none transition" placeholder="https://example.com/file.zip">
+                            <label class="block text-xs font-semibold text-slate-400">رابط تحميل الملف (الذي سيسلم للمشتري فور القبول)</label>
+                            <input type="url" id="new-prod-url" required class="w-full bg-dark-950 border border-gold-500/20 focus:border-gold-500 rounded-xl p-3.5 text-white outline-none transition text-sm" placeholder="https://example.com/file.zip">
                         </div>
                         <div class="md:col-span-2 space-y-2">
-                            <label class="block text-sm text-slate-400">وصف المنتج بتفصيل واحترافية</label>
-                            <textarea id="p-desc" required rows="3" class="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-white outline-none transition"></textarea>
+                            <label class="block text-xs font-semibold text-slate-400">صورة المنتج الفاخرة (يمكنك رفع صورة من جهازك)</label>
+                            <input type="file" id="new-prod-image-file" accept="image/*" class="w-full bg-dark-950 border border-gold-500/20 focus:border-gold-500 rounded-xl p-3 text-slate-400 outline-none transition text-xs">
                         </div>
                         <div class="md:col-span-2 space-y-2">
-                            <label class="block text-sm text-slate-400">صورة المنتج الفنية</label>
-                            <input type="file" id="p-image" accept="image/*" class="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-slate-400 outline-none transition">
+                            <label class="block text-xs font-semibold text-slate-400">وصف دقيق للمنتج ومزاياه</label>
+                            <textarea id="new-prod-desc" rows="4" required class="w-full bg-dark-950 border border-gold-500/20 focus:border-gold-500 rounded-xl p-3.5 text-white outline-none transition text-sm"></textarea>
                         </div>
                         <div class="md:col-span-2 text-left">
-                            <button type="submit" class="bg-amber-500 text-slate-950 font-extrabold px-8 py-3.5 rounded-xl hover:bg-amber-400 transition-all duration-300">نشر المنتج في المتجر</button>
+                            <button type="submit" class="bg-gold-500 hover:bg-gold-400 text-dark-950 font-black px-8 py-4 rounded-xl transition shadow-lg shadow-gold-500/10">نشر المنتج الفخم الآن</button>
                         </div>
                     </form>
                 </div>
 
-                <!-- إدارة الطلبات وإيصالات الدفع لـ محفظة جيب -->
-                <div class="glass-panel p-8 rounded-2xl">
-                    <h4 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                        <i class="fa-solid fa-receipt text-amber-500"></i> مراجعة طلبات الدفع عبر محفظة جيب (737996293)
-                    </h4>
+                <!-- جدول إزالة المنتجات الموجودة -->
+                <div class="glassmorphism p-8 rounded-2xl border border-gold-500/15">
+                    <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2"><i class="fa-solid fa-boxes-packing text-gold-500"></i> التحكم في إزالة المنتجات الحالية</h3>
                     <div class="overflow-x-auto">
                         <table class="w-full text-right text-sm">
-                            <thead>
-                                <tr class="border-b border-slate-800 text-slate-400">
-                                    <th class="py-4">العميل</th>
-                                    <th class="py-4">وسيلة التواصل</th>
-                                    <th class="py-4">المنتجات المطلوبة</th>
-                                    <th class="py-4">إجمالي الدفع</th>
-                                    <th class="py-4">صورة الإيصال</th>
-                                    <th class="py-4 text-center">إجراءات المراجعة والتحكم</th>
+                            <thead class="bg-dark-900 border-b border-gold-500/10 text-gold-500">
+                                <tr>
+                                    <th class="p-4">المنتج</th>
+                                    <th class="p-4">التصنيف</th>
+                                    <th class="p-4">السعر</th>
+                                    <th class="p-4 text-center">إجراء الإزالة</th>
                                 </tr>
                             </thead>
-                            <tbody id="orders-table-body" class="divide-y divide-slate-800/50">
-                                <!-- سيتم جلب وعرض الطلبات هنا -->
+                            <tbody id="admin-products-rows" class="divide-y divide-slate-800">
+                                <!-- سيتم التوليد هنا -->
                             </tbody>
                         </table>
                     </div>
                 </div>
-            </section>
+            </div>
         </div>
-
-        <!-- تذييل فاخر للمتجر -->
-        <footer class="mt-20 border-t border-amber-500/10 pt-6 text-center text-xs text-slate-500">
-            &copy; 2026 متجر Tarzanalwaqdiy الفاخر. جميع الحقوق محفوظة لـ طرزان الوقدي.
-        </footer>
     </main>
 
-    <!-- درج السلة المنبثق الأنيق (Cart Drawer) -->
-    <div id="cart-drawer" class="fixed inset-y-0 left-0 w-full sm:w-[450px] bg-slate-950 border-r border-amber-500/20 z-50 transform translate-x-[-100%] transition-transform duration-300 flex flex-col justify-between shadow-2xl">
-        <div class="p-6">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-                <h3 class="text-xl font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-cart-shopping text-amber-500"></i> حقيبة مقتنياتك
-                </h3>
-                <button onclick="toggleCartDrawer()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
-            </div>
-            <!-- قائمة مشتريات السلة -->
-            <div id="cart-items-container" class="mt-6 space-y-4 overflow-y-auto max-h-[50vh]">
-                <!-- العناصر تضاف برمجياً -->
-            </div>
-        </div>
-
-        <!-- الفاتورة ونموذج الدفع في أسفل الدرج -->
-        <div class="p-6 border-t border-slate-800 bg-slate-900/50 space-y-6">
-            <div class="flex justify-between items-center text-lg font-bold">
-                <span>الإجمالي الفخم:</span>
-                <span id="cart-total" class="text-amber-500">0$</span>
+    <!-- درج حقيبة المشتريات المنزلق (Shopping Cart Drawer) -->
+    <div id="cart-drawer" class="fixed inset-y-0 left-0 w-full sm:w-[480px] bg-dark-950 border-r border-gold-500/20 z-50 transform -translate-x-full transition-transform duration-500 ease-out flex flex-col justify-between shadow-2xl">
+        <div class="p-6 flex flex-col h-full justify-between">
+            <div>
+                <!-- رأس العربة -->
+                <div class="flex items-center justify-between border-b border-gold-500/10 pb-5">
+                    <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-basket-shopping text-gold-500"></i> حقيبة مقتنياتك الرقمية
+                    </h3>
+                    <button onclick="toggleCartDrawer()" class="text-slate-400 hover:text-white transition"><i class="fa-solid fa-xmark text-xl"></i></button>
+                </div>
+                
+                <!-- حاوية العناصر المشتراة -->
+                <div id="cart-items-list" class="mt-6 space-y-4 overflow-y-auto max-h-[45vh] pr-1">
+                    <!-- سيتم إضافة المنتجات هنا ديناميكياً -->
+                </div>
             </div>
 
-            <!-- نموذج الدفع المالي الفعلي -->
-            <form id="checkout-form" onsubmit="submitCheckout(event)" class="space-y-4">
-                <div class="p-4 bg-amber-500/5 border border-amber-500/20 rounded-xl space-y-1 text-xs">
-                    <p class="font-bold text-amber-500 text-sm">طريقة الدفع المعتمدة:</p>
-                    <p class="text-slate-300">أرسل المبلغ المطلوب لمقدار المنتجات إلى:</p>
-                    <p class="text-amber-400 font-mono font-bold text-lg">محفظة جيب: 737996293</p>
+            <!-- الفاتورة الكلية الملكية ونظام الدفع -->
+            <div class="border-t border-gold-500/10 pt-6 space-y-5 bg-dark-950">
+                <div class="flex justify-between items-center text-lg font-bold">
+                    <span>القيمة الكلية:</span>
+                    <span id="cart-total" class="text-gold-500 gold-text-glow font-serif text-2xl">0.00$</span>
                 </div>
-                <input type="text" id="cust-name" required placeholder="اسمك الكامل" class="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-white outline-none transition text-sm">
-                <input type="text" id="cust-telegram" required placeholder="رابط حسابك تليجرام أو رقمك" class="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-white outline-none transition text-sm">
-                <div class="space-y-1">
-                    <label class="block text-xs text-slate-400">ارفع صورة سكرين شوت (إيصال إتمام الدفع):</label>
-                    <input type="file" id="cust-receipt" accept="image/*" required class="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-2.5 text-slate-400 outline-none transition text-xs">
-                </div>
-                <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-sm transition-all duration-300">إتمام الدفع ورفع الطلب</button>
-            </form>
+
+                <!-- نموذج الدفع الفعلي مع نسخ رقم محفظة جيب -->
+                <form id="checkout-form" onsubmit="submitOrder(event)" class="space-y-4">
+                    <div class="p-4 rounded-xl bg-gold-500/5 border border-gold-500/20 space-y-2 text-xs">
+                        <p class="font-bold text-gold-500 text-sm flex items-center gap-1">
+                            <i class="fa-solid fa-wallet"></i> طريقة الدفع المعتمدة:
+                        </p>
+                        <p class="text-slate-300">أرسل المبلغ المطلوب لإجمالي السلة بالدولار إلى محفظة جيب التالية:</p>
+                        <div class="flex items-center justify-between bg-dark-950 p-2.5 rounded-lg border border-gold-500/30">
+                            <span class="text-gold-500 font-mono font-bold text-base" id="wallet-number">737996293</span>
+                            <button type="button" onclick="copyWallet()" class="bg-gold-500 hover:bg-gold-400 text-dark-950 font-bold px-3 py-1 rounded text-[10px] transition">نسخ الرقم</button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <input type="text" id="cust-name" required placeholder="اسمك الكامل" class="w-full bg-dark-900 border border-gold-500/10 focus:border-gold-500 rounded-xl p-3 text-white outline-none text-xs transition">
+                        <input type="text" id="cust-contact" required placeholder="معرف تليجرام أو رقم الهاتف" class="w-full bg-dark-900 border border-gold-500/10 focus:border-gold-500 rounded-xl p-3 text-white outline-none text-xs transition">
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="block text-[10px] text-slate-400">ارفع صورة إيصال الدفع (Screenshot):</label>
+                        <input type="file" id="cust-receipt-file" accept="image/*" required class="w-full bg-dark-900 border border-gold-500/10 focus:border-gold-500 rounded-xl p-2.5 text-slate-400 outline-none text-[10px] transition">
+                    </div>
+
+                    <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-gold-500 to-amber-500 hover:from-gold-400 hover:to-amber-400 text-dark-950 font-black text-sm tracking-wide transition shadow-lg shadow-gold-500/10">
+                        إتمام العملية وإرسال إثبات الدفع
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 
-    <!-- جافا سكربت المتقن لتشغيل المتجر وبوابة التحكم و PWA -->
+    <!-- جافا سكربت التفاعلي الشامل مع محاكاة قاعدة البيانات وتوليد مخرجات PWA -->
     <script>
+        // قواعد البيانات الافتراضية والفاخرة للمنتجات
+        const defaultProducts = [
+            {
+                id: "tarzan-p1",
+                title: "سكربت تليجرام الروسي الذكي",
+                description: "بوت تليجرام مبني بلغة Node.js فخم للغاية لإدارة وتأمين المحادثات وتفعيل أنظمة المسابقات والدفع الرقمي التلقائي.",
+                price: 49.00,
+                type: "code",
+                image: "https://images.unsplash.com/photo-1618401471353-b98aedd07871?auto=format&fit=crop&w=600&q=80",
+                downloadUrl: "https://example.com/files/telegram-bot.zip"
+            },
+            {
+                id: "tarzan-p2",
+                title: "تصميم متجر إلكتروني مع واجهة تحكم ثلاثية الأبعاد",
+                description: "قالب ويب HTML/TailwindCSS للمتاجر الكبيرة يتميز بلوحة تحكم للمنتجات مع إحصائيات بيع تفاعلية ومؤثرات حركية خرافية.",
+                price: 89.00,
+                type: "file",
+                image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=600&q=80",
+                downloadUrl: "https://example.com/files/luxury-dashboard.zip"
+            },
+            {
+                id: "tarzan-p3",
+                title: "كود تطبيق تشات الذكاء الاصطناعي متكامل",
+                description: "أكواد تطبيق شات جاهز يربط مباشرة بنموذج GPT-4 مع إعدادات حماية الخادم ونظام الاشتراكات المدفوعة ومحفظة جيب المدمجة.",
+                price: 120.00,
+                type: "code",
+                image: "https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=600&q=80",
+                downloadUrl: "https://example.com/files/ai-chat-app.zip"
+            }
+        ];
+
+        // تهيئة قواعد البيانات المحلية لضمان تجربة حية تماماً دون الحاجة لسيرفر خارجي
+        if (!localStorage.getItem('tarzan_products')) {
+            localStorage.setItem('tarzan_products', JSON.stringify(defaultProducts));
+        }
+        if (!localStorage.getItem('tarzan_orders')) {
+            localStorage.setItem('tarzan_orders', JSON.stringify([]));
+        }
+
+        let products = JSON.parse(localStorage.getItem('tarzan_products'));
+        let orders = JSON.parse(localStorage.getItem('tarzan_orders'));
         let cart = [];
-        let products = [];
         let deferredPrompt;
 
-        // إدارة ظهور الـ PWA للتثبيت كتطبيق للهاتف
+        // إدارة الـ PWA وتثبيت التطبيق على الجوال
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            const banner = document.getElementById('pwa-install-banner');
+            const banner = document.getElementById('pwa-banner');
             banner.style.transform = 'translateY(0)';
         });
 
-        function dismissInstallBanner() {
-            document.getElementById('pwa-install-banner').style.transform = 'translateY(-150%)';
+        function dismissBanner() {
+            document.getElementById('pwa-banner').style.transform = 'translateY(-180%)';
         }
 
-        function triggerPWAInstall() {
+        function triggerInstall() {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 deferredPrompt.userChoice.then((choiceResult) => {
                     if (choiceResult.outcome === 'accepted') {
-                        console.log('User accepted the install prompt');
+                        showToast('أهلاً بك في تطبيقنا الفاخر على هاتفك!', 'success');
                     }
-                    dismissInstallBanner();
+                    dismissBanner();
                 });
             }
         }
 
-        // تسجيل الـ Service Worker لتفعيل تكنولوجيا التطبيقات الهجينة PWA
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/service-worker.js')
-                .then(reg => console.log('Service Worker Registered successfully'))
-                .catch(err => console.log('Service Worker registration failed', err));
-        }
-
-        // جلب المنتجات من السيرفر وعرضها فور التشغيل
-        async function fetchProducts() {
-            try {
-                const response = await fetch('/api/products');
-                products = await response.json();
-                renderProducts(products);
-            } catch (error) {
-                console.error("حدث خطأ في جلب المنتجات:", error);
-            }
-        }
-
-        function renderProducts(itemsToRender) {
-            const container = document.getElementById('store-section');
-            container.innerHTML = '';
+        // إشعار فخم مخصص (Custom Toast Notification)
+        function showToast(message, type = 'gold') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `p-4 rounded-xl shadow-2xl flex items-center gap-3 border transition-all duration-500 transform translate-x-[-120%] pointer-events-auto min-w-[280px] text-xs font-bold `;
             
-            if (itemsToRender.length === 0) {
-                container.innerHTML = `<p class="col-span-full text-center text-slate-500 py-12">لا توجد منتجات حالياً في هذا القسم.</p>`;
+            if (type === 'success') {
+                toast.className += 'bg-emerald-950/90 border-emerald-500/50 text-emerald-400';
+                toast.innerHTML = `<i class="fa-solid fa-circle-check text-lg"></i> <span>${message}</span>`;
+            } else if (type === 'error') {
+                toast.className += 'bg-red-950/90 border-red-500/50 text-red-400';
+                toast.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-lg"></i> <span>${message}</span>`;
+            } else {
+                toast.className += 'bg-dark-900/95 border-gold-500/50 text-gold-500';
+                toast.innerHTML = `<i class="fa-solid fa-crown text-lg"></i> <span>${message}</span>`;
+            }
+
+            container.appendChild(toast);
+            setTimeout(() => { toast.style.transform = 'translateX(0)'; }, 50);
+            setTimeout(() => {
+                toast.style.transform = 'translateX(-120%)';
+                setTimeout(() => { toast.remove(); }, 500);
+            }, 4000);
+        }
+
+        // عرض المنتجات في الواجهة بشكل فخم جداً مع تأثيرات الحركات
+        function renderProducts(productsList) {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = '';
+
+            if (productsList.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-24 glassmorphism rounded-3xl">
+                        <i class="fa-solid fa-boxes-open text-6xl text-gold-500/20 mb-4"></i>
+                        <p class="text-slate-500 font-bold">لا يوجد أي منتجات معروضة حالياً ضمن هذا التصنيف.</p>
+                    </div>
+                `;
                 return;
             }
 
-            itemsToRender.forEach(prod => {
-                container.innerHTML += `
-                    <div class="glass-panel p-5 rounded-3xl transition-all duration-300 gold-glow flex flex-col justify-between h-full group">
+            productsList.forEach(product => {
+                grid.innerHTML += `
+                    <div class="glassmorphism p-6 rounded-3xl transition-all duration-300 gold-border-glow flex flex-col justify-between h-full group relative overflow-hidden">
                         <div>
-                            <div class="relative overflow-hidden rounded-2xl h-48 mb-4">
-                                <img src="${prod.image}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="${prod.title}">
-                                <span class="absolute top-3 right-3 bg-slate-950/90 text-amber-500 text-xs font-bold px-3 py-1.5 rounded-full border border-amber-500/20">
-                                    ${prod.type === 'code' ? '<i class="fa-solid fa-code"></i> كود برمجي' : '<i class="fa-solid fa-file-zipper"></i> ملف'}
-                                </span>
+                            <div class="relative overflow-hidden rounded-2xl h-52 mb-5">
+                                <img src="${product.image}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="${product.title}">
+                                <div class="absolute top-3 right-3 bg-dark-950/95 text-gold-500 text-[10px] font-black px-3.5 py-2 rounded-xl border border-gold-500/20 shadow-lg uppercase tracking-wider flex items-center gap-1.5">
+                                    ${product.type === 'code' ? '<i class="fa-solid fa-code"></i> كود برمجي' : '<i class="fa-solid fa-file-zipper"></i> ملف رقمي'}
+                                </div>
                             </div>
-                            <h3 class="text-xl font-bold text-white mb-2">${prod.title}</h3>
-                            <p class="text-slate-400 text-xs leading-relaxed mb-4 line-clamp-3">${prod.description}</p>
+                            <h3 class="text-xl font-bold text-white mb-2 tracking-wide group-hover:text-gold-400 transition">${product.title}</h3>
+                            <p class="text-slate-400 text-xs leading-relaxed mb-6 line-clamp-3">${product.description}</p>
                         </div>
-                        <div class="pt-4 border-t border-slate-800/50 flex items-center justify-between">
-                            <span class="text-2xl font-black text-amber-500">${prod.price}$</span>
-                            <button onclick="addToCart('${prod.id}')" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl transition text-sm flex items-center gap-2">
-                                <i class="fa-solid fa-cart-plus"></i> إضافة للسلة
+                        <div class="pt-5 border-t border-slate-800/60 flex items-center justify-between">
+                            <div>
+                                <span class="text-2xl font-serif italic font-black text-gold-500 gold-text-glow">${product.price.toFixed(2)}$</span>
+                            </div>
+                            <button onclick="addToCart('${product.id}')" class="bg-gold-500 hover:bg-gold-400 text-dark-950 font-black px-5 py-3 rounded-xl transition-all shadow-md shadow-gold-500/10 flex items-center gap-2 text-xs">
+                                <i class="fa-solid fa-cart-plus"></i> إضافة للحقيبة
                             </button>
                         </div>
                     </div>
@@ -314,7 +534,18 @@
             });
         }
 
+        // فلترة المنتجات
         function filterProducts(type) {
+            // تحديث الأزرار النشطة
+            ['all', 'code', 'file'].forEach(t => {
+                const btn = document.getElementById(`filter-${t}`);
+                if (t === type) {
+                    btn.className = "px-5 py-2.5 rounded-lg text-xs md:text-sm font-bold bg-gold-500 text-dark-950 shadow-md shadow-gold-500/10 transition";
+                } else {
+                    btn.className = "px-5 py-2.5 rounded-lg text-xs md:text-sm font-bold text-slate-400 hover:text-white transition";
+                }
+            });
+
             if (type === 'all') {
                 renderProducts(products);
             } else {
@@ -323,241 +554,413 @@
             }
         }
 
-        // إدارة سلة المشتريات مبرمجة برمجياً بشكل متطور
+        // التحكم في قائمة السلة المنزلقة
+        function toggleCartDrawer() {
+            const drawer = document.getElementById('cart-drawer');
+            drawer.classList.toggle('-translate-x-full');
+        }
+
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('translate-x-full');
+        }
+
+        // إدارة السلة تفاعلياً
         function addToCart(id) {
             const product = products.find(p => p.id === id);
-            const exists = cart.find(item => item.product.id === id);
-            
-            if (exists) {
-                exists.quantity++;
+            const exist = cart.find(item => item.product.id === id);
+            if (exist) {
+                exist.quantity++;
             } else {
                 cart.push({ product, quantity: 1 });
             }
             updateCartUI();
-            alert(`تمت إضافة "${product.title}" إلى السلة بنجاح!`);
+            showToast(`تمت إضافة "${product.title}" بنجاح!`, 'success');
         }
 
         function removeFromCart(id) {
             cart = cart.filter(item => item.product.id !== id);
             updateCartUI();
+            showToast('تمت إزالة العنصر من السلة', 'error');
         }
 
         function updateCartUI() {
-            const badge = document.getElementById('cart-badge');
-            const container = document.getElementById('cart-items-container');
-            const totalElement = document.getElementById('cart-total');
+            const list = document.getElementById('cart-items-list');
+            const totalText = document.getElementById('cart-total');
+            const sidebarCount = document.getElementById('sidebar-cart-count');
+            const mobileCount = document.getElementById('mobile-cart-count');
             
-            let totalCount = 0;
-            let totalPrice = 0;
-            container.innerHTML = '';
+            list.innerHTML = '';
+            let total = 0;
+            let count = 0;
 
             cart.forEach(item => {
-                totalCount += item.quantity;
-                totalPrice += item.product.price * item.quantity;
-                
-                container.innerHTML += `
-                    <div class="flex items-center gap-4 bg-slate-900 p-3.5 rounded-xl border border-slate-800">
-                        <img src="${item.product.image}" class="w-16 h-16 object-cover rounded-lg" alt="">
+                total += item.product.price * item.quantity;
+                count += item.quantity;
+
+                list.innerHTML += `
+                    <div class="flex items-center gap-4 bg-dark-900 p-4 rounded-2xl border border-gold-500/10 hover:border-gold-500/30 transition">
+                        <img src="${item.product.image}" class="w-16 h-16 object-cover rounded-xl border border-slate-800" alt="">
                         <div class="flex-1">
                             <h4 class="font-bold text-white text-sm line-clamp-1">${item.product.title}</h4>
-                            <p class="text-amber-500 font-bold text-sm mt-1">${item.product.price}$ <span class="text-xs text-slate-400">x${item.quantity}</span></p>
+                            <div class="flex items-center justify-between mt-2">
+                                <span class="text-gold-500 font-bold text-sm">${(item.product.price * item.quantity).toFixed(2)}$</span>
+                                <span class="text-[10px] bg-dark-950 text-slate-400 px-2 py-1 rounded">الكمية: ${item.quantity}</span>
+                            </div>
                         </div>
-                        <button onclick="removeFromCart('${item.product.id}')" class="text-red-500 hover:text-red-400 px-2 py-1"><i class="fa-solid fa-trash-can"></i></button>
+                        <button onclick="removeFromCart('${item.product.id}')" class="text-red-500 hover:text-red-400 p-2"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
                 `;
             });
 
-            badge.innerText = totalCount;
-            totalElement.innerText = totalPrice.toFixed(2) + '$';
+            totalText.innerText = total.toFixed(2) + '$';
+            sidebarCount.innerText = count;
+            mobileCount.innerText = count;
         }
 
-        // إتمام الشراء وإرسال الطلب وإيصال الدفع للسيرفر
-        async function submitCheckout(e) {
+        // نسخ رقم محفظة جيب
+        function copyWallet() {
+            const num = document.getElementById('wallet-number').innerText;
+            navigator.clipboard.writeText(num);
+            showToast('تم نسخ رقم محفظة جيب بنجاح!', 'success');
+        }
+
+        // تقديم العميل لطلب مالي جديد (رفع إيصال الدفع)
+        function submitOrder(e) {
             e.preventDefault();
             if (cart.length === 0) {
-                alert('سلة مقتنياتك فارغة حالياً!');
+                showToast('عربتك فارغة! أضف بعض المنتجات البرمجية أولاً.', 'error');
                 return;
             }
 
             const name = document.getElementById('cust-name').value;
-            const telegram = document.getElementById('cust-telegram').value;
-            const receiptFile = document.getElementById('cust-receipt').files[0];
+            const contact = document.getElementById('cust-contact').value;
+            const fileInput = document.getElementById('cust-receipt-file');
+            const file = fileInput.files[0];
 
-            let totalPrice = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+            if (!file) {
+                showToast('يرجى رفع صورة إيصال الدفع لإثبات المعاملة.', 'error');
+                return;
+            }
 
-            const formData = new FormData();
-            formData.append('customerName', name);
-            formData.append('telegramContact', telegram);
-            formData.append('items', JSON.stringify(cart));
-            formData.append('total', totalPrice);
-            formData.append('receipt', receiptFile);
+            // تحويل الصورة المرفوعة لقاعدة بيانات Base64 للتخزين التفاعلي المحلي الكامل
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const base64Img = event.target.result;
+                let totalPrice = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
 
-            try {
-                const response = await fetch('/api/orders', {
-                    method: 'POST',
-                    body: formData
-                });
-                const result = await response.json();
+                const newOrder = {
+                    id: 'tarzan-order-' + Date.now(),
+                    customerName: name,
+                    telegramContact: contact,
+                    items: [...cart],
+                    total: totalPrice,
+                    receiptImg: base64Img,
+                    status: 'pending', // pending, accepted, rejected
+                    date: new Date().toLocaleDateString('ar-YE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+                };
+
+                orders.push(newOrder);
+                localStorage.setItem('tarzan_orders', JSON.stringify(orders));
+
+                // تنظيف السلة وواجهات الاستخدام
+                cart = [];
+                updateCartUI();
+                toggleCartDrawer();
+                document.getElementById('checkout-form').reset();
                 
-                if (result.success) {
-                    alert('تم استلام طلبك ومراجعته للتحقق من الدفع جارية الآن من قبل إدارة Tarzanalwaqdiy.');
-                    cart = [];
-                    updateCartUI();
-                    toggleCartDrawer();
-                    document.getElementById('checkout-form').reset();
-                } else {
-                    alert('فشل رفع الطلب: ' + result.message);
+                showToast('تم رفع طلبك بنجاح! سيتم التحقق من الدفع وتفعيله لك خلال دقائق.', 'success');
+                
+                // الانتقال لتتبع الطلب فوراً لراحة العميل
+                changeSection('order-tracker');
+                document.getElementById('tracker-input').value = contact;
+                trackMyOrders();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // نظام تبديل التبويبات الفخم من القائمة الجانبية
+        function changeSection(section) {
+            document.getElementById('store-section').classList.add('hidden');
+            document.getElementById('tracker-section').classList.add('hidden');
+            document.getElementById('admin-section').classList.add('hidden');
+
+            // إزالة الألوان المحددة من كافة الأزرار
+            ['nav-store', 'nav-tracker'].forEach(id => {
+                const btn = document.getElementById(id);
+                if(btn) {
+                    btn.className = "w-full flex items-center gap-4 px-5 py-4 rounded-xl hover:bg-gold-500/5 text-slate-400 hover:text-gold-400 border border-transparent hover:border-gold-500/10 transition-all duration-300";
                 }
-            } catch (error) {
-                console.error(error);
-                alert('حدث خطأ أثناء معالجة الطلب.');
+            });
+
+            if (section === 'store') {
+                document.getElementById('store-section').classList.remove('hidden');
+                document.getElementById('nav-store').className = "w-full flex items-center gap-4 px-5 py-4 rounded-xl bg-gold-500/10 text-gold-500 border border-gold-500/30 font-bold transition-all duration-300";
+            } else if (section === 'order-tracker') {
+                document.getElementById('tracker-section').classList.remove('hidden');
+                document.getElementById('nav-tracker').className = "w-full flex items-center gap-4 px-5 py-4 rounded-xl bg-gold-500/10 text-gold-500 border border-gold-500/30 font-bold transition-all duration-300";
+            } else if (section === 'admin') {
+                document.getElementById('admin-section').classList.remove('hidden');
+            }
+            
+            // إغلاق قائمة الجوال تلقائياً بعد الاختيار
+            const sidebar = document.getElementById('sidebar');
+            if (!sidebar.classList.contains('translate-x-full')) {
+                toggleMobileSidebar();
             }
         }
 
-        // بوابة إدارة المتجر بكلمة مرور 'tarzanb'
-        function promptAdminAccess() {
-            const password = prompt("يرجى إدخال كلمة مرور الإدارة لتأمين لوحة التحكم:");
-            if (password === 'tarzanb') {
-                switchTab('admin');
-                fetchOrders();
-            } else if (password !== null) {
-                alert("كلمة المرور غير صحيحة! الدخول مسموح للمصرح لهم فقط.");
+        // تتبع الطلبات من جهة العميل
+        function trackMyOrders() {
+            const input = document.getElementById('tracker-input').value.trim().toLowerCase();
+            const resultsDiv = document.getElementById('tracker-results');
+            resultsDiv.innerHTML = '';
+
+            if (!input) {
+                showToast('يرجى إدخال معرف التواصل للبحث عن طلبياتك.', 'error');
+                return;
             }
+
+            const myOrders = orders.filter(o => o.telegramContact.toLowerCase() === input);
+
+            if (myOrders.length === 0) {
+                resultsDiv.innerHTML = `
+                    <div class="glassmorphism p-8 text-center rounded-2xl border border-gold-500/10">
+                        <i class="fa-solid fa-hourglass-empty text-5xl text-gold-500/30 mb-4 animate-spin"></i>
+                        <h4 class="font-bold text-white text-lg">لم نعثر على أي طلبيات لهذا الحساب</h4>
+                        <p class="text-slate-500 text-xs mt-1">تأكد من إدخال نفس المعرف الذي كتبته عند إتمام عملية الدفع.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            myOrders.reverse().forEach(order => {
+                let statusHtml = '';
+                let downloadButton = '';
+
+                if (order.status === 'pending') {
+                    statusHtml = `<span class="bg-amber-500/10 text-amber-500 px-3 py-1.5 rounded-lg border border-amber-500/30 font-bold text-xs"><i class="fa-solid fa-spinner animate-spin"></i> قيد مراجعة إيصال الدفع</span>`;
+                    downloadButton = `<button class="w-full mt-4 py-3 rounded-xl bg-slate-800 text-slate-500 font-bold text-xs cursor-not-allowed" disabled><i class="fa-solid fa-lock"></i> الرابط مقفل - بانتظار قبول الإدارة</button>`;
+                } else if (order.status === 'rejected') {
+                    statusHtml = `<span class="bg-red-500/10 text-red-500 px-3 py-1.5 rounded-lg border border-red-500/30 font-bold text-xs"><i class="fa-solid fa-circle-xmark"></i> العملية مرفوضة</span>`;
+                    downloadButton = `<div class="mt-4 p-3 bg-red-950/20 border border-red-500/30 rounded-xl text-red-400 text-xs text-center font-semibold">تواصل مع الإدارة للتحقق من المشكلة أو أعد رفع الإيصال الصحيح.</div>`;
+                } else {
+                    statusHtml = `<span class="bg-emerald-500/10 text-emerald-500 px-3 py-1.5 rounded-lg border border-emerald-500/30 font-bold text-xs"><i class="fa-solid fa-circle-check animate-pulse"></i> تم تفعيل الطلب بنجاح</span>`;
+                    
+                    // توليد أزرار التحميل المباشرة لجميع المنتجات في هذا الطلب الفخم
+                    let btnLinks = '';
+                    order.items.forEach(item => {
+                        btnLinks += `
+                            <a href="${item.product.downloadUrl}" target="_blank" class="w-full mt-2 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-black text-xs transition shadow-lg shadow-emerald-500/10 flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-download"></i> تحميل: ${item.product.title}
+                            </a>
+                        `;
+                    });
+                    downloadButton = btnLinks;
+                }
+
+                const itemsText = order.items.map(i => `<span class="text-white font-semibold">${i.product.title} (${i.quantity}x)</span>`).join(' ، ');
+
+                resultsDiv.innerHTML += `
+                    <div class="glassmorphism p-6 rounded-2xl border border-gold-500/10 space-y-4">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 pb-4 border-b border-slate-800">
+                            <div>
+                                <span class="text-[10px] text-slate-500 uppercase tracking-widest block">${order.id}</span>
+                                <h4 class="font-bold text-gold-500 mt-1">${order.date}</h4>
+                            </div>
+                            <div>${statusHtml}</div>
+                        </div>
+                        <div class="text-xs space-y-2 text-slate-400">
+                            <p><span class="text-slate-500">اسم العميل:</span> ${order.customerName}</p>
+                            <p><span class="text-slate-500">المنتجات:</span> ${itemsText}</p>
+                            <p><span class="text-slate-500">المبلغ الإجمالي المدفوع:</span> <span class="text-gold-500 font-bold">${order.total.toFixed(2)}$</span></p>
+                        </div>
+                        ${downloadButton}
+                    </div>
+                `;
+            });
         }
 
-        function switchTab(tab) {
-            const storeSection = document.getElementById('store-section');
-            const adminSection = document.getElementById('admin-section');
-            const btnStore = document.getElementById('btn-tab-store');
+        // ================= نظام بوابة الإدارة وباسوورد 'tarzanb' =================
 
-            if (tab === 'store') {
-                storeSection.classList.remove('hidden');
-                adminSection.classList.add('hidden');
-                btnStore.classList.add('bg-amber-500/10', 'text-amber-400');
-            } else if (tab === 'admin') {
-                storeSection.classList.add('hidden');
-                adminSection.classList.remove('hidden');
-                btnStore.classList.remove('bg-amber-500/10', 'text-amber-400');
+        function loginAdminPrompt() {
+            const pass = prompt('يرجى إدخال كلمة المرور لتأمين لوحة تحكم Tarzanalwaqdiy:');
+            if (pass === 'tarzanb') {
+                showToast('أهلاً بك يا إمبراطور البرمجة. تم فك قفل بوابة التحكم!', 'success');
+                changeSection('admin');
+                renderAdminOrders();
+                renderAdminProducts();
+            } else if (pass !== null) {
+                showToast('كلمة مرور خاطئة! الدخول مرفوض.', 'error');
             }
         }
 
         function logoutAdmin() {
-            switchTab('store');
-            alert('تم الخروج من لوحة التحكم بنجاح.');
+            changeSection('store');
+            showToast('تم الخروج من الإدارة وتأمين لوحة التحكم بنجاح.', 'success');
         }
 
-        // جلب الطلبات للمسؤول في لوحة التحكم
-        async function fetchOrders() {
-            try {
-                const response = await fetch('/api/orders');
-                const orders = await response.json();
-                const tableBody = document.getElementById('orders-table-body');
-                tableBody.innerHTML = '';
+        // تبديل تبويبات لوحة التحكم
+        function toggleAdminTab(tab) {
+            const ordersTab = document.getElementById('admin-tab-orders');
+            const productsTab = document.getElementById('admin-tab-products');
+            const btnOrders = document.getElementById('btn-admin-orders');
+            const btnProducts = document.getElementById('btn-admin-products');
 
-                if (orders.length === 0) {
-                    tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-slate-500">لا توجد طلبات واردة حالياً.</td></tr>`;
-                    return;
-                }
+            if (tab === 'orders') {
+                ordersTab.classList.remove('hidden');
+                productsTab.classList.add('hidden');
+                btnOrders.className = "px-6 py-3 rounded-xl bg-gold-500 text-dark-950 font-black text-sm transition";
+                btnProducts.className = "px-6 py-3 rounded-xl text-slate-400 hover:text-white font-bold text-sm transition";
+                renderAdminOrders();
+            } else {
+                ordersTab.classList.add('hidden');
+                productsTab.classList.remove('hidden');
+                btnOrders.className = "px-6 py-3 rounded-xl text-slate-400 hover:text-white font-bold text-sm transition";
+                btnProducts.className = "px-6 py-3 rounded-xl bg-gold-500 text-dark-950 font-black text-sm transition";
+                renderAdminProducts();
+            }
+        }
 
-                orders.reverse().forEach(order => {
-                    const itemsText = order.items.map(i => `${i.product.title} (x${i.quantity})`).join('<br>');
-                    
-                    let statusBadge = '';
-                    if (order.status === 'pending') statusBadge = '<span class="text-amber-500 bg-amber-500/10 px-2 py-1 rounded">معلق</span>';
-                    else if (order.status === 'accepted') statusBadge = '<span class="text-emerald-500 bg-emerald-500/10 px-2 py-1 rounded">مقبول</span>';
-                    else statusBadge = '<span class="text-red-500 bg-red-500/10 px-2 py-1 rounded">مرفوض</span>';
+        // عرض طلبات مراجعة الفواتير للإدارة
+        function renderAdminOrders() {
+            const tbody = document.getElementById('admin-orders-rows');
+            tbody.innerHTML = '';
 
-                    tableBody.innerHTML += `
-                        <tr class="border-b border-slate-800/40 text-slate-300">
-                            <td class="py-4">
-                                <p class="font-bold text-white">${order.customerName}</p>
-                                <span class="text-xs text-slate-500">${order.date}</span>
-                            </td>
-                            <td class="py-4 font-mono text-xs">${order.telegramContact}</td>
-                            <td class="py-4 text-xs">${itemsText}</td>
-                            <td class="py-4 font-bold text-amber-500">${order.total}$</td>
-                            <td class="py-4">
-                                <a href="${order.receiptImg}" target="_blank" class="text-amber-400 hover:underline flex items-center gap-1 text-xs">
-                                    <i class="fa-solid fa-image"></i> عرض الإيصال
-                                </a>
-                            </td>
-                            <td class="py-4 text-center space-x-2">
-                                ${order.status === 'pending' ? `
-                                    <button onclick="updateOrderStatus('${order.id}', 'accepted')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs transition">قبول العملية</button>
-                                    <button onclick="updateOrderStatus('${order.id}', 'rejected')" class="bg-red-600 hover:bg-red-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs transition">رفض</button>
-                                ` : statusBadge}
-                            </td>
-                        </tr>
+            if (orders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-slate-500">لا توجد أي فواتير أو طلبات شراء معلقة حالياً.</td></tr>`;
+                return;
+            }
+
+            orders.slice().reverse().forEach(order => {
+                const itemsText = order.items.map(i => `${i.product.title} (x${i.quantity})`).join('<br>');
+                
+                let actionHtml = '';
+                if (order.status === 'pending') {
+                    actionHtml = `
+                        <div class="flex gap-2 justify-center">
+                            <button onclick="changeOrderStatus('${order.id}', 'accepted')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-xs transition">قبول وإرسال الكود</button>
+                            <button onclick="changeOrderStatus('${order.id}', 'rejected')" class="bg-red-600 hover:bg-red-500 text-white font-bold px-4 py-2 rounded-xl text-xs transition">رفض</button>
+                        </div>
                     `;
-                });
-            } catch (error) {
-                console.error(error);
-            }
-        }
-
-        async function updateOrderStatus(orderId, status) {
-            try {
-                const response = await fetch(`/api/orders/${orderId}/status`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ status })
-                });
-                const result = await response.json();
-                if (result.success) {
-                    alert(result.message);
-                    fetchOrders();
+                } else if (order.status === 'accepted') {
+                    actionHtml = `<span class="text-emerald-500 bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/30 text-xs font-bold">مقبول ومفعل</span>`;
+                } else {
+                    actionHtml = `<span class="text-red-500 bg-red-500/10 px-3 py-1.5 rounded-lg border border-red-500/30 text-xs font-bold">مرفوض</span>`;
                 }
-            } catch (error) {
-                console.error(error);
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-900/50 transition">
+                        <td class="p-5">
+                            <p class="font-bold text-white">${order.customerName}</p>
+                            <span class="text-slate-500 text-[10px] block mt-1">${order.telegramContact}</span>
+                            <span class="text-slate-600 text-[10px] block">${order.date}</span>
+                        </td>
+                        <td class="p-5 text-xs text-slate-300 leading-relaxed">${itemsText}</td>
+                        <td class="p-5 font-serif font-bold text-gold-500 text-base">${order.total.toFixed(2)}$</td>
+                        <td class="p-5">
+                            <a href="${order.receiptImg}" target="_blank" class="text-gold-500 hover:underline flex items-center gap-1.5 text-xs font-bold">
+                                <i class="fa-solid fa-eye"></i> عرض إيصال الدفع
+                            </a>
+                        </td>
+                        <td class="p-5 text-center">${actionHtml}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        // تغيير حالة طلب الشراء (قبول / رفض)
+        function changeOrderStatus(orderId, status) {
+            const index = orders.findIndex(o => o.id === orderId);
+            if (index !== -1) {
+                orders[index].status = status;
+                localStorage.setItem('tarzan_orders', JSON.stringify(orders));
+                showToast(`تم تعديل حالة الطلب بنجاح إلى: ${status === 'accepted' ? 'قبول' : 'رفض'}`, 'success');
+                renderAdminOrders();
             }
         }
 
-        // إضافة منتج جديد للبيع
-        async function submitNewProduct(e) {
+        // عرض المنتجات وتفعيل حذفها للإدارة
+        function renderAdminProducts() {
+            const tbody = document.getElementById('admin-products-rows');
+            tbody.innerHTML = '';
+
+            products.forEach(product => {
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-900/50 transition">
+                        <td class="p-4 flex items-center gap-3">
+                            <img src="${product.image}" class="w-10 h-10 object-cover rounded-lg border border-slate-800" alt="">
+                            <span class="font-bold text-white">${product.title}</span>
+                        </td>
+                        <td class="p-4 text-xs text-slate-400">
+                            ${product.type === 'code' ? '<span class="text-gold-500">كود برمجي</span>' : '<span class="text-sky-500">ملف رقمي</span>'}
+                        </td>
+                        <td class="p-4 font-serif font-bold text-gold-500 text-sm">${product.price.toFixed(2)}$</td>
+                        <td class="p-4 text-center">
+                            <button onclick="adminDeleteProduct('${product.id}')" class="bg-red-600/10 text-red-500 hover:bg-red-600 hover:text-white px-3 py-1.5 rounded-xl text-xs font-bold transition">حذف المنتج</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // حذف منتج من الإدارة
+        function adminDeleteProduct(prodId) {
+            if (confirm('هل أنت متأكد تماماً من حذف هذا المنتج الفاخر وإزالته نهائياً من المتجر؟')) {
+                products = products.filter(p => p.id !== prodId);
+                localStorage.setItem('tarzan_products', JSON.stringify(products));
+                showToast('تمت إزالة المنتج وحذفه بنجاح.', 'success');
+                renderAdminProducts();
+                renderProducts(products);
+            }
+        }
+
+        // إضافة منتج جديد للإدارة
+        function adminAddProduct(e) {
             e.preventDefault();
-            const formData = new FormData();
-            formData.append('title', document.getElementById('p-title').value);
-            formData.append('price', document.getElementById('p-price').value);
-            formData.append('type', document.getElementById('p-type').value);
-            formData.append('downloadUrl', document.getElementById('p-downloadUrl').value);
-            formData.append('description', document.getElementById('p-desc').value);
-            
-            const imageFile = document.getElementById('p-image').files[0];
-            if (imageFile) {
-                formData.append('imageFile', imageFile);
+            const title = document.getElementById('new-prod-title').value;
+            const price = parseFloat(document.getElementById('new-prod-price').value);
+            const type = document.getElementById('new-prod-type').value;
+            const downloadUrl = document.getElementById('new-prod-url').value;
+            const desc = document.getElementById('new-prod-desc').value;
+            const fileInput = document.getElementById('new-prod-image-file');
+            const file = fileInput.files[0];
+
+            let imageUrl = "https://images.unsplash.com/photo-1618401471353-b98aedd07871?auto=format&fit=crop&w=600&q=80"; // صورة افتراضية
+
+            const submitData = (img) => {
+                const newProd = {
+                    id: 'tarzan-prod-' + Date.now(),
+                    title,
+                    description: desc,
+                    price,
+                    type,
+                    image: img,
+                    downloadUrl
+                };
+
+                products.push(newProd);
+                localStorage.setItem('tarzan_products', JSON.stringify(products));
+                showToast(`تم إدراج المنتج الفخم: "${title}" بالمتجر الملكي!`, 'success');
+                
+                document.getElementById('product-form').reset();
+                renderAdminProducts();
+                renderProducts(products);
+            };
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    submitData(event.target.result);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                submitData(imageUrl);
             }
-
-            try {
-                const response = await fetch('/api/products', {
-                    method: 'POST',
-                    body: formData
-                });
-                const result = await response.json();
-                if (result.success) {
-                    alert('تم إدراج المنتج الجديد بنجاح فائق!');
-                    document.getElementById('add-product-form').reset();
-                    fetchProducts();
-                }
-            } catch (error) {
-                console.error(error);
-                alert('حدث خطأ في إضافة المنتج.');
-            }
         }
 
-        // واجهات ترفيهية تفاعلية
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('translate-x-full');
-        }
-
-        function toggleCartDrawer() {
-            const drawer = document.getElementById('cart-drawer');
-            const isOpen = drawer.style.transform === 'translateX(0px)';
-            drawer.style.transform = isOpen ? 'translateX(-100%)' : 'translateX(0px)';
-        }
-
-        // تهيئة تشغيل التطبيق بالكامل
-        fetchProducts();
+        // تشغيل التهيئة الفورية للمتجر بالكامل
+        renderProducts(products);
     </script>
 </body>
 </html>
