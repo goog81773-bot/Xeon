@@ -2,759 +2,444 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tarzanalwaqdiy Cyber Store | متجر طرزان الوقدي VIP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#020204">
+    <title>TarzanAlwaqdiy VIP Store</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        cyber: {
-                            950: '#020204', 900: '#070a13', 800: '#0c1322',
-                            green: '#00ff66', gold: '#d4af37', neon: '#39ff14'
-                        }
-                    },
-                    fontFamily: {
-                        cairo: ['Cairo', 'sans-serif'],
-                        mono: ['Share Tech Mono', 'monospace'],
-                    }
-                }
-            }
-        }
+        tailwind.config = { theme: { extend: { colors: { cyber: { 950: '#020204', 900: '#070a13', 800: '#0c1322', green: '#00ff66', gold: '#d4af37' } } } } }
     </script>
 
     <style>
-        body {
-            font-family: 'Cairo', sans-serif;
-            background-color: #020204;
-            color: #f1f5f9;
-            overflow-x: hidden;
-        }
+        body { font-family: 'Cairo', sans-serif; background-color: #020204; color: #f1f5f9; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
+        ::-webkit-scrollbar { display: none; } /* إخفاء السكرول لشعور التطبيق */
         
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #020204; }
-        ::-webkit-scrollbar-thumb { background: #00ff66; border-radius: 10px; }
-
-        .cyber-glass {
-            background: rgba(7, 10, 19, 0.7);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(0, 255, 102, 0.1);
-        }
-        .admin-panel-card {
-            background: #070a13;
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 1rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-        }
-        .form-input-clean {
-            width: 100%; background: #0c1322; border: 1px solid rgba(0,255,102,0.2); 
-            border-radius: 0.5rem; padding: 0.75rem 1rem; color: white; outline: none; transition: 0.3s;
-        }
-        .form-input-clean:focus { border-color: #00ff66; box-shadow: 0 0 10px rgba(0,255,102,0.1); }
+        .glass-panel { background: rgba(7, 10, 19, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(0, 255, 102, 0.1); border-radius: 1rem; }
+        .input-cyber { width: 100%; background: #0c1322; border: 1px solid rgba(0,255,102,0.3); border-radius: 0.5rem; padding: 0.75rem 1rem; color: white; outline: none; transition: 0.3s; }
+        .input-cyber:focus { border-color: #00ff66; box-shadow: 0 0 10px rgba(0,255,102,0.2); }
+        .btn-glow { box-shadow: 0 0 15px rgba(0,255,102,0.3); }
         
-        #matrix-canvas {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.05; pointer-events: none;
-        }
-
-        /* تنسيقات الرتب */
-        .rank-badge {
-            background: linear-gradient(135deg, #00ff66, #008833);
-            color: #020204; font-weight: 900;
-        }
-        .rank-admin {
-            background: linear-gradient(135deg, #ffd700, #b8860b);
-            color: #020204; font-weight: 900; animation: adminGlow 2s infinite alternate;
-        }
-        @keyframes adminGlow {
-            0% { box-shadow: 0 0 5px rgba(212,175,55,0.4); }
-            100% { box-shadow: 0 0 15px rgba(212,175,55,0.8); }
-        }
-
-        /* تحسين الجداول */
-        .admin-table th { background-color: rgba(12, 19, 34, 0.8); border-bottom: 2px solid rgba(212,175,55,0.3); color: #d4af37; padding: 1rem; text-align: right; }
-        .admin-table td { padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.05); vertical-align: middle; }
-        .admin-table tr:hover td { background-color: rgba(0,255,102,0.02); }
+        /* تأثيرات الرتب */
+        .rank-vip { background: linear-gradient(135deg, #00ff66, #008833); color: black; }
+        .rank-admin { background: linear-gradient(135deg, #ffd700, #ff8c00); color: black; box-shadow: 0 0 10px rgba(255,215,0,0.5); }
+        
+        #matrix { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.04; pointer-events: none; }
+        
+        /* شريط التنقل السفلي للهواتف */
+        .bottom-nav { background: rgba(2, 2, 4, 0.95); border-top: 1px solid rgba(0,255,102,0.2); backdrop-filter: blur(10px); }
+        .nav-item.active { color: #00ff66; text-shadow: 0 0 8px rgba(0,255,102,0.5); transform: translateY(-3px); }
+        
+        /* Modals */
+        .modal-overlay { background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
     </style>
 </head>
-<body class="min-h-screen flex flex-col lg:flex-row">
+<body class="flex flex-col h-screen overflow-hidden">
+    <canvas id="matrix"></canvas>
+    <div id="toast-container" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-[100] flex flex-col gap-2 w-[90%] max-w-sm pointer-events-none"></div>
 
-    <canvas id="matrix-canvas"></canvas>
-    <div id="toast-container" class="fixed top-5 left-5 z-50 flex flex-col gap-3 pointer-events-none"></div>
-
-    <!-- هيدر الجوال -->
-    <div class="lg:hidden w-full bg-cyber-950/90 border-b border-cyber-green/15 p-4 flex justify-between items-center sticky top-0 z-40 backdrop-blur-md">
-        <h1 class="text-xl font-black text-cyber-green font-mono">TARZAN VIP</h1>
-        <div class="flex gap-4">
-            <button onclick="toggleCartDrawer()" class="relative text-cyber-green text-xl">
-                <i class="fa-solid fa-cart-shopping"></i>
-                <span id="mobile-cart-count" class="absolute -top-2 -left-2 bg-red-600 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold">0</span>
+    <!-- الهيدر العلوي -->
+    <header class="glass-panel rounded-none border-t-0 border-l-0 border-r-0 border-b border-cyber-green/20 p-4 flex justify-between items-center z-40 shrink-0">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-cyber-green rounded-lg flex items-center justify-center text-black font-black text-xl shadow-[0_0_10px_rgba(0,255,102,0.4)]">TZ</div>
+            <div>
+                <h1 class="text-sm font-black text-white font-mono leading-tight">TARZANALWAQDIY</h1>
+                <p class="text-[9px] text-cyber-green tracking-widest uppercase">VIP Secure App v3</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <button onclick="toggleCart()" class="relative p-2 text-slate-300 hover:text-cyber-green transition">
+                <i class="fa-solid fa-basket-shopping text-xl"></i>
+                <span id="cart-badge" class="absolute top-0 right-0 bg-red-500 text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
             </button>
-            <button onclick="toggleMobileSidebar()" class="text-cyber-green text-2xl"><i class="fa-solid fa-bars"></i></button>
+            <div id="user-avatar" class="hidden w-9 h-9 rounded-full bg-slate-800 border border-cyber-green flex items-center justify-center cursor-pointer" onclick="changePage('profile')"></div>
         </div>
-    </div>
+    </header>
 
-    <!-- القائمة الجانبية الموحدة والمحسنة -->
-    <aside id="sidebar" class="w-72 bg-cyber-950 border-l border-cyber-green/20 flex flex-col justify-between fixed lg:sticky inset-y-0 right-0 z-50 transform translate-x-full lg:translate-x-0 transition-transform duration-300 shadow-2xl">
-        <div>
-            <div class="p-6 text-center border-b border-cyber-green/10">
-                <button onclick="toggleMobileSidebar()" class="lg:hidden absolute top-4 left-4 text-slate-400"><i class="fa-solid fa-xmark"></i></button>
-                <div class="w-16 h-16 mx-auto mb-3 bg-cyber-green rounded-xl flex items-center justify-center text-cyber-950 text-2xl font-black shadow-lg shadow-cyber-green/20">TZ</div>
-                <h1 class="text-lg font-black text-white tracking-widest font-mono">TARZANALWAQDIY</h1>
-                <p class="text-[10px] text-cyber-green tracking-widest">VIP STORE V2.1</p>
-            </div>
-
-            <div id="user-profile-section" class="p-5 border-b border-cyber-green/10 bg-slate-900/30"></div>
-
-            <nav class="p-4 space-y-1" id="main-nav">
-                <!-- أزرار التصفح العادية -->
-                <button onclick="changeSection('store')" id="nav-store" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-cyber-green/10 text-cyber-green font-bold transition">
-                    <i class="fa-solid fa-store w-5"></i><span>المعرض</span>
-                </button>
-                <button onclick="toggleCartDrawer()" class="w-full flex items-center justify-between px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
-                    <div class="flex items-center gap-3"><i class="fa-solid fa-cart-shopping w-5"></i><span>السلة</span></div>
-                    <span id="sidebar-cart-count" class="bg-cyber-green text-cyber-950 font-bold text-xs px-2 py-0.5 rounded">0</span>
-                </button>
-                <button onclick="changeSection('requests')" id="nav-requests" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
-                    <i class="fa-solid fa-pen-ruler w-5"></i><span>طلب خاص</span>
-                </button>
-                <button onclick="changeSection('tracker')" id="nav-tracker" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
-                    <i class="fa-solid fa-cloud-arrow-down w-5"></i><span>مشترياتي</span>
-                </button>
-                
-                <!-- زر لوحة الإدارة (يظهر فقط للأدمن) -->
-                <div id="admin-nav-button" class="hidden mt-4 pt-4 border-t border-slate-800">
-                    <button onclick="changeSection('admin')" id="nav-admin" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-cyber-gold border border-cyber-gold/30 hover:bg-cyber-gold/10 font-bold transition">
-                        <i class="fa-solid fa-gauge-high w-5"></i><span>لوحة التحكم</span>
-                    </button>
-                </div>
-            </nav>
-        </div>
-
-        <div class="p-4 border-t border-cyber-green/10 bg-cyber-950">
-            <div id="auth-buttons" class="space-y-2"></div>
-            <!-- زر تسجيل دخول الأدمن المخفي للمستخدم العادي -->
-            <button id="secret-admin-btn" onclick="promptAdminLogin()" class="w-full mt-2 py-2 text-[10px] text-slate-600 hover:text-cyber-gold transition">دخول الإدارة</button>
-        </div>
-    </aside>
-
-    <!-- منطقة المحتوى -->
-    <main class="flex-1 p-4 md:p-8 overflow-y-auto h-screen z-10 relative pb-24">
+    <!-- منطقة المحتوى القابلة للتمرير -->
+    <main class="flex-1 overflow-y-auto p-4 pb-24 relative z-10 scroll-smooth" id="main-content">
         
-        <!-- قسم المصادقة -->
-        <div id="auth-section" class="hidden max-w-md mx-auto mt-10 cyber-glass p-8 rounded-2xl">
-            <div class="text-center mb-6">
-                <i class="fa-solid fa-shield-halved text-4xl text-cyber-green mb-2"></i>
-                <h2 class="text-2xl font-black text-white" id="auth-title">تسجيل الدخول</h2>
+        <!-- صفحة المعرض -->
+        <section id="page-store" class="page-section space-y-6">
+            <div class="bg-gradient-to-r from-cyber-900 to-slate-900 rounded-xl p-5 border border-slate-800 flex justify-between items-center">
+                <div><h2 class="text-xl font-black text-white">ترسانة الأدوات</h2><p class="text-xs text-slate-400">برمجيات مشفرة وآمنة</p></div>
+                <div class="flex gap-2">
+                    <button onclick="filterType('all')" class="px-3 py-1 bg-cyber-green text-black text-xs font-bold rounded">الكل</button>
+                    <button onclick="filterType('code')" class="px-3 py-1 bg-slate-800 text-white text-xs font-bold rounded">أكواد</button>
+                </div>
             </div>
-            <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
-                <div>
-                    <label class="text-xs text-slate-400 mb-1 block">اسم المستخدم</label>
-                    <input type="text" id="auth-username" required class="form-input-clean">
-                </div>
-                <div>
-                    <label class="text-xs text-slate-400 mb-1 block">كلمة المرور</label>
-                    <input type="password" id="auth-password" required class="form-input-clean">
-                </div>
-                <button type="submit" class="w-full py-3 bg-cyber-green text-cyber-950 font-bold rounded-lg hover:bg-emerald-400 transition" id="auth-submit-btn">دخول</button>
+            <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </section>
+
+        <!-- صفحة المشتريات (تنزيل الملفات) -->
+        <section id="page-downloads" class="page-section hidden space-y-4">
+            <h2 class="text-xl font-black text-white mb-4 border-b border-cyber-green/20 pb-2"><i class="fa-solid fa-cloud-arrow-down"></i> مكتبة تنزيلاتي</h2>
+            <div id="downloads-list" class="space-y-4"></div>
+        </section>
+
+        <!-- صفحة الطلبات الخاصة -->
+        <section id="page-requests" class="page-section hidden max-w-2xl mx-auto">
+            <h2 class="text-xl font-black text-white mb-4">طلب برمجية خاصة</h2>
+            <form onsubmit="submitCustomReq(event)" class="glass-panel p-5 space-y-4 mb-6">
+                <input type="text" id="req-title" placeholder="عنوان المشروع..." required class="input-cyber">
+                <textarea id="req-desc" rows="4" placeholder="اشرح الفكرة بالتفصيل ليقوم طرزان ببرمجتها..." required class="input-cyber"></textarea>
+                <button type="submit" class="w-full bg-cyber-green text-black font-black py-3 rounded-lg text-sm btn-glow">إرسال الطلب للتقييم والتسعير</button>
             </form>
-            <div class="text-center mt-4">
-                <button onclick="toggleAuthMode()" id="auth-switch-btn" class="text-xs text-slate-400 hover:text-cyber-green underline">إنشاء حساب جديد</button>
-            </div>
-        </div>
-
-        <!-- المعرض -->
-        <div id="store-section" class="animate-fade-up">
-            <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-                <h2 class="text-3xl font-black text-white">المعرض السيبراني</h2>
-                <div class="flex bg-slate-900 rounded-lg p-1 border border-slate-800">
-                    <button onclick="filterProducts('all')" class="px-4 py-2 text-sm rounded bg-cyber-green text-black font-bold" id="filter-all">الكل</button>
-                    <button onclick="filterProducts('code')" class="px-4 py-2 text-sm rounded text-slate-400 hover:text-white font-bold" id="filter-code">أكواد</button>
-                    <button onclick="filterProducts('file')" class="px-4 py-2 text-sm rounded text-slate-400 hover:text-white font-bold" id="filter-file">ملفات</button>
-                </div>
-            </div>
-            <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
-        </div>
-
-        <!-- قسم الطلبات الخاصة -->
-        <div id="requests-section" class="hidden animate-fade-up max-w-4xl mx-auto">
-            <h2 class="text-2xl font-black text-white mb-6">طلب مشروع خاص</h2>
-            <div class="cyber-glass p-6 rounded-2xl mb-8">
-                <form id="custom-request-form" onsubmit="submitCustomRequest(event)" class="space-y-4">
-                    <input type="text" id="req-title" required placeholder="عنوان الطلب..." class="form-input-clean">
-                    <textarea id="req-desc" rows="4" required placeholder="اشرح تفاصيل المشروع بدقة..." class="form-input-clean"></textarea>
-                    <button type="submit" class="bg-cyber-green text-black font-bold py-3 px-6 rounded-lg w-full md:w-auto">إرسال الطلب</button>
-                </form>
-            </div>
-            <h3 class="font-bold text-white mb-4">طلباتك السابقة</h3>
+            <h3 class="font-bold text-cyber-gold mb-3 border-b border-cyber-gold/20 pb-2">طلباتي السابقة</h3>
             <div id="my-requests-list" class="space-y-3"></div>
-        </div>
+        </section>
 
-        <!-- قسم المشتريات والتنزيل -->
-        <div id="tracker-section" class="hidden animate-fade-up max-w-4xl mx-auto">
-            <h2 class="text-2xl font-black text-white mb-6">مشترياتي وتنزيلاتي</h2>
-            <div id="tracker-results" class="space-y-4"></div>
-        </div>
+        <!-- صفحة الحساب -->
+        <section id="page-profile" class="page-section hidden max-w-sm mx-auto mt-10">
+            <div id="auth-box" class="glass-panel p-6"></div>
+        </section>
 
-        <!-- 🔴 لوحة الإدارة المرتبة والجديدة كلياً 🔴 -->
-        <div id="admin-section" class="hidden animate-fade-up">
-            <div class="flex items-center justify-between mb-8 border-b border-cyber-gold/20 pb-4">
-                <div>
-                    <h2 class="text-3xl font-black text-cyber-gold"><i class="fa-solid fa-gauge"></i> لوحة تحكم الإدارة</h2>
-                    <p class="text-slate-400 text-sm mt-1">إدارة المتجر، المنتجات، والطلبات بصلاحيات كاملة.</p>
-                </div>
+        <!-- 🔴 لوحة تحكم الإدارة (APK Style) 🔴 -->
+        <section id="page-admin" class="page-section hidden">
+            <h2 class="text-2xl font-black text-cyber-gold mb-4"><i class="fa-solid fa-shield-halved"></i> مركز القيادة VIP</h2>
+            
+            <div class="flex bg-slate-900 rounded-lg p-1 mb-6 border border-slate-800 text-xs">
+                <button onclick="adminTab('add')" id="tab-add" class="flex-1 py-2 text-center bg-cyber-gold text-black font-bold rounded">رفع منتج</button>
+                <button onclick="adminTab('orders')" id="tab-orders" class="flex-1 py-2 text-center text-slate-400 font-bold">التحويلات</button>
+                <button onclick="adminTab('reqs')" id="tab-reqs" class="flex-1 py-2 text-center text-slate-400 font-bold">المشاريع</button>
             </div>
 
-            <!-- تبويبات الإدارة العلوية -->
-            <div class="flex flex-wrap gap-2 mb-6">
-                <button onclick="switchAdminTab('products')" id="tab-btn-products" class="px-5 py-2.5 bg-cyber-gold text-black rounded-lg font-bold text-sm transition shadow-md shadow-cyber-gold/20"><i class="fa-solid fa-box"></i> إدارة المنتجات والرفع</button>
-                <button onclick="switchAdminTab('orders')" id="tab-btn-orders" class="px-5 py-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg font-bold text-sm transition"><i class="fa-solid fa-receipt"></i> مراجعة المدفوعات</button>
-                <button onclick="switchAdminTab('requests')" id="tab-btn-requests" class="px-5 py-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg font-bold text-sm transition"><i class="fa-solid fa-envelope-open-text"></i> الطلبات الخاصة</button>
-            </div>
-
-            <!-- محتوى الإدارة: المنتجات والرفع -->
-            <div id="admin-content-products" class="space-y-6">
-                <!-- فورم رفع منتج جديد بتصميم نظيف (شبكي) -->
-                <div class="admin-panel-card p-6">
-                    <h3 class="text-xl font-bold text-cyber-gold mb-4 border-b border-slate-800 pb-2"><i class="fa-solid fa-upload"></i> إضافة منتج جديد</h3>
-                    <form id="product-form" onsubmit="adminAddProduct(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="text-xs text-slate-400 mb-1 block">اسم المنتج</label>
-                            <input type="text" id="new-prod-title" required class="form-input-clean">
-                        </div>
-                        <div>
-                            <label class="text-xs text-slate-400 mb-1 block">السعر ($)</label>
-                            <input type="number" step="0.01" id="new-prod-price" required class="form-input-clean">
-                        </div>
-                        <div>
-                            <label class="text-xs text-slate-400 mb-1 block">النوع</label>
-                            <select id="new-prod-type" required class="form-input-clean">
-                                <option value="code">كود برمجي</option>
-                                <option value="file">ملف رقمي</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="text-xs text-cyber-gold mb-1 block font-bold">الملف الفعلي (المشفر للعميل)</label>
-                            <input type="file" id="new-prod-file" required class="form-input-clean border-cyber-gold/40 bg-cyber-900 cursor-pointer">
-                        </div>
-                        <div class="md:col-span-2">
-                            <label class="text-xs text-slate-400 mb-1 block">صورة العرض (اختياري)</label>
-                            <input type="file" id="new-prod-image-file" accept="image/*" class="form-input-clean">
-                        </div>
-                        <div class="md:col-span-2">
-                            <label class="text-xs text-slate-400 mb-1 block">الوصف المكتوب</label>
-                            <textarea id="new-prod-desc" rows="3" required class="form-input-clean"></textarea>
-                        </div>
-                        <div class="md:col-span-2 mt-2">
-                            <button type="submit" class="w-full bg-cyber-gold hover:bg-yellow-500 text-black font-black py-3 rounded-lg transition shadow-lg text-lg">
-                                رفع المنتج للمعرض
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- جدول المنتجات الحالية -->
-                <div class="admin-panel-card overflow-hidden">
-                    <h3 class="text-lg font-bold text-white p-5 border-b border-slate-800 bg-slate-900/50">المنتجات المتوفرة حالياً</h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full admin-table text-sm">
-                            <thead>
-                                <tr>
-                                    <th>اسم المنتج</th>
-                                    <th>النوع</th>
-                                    <th>السعر</th>
-                                    <th>الملف المرفق</th>
-                                    <th class="text-center">الإجراء</th>
-                                </tr>
-                            </thead>
-                            <tbody id="admin-products-rows"></tbody>
-                        </table>
+            <!-- رفع منتج -->
+            <div id="admin-add" class="glass-panel p-5 space-y-4">
+                <form onsubmit="submitProduct(event)" class="space-y-4">
+                    <input type="text" id="p-title" placeholder="اسم المنتج" required class="input-cyber">
+                    <div class="flex gap-2">
+                        <input type="number" id="p-price" placeholder="السعر $" required class="input-cyber w-1/2">
+                        <select id="p-type" class="input-cyber w-1/2"><option value="code">كود برمجي</option><option value="file">ملف رقمي</option></select>
                     </div>
+                    <div>
+                        <label class="text-[10px] text-cyber-gold block mb-1">ارفع الملف الفعلي (المشفر للعميل)</label>
+                        <input type="file" id="p-file" required class="input-cyber border-cyber-gold py-2 text-xs">
+                    </div>
+                    <textarea id="p-desc" rows="2" placeholder="الوصف" required class="input-cyber"></textarea>
+                    <button type="submit" class="w-full bg-cyber-gold text-black font-black py-3 rounded-lg">رفع ونشر بالمعرض</button>
+                </form>
+                <div class="mt-8 border-t border-slate-800 pt-4">
+                    <h3 class="text-white font-bold text-sm mb-3">المنتجات الحالية:</h3>
+                    <div id="admin-products-list" class="space-y-2"></div>
                 </div>
             </div>
 
-            <!-- محتوى الإدارة: المدفوعات -->
-            <div id="admin-content-orders" class="hidden admin-panel-card overflow-hidden">
-                <h3 class="text-lg font-bold text-white p-5 border-b border-slate-800 bg-slate-900/50">مراجعة التحويلات المالية (جيب)</h3>
-                <div class="overflow-x-auto">
-                    <table class="w-full admin-table text-sm">
-                        <thead>
-                            <tr>
-                                <th>العميل & التاريخ</th>
-                                <th>المشتريات</th>
-                                <th>المبلغ</th>
-                                <th>الإثبات</th>
-                                <th class="text-center">القرار</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-orders-rows"></tbody>
-                    </table>
-                </div>
-            </div>
+            <!-- إدارة الطلبات والتحويلات -->
+            <div id="admin-orders" class="hidden space-y-3"></div>
 
-            <!-- محتوى الإدارة: الطلبات الخاصة -->
-            <div id="admin-content-requests" class="hidden space-y-4">
-                <div class="admin-panel-card p-6 border-cyber-green/20">
-                    <h3 class="text-lg font-bold text-white mb-4">طلبات المشاريع المخصصة من العملاء</h3>
-                    <div id="admin-custom-reqs-rows" class="space-y-4"></div>
-                </div>
-            </div>
-        </div>
+            <!-- إدارة المشاريع الخاصة -->
+            <div id="admin-reqs" class="hidden space-y-3"></div>
+        </section>
 
     </main>
 
-    <!-- سلة المشتريات -->
-    <div id="cart-drawer" class="fixed inset-y-0 left-0 w-full sm:w-96 bg-cyber-950 border-r border-cyber-green/20 z-50 transform -translate-x-full transition-transform duration-300 shadow-2xl flex flex-col">
-        <div class="p-5 border-b border-cyber-green/10 flex justify-between items-center bg-slate-900/50">
-            <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-basket-shopping text-cyber-green"></i> حقيبة المشتريات</h3>
-            <button onclick="toggleCartDrawer()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
-        </div>
-        
-        <div id="cart-items-list" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
+    <!-- شريط التنقل السفلي (App Navbar) -->
+    <nav class="bottom-nav fixed bottom-0 w-full flex justify-around items-center p-3 z-40 pb-5 sm:pb-3">
+        <button onclick="changePage('store')" id="nav-store" class="nav-item active flex flex-col items-center gap-1 w-16 text-slate-500 transition-all">
+            <i class="fa-solid fa-store text-xl"></i><span class="text-[10px] font-bold">المعرض</span>
+        </button>
+        <button onclick="changePage('requests')" id="nav-requests" class="nav-item flex flex-col items-center gap-1 w-16 text-slate-500 transition-all">
+            <i class="fa-solid fa-pen-ruler text-xl"></i><span class="text-[10px] font-bold">طلب خاص</span>
+        </button>
+        <button onclick="changePage('downloads')" id="nav-downloads" class="nav-item flex flex-col items-center gap-1 w-16 text-slate-500 transition-all">
+            <i class="fa-solid fa-download text-xl"></i><span class="text-[10px] font-bold">تنزيلاتي</span>
+        </button>
+        <button onclick="changePage('profile')" id="nav-profile" class="nav-item flex flex-col items-center gap-1 w-16 text-slate-500 transition-all">
+            <i class="fa-solid fa-user text-xl"></i><span class="text-[10px] font-bold">حسابي</span>
+        </button>
+        <button id="nav-admin-btn" onclick="changePage('admin')" class="hidden nav-item flex flex-col items-center gap-1 w-16 text-cyber-gold transition-all">
+            <i class="fa-solid fa-crown text-xl"></i><span class="text-[10px] font-bold">الإدارة</span>
+        </button>
+    </nav>
 
-        <div class="p-5 border-t border-cyber-green/10 bg-cyber-950">
-            <div class="flex justify-between items-center mb-4 text-white font-bold">
-                <span>الإجمالي:</span>
-                <span id="cart-total" class="text-cyber-green text-xl font-mono">0.00$</span>
+    <!-- نافذة سلة المشتريات (Drawer) -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 hidden flex justify-end">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="toggleCart()"></div>
+        <div class="relative w-full max-w-sm bg-cyber-900 h-full border-l border-cyber-green/30 flex flex-col transform translate-x-full transition-transform duration-300" id="cart-content">
+            <div class="p-4 border-b border-slate-800 flex justify-between items-center bg-black/50">
+                <h3 class="text-lg font-bold text-white">سلة المشتريات</h3>
+                <button onclick="toggleCart()" class="text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
-            <form id="checkout-form" onsubmit="submitOrder(event)" class="space-y-3">
-                <div class="bg-slate-900 p-3 rounded-lg border border-slate-800 text-xs text-slate-300">
-                    <p class="text-cyber-green font-bold mb-1">محفظة جيب المعتمدة:</p>
-                    <div class="flex justify-between items-center bg-black p-2 rounded">
-                        <span class="font-mono text-sm">737996293</span>
-                        <button type="button" onclick="navigator.clipboard.writeText('737996293'); showToast('تم النسخ', 'success')" class="text-cyber-green hover:text-white px-2">نسخ</button>
+            <div id="cart-items" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
+            <div class="p-5 border-t border-slate-800 bg-black/80">
+                <div class="flex justify-between items-center mb-3 text-white font-bold"><span>الإجمالي:</span><span id="cart-total" class="text-cyber-green text-xl font-mono">0$</span></div>
+                <form onsubmit="checkout(event)" class="space-y-3">
+                    <div class="bg-slate-900 p-3 rounded border border-slate-800">
+                        <p class="text-[10px] text-cyber-green mb-1">حول المبلغ لمحفظة جيب:</p>
+                        <p class="font-mono text-lg text-white font-black tracking-widest text-center" onclick="navigator.clipboard.writeText('737996293'); showToast('تم نسخ الرقم')">737996293 <i class="fa-regular fa-copy text-sm text-slate-500 ml-2"></i></p>
                     </div>
-                </div>
-                <div>
-                    <label class="text-[10px] text-slate-400 block mb-1">ارفع إثبات التحويل (صورة)</label>
-                    <input type="file" id="cust-receipt-file" accept="image/*" required class="form-input-clean text-xs py-2">
-                </div>
-                <button type="submit" class="w-full bg-cyber-green hover:bg-emerald-400 text-black font-bold py-3 rounded-lg transition">تأكيد وإرسال للإدارة</button>
-            </form>
+                    <input type="file" id="receipt-file" accept="image/*" required class="input-cyber text-xs py-2">
+                    <button type="submit" class="w-full bg-cyber-green text-black font-bold py-3 rounded btn-glow">تأكيد الدفع</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة تسجيل دخول الإدارة السري -->
+    <div id="admin-login-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center modal-overlay">
+        <div class="glass-panel p-6 w-[90%] max-w-xs border-cyber-gold">
+            <h3 class="text-cyber-gold font-black mb-4 text-center"><i class="fa-solid fa-lock"></i> دخول المسؤول</h3>
+            <input type="password" id="admin-pass" placeholder="الرمز السري..." class="input-cyber mb-4 text-center tracking-widest">
+            <div class="flex gap-2">
+                <button onclick="verifyAdmin()" class="flex-1 bg-cyber-gold text-black font-bold py-2 rounded">دخول</button>
+                <button onclick="document.getElementById('admin-login-modal').classList.add('hidden')" class="flex-1 bg-slate-800 text-white font-bold py-2 rounded">إلغاء</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // إعدادات المتغيرات الأساسية
-        let cart = [];
-        let products = [];
-        let currentUser = JSON.parse(sessionStorage.getItem('tarzan_logged_user')) || null;
-        let authMode = 'login';
+        // المتغيرات والتهيئة
+        let user = JSON.parse(sessionStorage.getItem('tz_user')) || null;
+        window.authHeaders = user ? { 'x-user-id': user.id } : {};
+        let cart = []; let products = [];
 
-        // خلفية الماتريكس
-        const canvas = document.getElementById('matrix-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".split("");
-        const fontSize = 14; const columns = canvas.width / fontSize;
-        const rainDrops = Array(Math.floor(columns)).fill(1);
+        // الماتريكس
+        const cvs = document.getElementById('matrix'), ctx = cvs.getContext('2d');
+        cvs.width = window.innerWidth; cvs.height = window.innerHeight;
+        const chars = "TARZANALWAQDIY010101".split(""), drops = Array(Math.floor(cvs.width/14)).fill(1);
         setInterval(() => {
-            ctx.fillStyle = 'rgba(2, 2, 4, 0.05)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#00ff66'; ctx.font = fontSize + 'px monospace';
-            for (let i = 0; i < rainDrops.length; i++) {
-                const text = alphabet[Math.floor(Math.random() * alphabet.length)];
-                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
-                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) rainDrops[i] = 0;
-                rainDrops[i]++;
-            }
-        }, 30);
-        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+            ctx.fillStyle = 'rgba(2, 2, 4, 0.1)'; ctx.fillRect(0, 0, cvs.width, cvs.height);
+            ctx.fillStyle = '#00ff66'; ctx.font = '14px monospace';
+            drops.forEach((y, i) => {
+                ctx.fillText(chars[Math.floor(Math.random()*chars.length)], i*14, y*14);
+                if(y*14 > cvs.height && Math.random() > 0.95) drops[i] = 0;
+                drops[i]++;
+            });
+        }, 50);
 
-        // نظام التنبيهات
-        function showToast(message, type = 'cyber') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            let colors = type === 'success' ? 'bg-emerald-900 border-emerald-500 text-emerald-400' : 
-                         type === 'error' ? 'bg-red-900 border-red-500 text-red-400' : 'bg-slate-900 border-cyber-green text-cyber-green';
-            toast.className = `p-4 rounded-xl shadow-lg border ${colors} text-sm font-bold flex items-center gap-2 transform transition-all duration-300 translate-x-[-120%]`;
-            toast.innerHTML = `<span>${message}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => toast.style.transform = 'translateX(0)', 10);
-            setTimeout(() => { toast.style.transform = 'translateX(-120%)'; setTimeout(() => toast.remove(), 300); }, 3000);
+        // التنبيهات المنبثقة
+        function showToast(msg, type='cyber') {
+            const c = document.getElementById('toast-container');
+            const t = document.createElement('div');
+            const color = type==='error'?'bg-red-900/90 border-red-500 text-red-200':type==='success'?'bg-emerald-900/90 border-emerald-500 text-emerald-200':'bg-slate-900/90 border-cyber-green text-cyber-green';
+            t.className = `p-3 rounded-lg shadow-lg border ${color} text-xs font-bold text-center backdrop-blur-md transition-all duration-300 transform scale-90 opacity-0`;
+            t.innerHTML = msg; c.appendChild(t);
+            setTimeout(() => { t.classList.remove('scale-90', 'opacity-0'); t.classList.add('scale-100', 'opacity-100'); }, 10);
+            setTimeout(() => { t.classList.add('scale-90', 'opacity-0'); setTimeout(()=>t.remove(),300); }, 3000);
         }
 
-        // تحديث واجهة المستخدم والقائمة
-        function renderUserProfile() {
-            const section = document.getElementById('user-profile-section');
-            const authBtns = document.getElementById('auth-buttons');
-            const adminNavBtn = document.getElementById('admin-nav-button');
-            const secretBtn = document.getElementById('secret-admin-btn');
-            
-            if (!currentUser) {
-                section.innerHTML = `<div class="text-center py-2"><p class="text-xs text-slate-400">زائر غير مسجل</p></div>`;
-                authBtns.innerHTML = `
-                    <button onclick="showAuthPortal('login')" class="w-full py-2 rounded bg-cyber-green text-black text-xs font-bold transition">تسجيل دخول</button>
-                    <button onclick="showAuthPortal('register')" class="w-full py-2 rounded bg-slate-800 text-slate-300 text-xs transition">إنشاء حساب</button>
-                `;
-                adminNavBtn.classList.add('hidden');
-                secretBtn.classList.remove('hidden');
-                return;
-            }
-
-            secretBtn.classList.add('hidden');
-            let isAdm = currentUser.role === 'admin';
-            let rankClass = isAdm ? 'rank-admin' : 'rank-badge';
-            let rankText = isAdm ? 'ADMIN' : 'VIP';
-
-            if(isAdm) {
-                adminNavBtn.classList.remove('hidden');
-            } else {
-                adminNavBtn.classList.add('hidden');
-            }
-
-            section.innerHTML = `
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg flex items-center justify-center ${rankClass} text-sm">${currentUser.username[0].toUpperCase()}</div>
-                    <div>
-                        <h4 class="font-bold text-white text-sm">${currentUser.username}</h4>
-                        <span class="text-[9px] px-1.5 rounded ${rankClass}">${rankText}</span>
-                    </div>
-                </div>
-            `;
-            authBtns.innerHTML = `<button onclick="logoutUser()" class="w-full py-2 rounded border border-red-500/30 text-red-500 hover:bg-red-500 hover:text-white text-xs font-bold transition">تسجيل خروج</button>`;
-            
-            // إضافة هيدر x-user-id الافتراضي لعمليات fetch القادمة
-            window.authHeaders = { 'x-user-id': currentUser.id };
-        }
-
-        // المصادقة والتسجيل (تشمل الإدارة والمستخدمين)
-        function showAuthPortal(mode) {
-            authMode = mode;
-            changeSection('auth');
-            toggleAuthMode(true);
-        }
-
-        function toggleAuthMode(forceUpdate = false) {
-            if(!forceUpdate) authMode = authMode === 'login' ? 'register' : 'login';
-            document.getElementById('auth-title').innerText = authMode === 'login' ? 'تسجيل الدخول' : 'إنشاء حساب جديد';
-            document.getElementById('auth-submit-btn').innerText = authMode === 'login' ? 'دخول' : 'تسجيل';
-            document.getElementById('auth-switch-btn').innerText = authMode === 'login' ? 'ليس لديك حساب؟ إنشاء جديد' : 'لديك حساب؟ سجل دخولك';
-        }
-
-        // الدخول السري للآدمن (يتم التحقق منه عبر الخادم الآن!)
-        async function promptAdminLogin() {
-            const pass = prompt('أدخل الرمز السري للإدارة (tarzanb):');
-            if (pass) {
-                // ارسال طلب دخول كأدمن للخادم الحقيقي
-                try {
-                    const res = await fetch('/api/auth/login', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ username: 'admin', password: pass })
-                    });
-                    const data = await res.json();
-                    if(data.success && data.user.role === 'admin') {
-                        currentUser = data.user;
-                        sessionStorage.setItem('tarzan_logged_user', JSON.stringify(currentUser));
-                        renderUserProfile();
-                        showToast('تم تسجيل الدخول كمدير للنظام بنجاح', 'success');
-                        changeSection('admin');
-                    } else {
-                        showToast('الرمز السري خاطئ أو ليس لديك صلاحيات', 'error');
-                    }
-                } catch(e) { showToast('خطأ في الاتصال بالخادم', 'error'); }
-            }
-        }
-
-        async function handleAuthSubmit(e) {
-            e.preventDefault();
-            const username = document.getElementById('auth-username').value.trim();
-            const password = document.getElementById('auth-password').value.trim();
-            const url = authMode === 'login' ? '/api/auth/login' : '/api/auth/register';
-
+        // تحديث حالة المستخدم في الواجهة
+        async function checkProfile() {
+            if(!user) { renderAuthBox(); return; }
             try {
-                const res = await fetch(url, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
-                });
+                const res = await fetch('/api/user-profile', {headers: window.authHeaders});
                 const data = await res.json();
-                if (data.success) {
-                    showToast(data.message, 'success');
-                    currentUser = data.user;
-                    sessionStorage.setItem('tarzan_logged_user', JSON.stringify(data.user));
-                    renderUserProfile();
-                    changeSection('store');
-                } else { showToast(data.message, 'error'); }
-            } catch (err) { showToast('خطأ بالاتصال بالخادم', 'error'); }
-        }
-
-        function logoutUser() {
-            currentUser = null;
-            sessionStorage.removeItem('tarzan_logged_user');
-            renderUserProfile();
-            changeSection('store');
-            showToast('تم تسجيل الخروج', 'success');
-        }
-
-        // جلب وعرض المنتجات
-        async function fetchProducts() {
-            try {
-                const res = await fetch('/api/products');
-                products = await res.json();
-                renderProducts(products);
-                if(currentUser && currentUser.role === 'admin') renderAdminProducts();
-            } catch (e) { showToast('فشل جلب المنتجات', 'error'); }
-        }
-
-        function renderProducts(list) {
-            const grid = document.getElementById('products-grid');
-            grid.innerHTML = list.length === 0 ? `<p class="text-slate-500 col-span-full text-center">لا توجد منتجات حالياً.</p>` : '';
-            list.forEach(p => {
-                grid.innerHTML += `
-                    <div class="cyber-glass rounded-xl overflow-hidden flex flex-col transition hover:border-cyber-green/50">
-                        <img src="${p.image}" class="h-40 w-full object-cover">
-                        <div class="p-4 flex-1 flex flex-col justify-between">
-                            <div>
-                                <div class="flex justify-between items-start mb-2">
-                                    <h3 class="font-bold text-lg text-white font-mono">${p.title}</h3>
-                                    <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-1 rounded">${p.type === 'code' ? 'كود' : 'ملف'}</span>
-                                </div>
-                                <p class="text-xs text-slate-400 mb-4 line-clamp-2">${p.description}</p>
-                            </div>
-                            <div class="flex justify-between items-center border-t border-slate-800/50 pt-3">
-                                <span class="font-bold text-cyber-green text-lg font-mono">${p.price}$</span>
-                                <button onclick="addToCart('${p.id}')" class="bg-cyber-green/10 text-cyber-green hover:bg-cyber-green hover:text-black px-3 py-1.5 rounded text-xs font-bold transition">إضافة للسلة</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        function filterProducts(type) {
-            ['all', 'code', 'file'].forEach(t => {
-                const btn = document.getElementById(`filter-${t}`);
-                btn.className = t === type ? "px-4 py-2 text-sm rounded bg-cyber-green text-black font-bold" : "px-4 py-2 text-sm rounded text-slate-400 hover:text-white font-bold";
-            });
-            renderProducts(type === 'all' ? products : products.filter(p => p.type === type));
-        }
-
-        // السلة والطلبات المالية
-        function toggleCartDrawer() { document.getElementById('cart-drawer').classList.toggle('-translate-x-full'); }
-        function toggleMobileSidebar() { document.getElementById('sidebar').classList.toggle('translate-x-full'); }
-
-        function addToCart(id) {
-            if (!currentUser) { showToast('سجل دخولك أولاً', 'error'); return showAuthPortal('login'); }
-            const prod = products.find(p => p.id === id);
-            const exist = cart.find(i => i.product.id === id);
-            exist ? exist.quantity++ : cart.push({ product: prod, quantity: 1 });
-            updateCartUI();
-            showToast('تمت الإضافة للسلة', 'success');
-        }
-
-        function updateCartUI() {
-            const list = document.getElementById('cart-items-list');
-            list.innerHTML = '';
-            let total = 0, count = 0;
-            cart.forEach(item => {
-                total += item.product.price * item.quantity; count += item.quantity;
-                list.innerHTML += `
-                    <div class="flex gap-3 bg-slate-900/50 p-3 rounded-lg border border-slate-800">
-                        <img src="${item.product.image}" class="w-12 h-12 rounded object-cover">
-                        <div class="flex-1">
-                            <h4 class="text-white text-xs font-bold">${item.product.title}</h4>
-                            <div class="flex justify-between text-[10px] mt-1">
-                                <span class="text-cyber-green">${item.product.price}$ × ${item.quantity}</span>
-                                <button onclick="cart.splice(cart.indexOf(${item}), 1); updateCartUI();" class="text-red-500">حذف</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-            document.getElementById('cart-total').innerText = total.toFixed(2) + '$';
-            document.getElementById('sidebar-cart-count').innerText = count;
-            document.getElementById('mobile-cart-count').innerText = count;
-        }
-
-        async function submitOrder(e) {
-            e.preventDefault();
-            if(cart.length === 0) return showToast('السلة فارغة', 'error');
-            const file = document.getElementById('cust-receipt-file').files[0];
-            if(!file) return showToast('ارفع صورة الإيصال', 'error');
-
-            const formData = new FormData();
-            formData.append('cartItems', JSON.stringify(cart));
-            formData.append('total', cart.reduce((s, i) => s + (i.product.price * i.quantity), 0));
-            formData.append('cust-receipt-file', file);
-
-            try {
-                const res = await fetch('/api/orders', {
-                    method: 'POST', headers: window.authHeaders, body: formData
-                });
-                const data = await res.json();
-                if(data.success) {
-                    showToast(data.message, 'success');
-                    cart = []; updateCartUI(); toggleCartDrawer(); changeSection('tracker');
-                } else showToast(data.message, 'error');
-            } catch(e) { showToast('خطأ في إرسال الطلب', 'error'); }
-        }
-
-        // تتبع المشتريات والتنزيل
-        async function fetchMyOrders() {
-            if(!currentUser) return;
-            const container = document.getElementById('tracker-results');
-            try {
-                const res = await fetch('/api/user-orders', { headers: window.authHeaders });
-                const orders = await res.json();
-                container.innerHTML = orders.length === 0 ? '<p class="text-slate-500">لا توجد مشتريات.</p>' : '';
-                orders.reverse().forEach(o => {
-                    let status = o.status === 'pending' ? '<span class="text-yellow-500 bg-yellow-500/10 px-2 py-1 rounded text-xs">قيد المراجعة</span>' :
-                                 o.status === 'accepted' ? '<span class="text-cyber-green bg-cyber-green/10 px-2 py-1 rounded text-xs">مقبول - التنزيل متاح</span>' :
-                                 '<span class="text-red-500 bg-red-500/10 px-2 py-1 rounded text-xs">مرفوض</span>';
-                    
-                    let downloads = o.status === 'accepted' ? o.items.map(i => `<button onclick="downloadFile('${i.product.id}')" class="mt-2 text-xs bg-cyber-green text-black px-3 py-2 rounded font-bold w-full"><i class="fa-solid fa-download"></i> تنزيل ${i.product.title}</button>`).join('') : '';
-
-                    container.innerHTML += `
-                        <div class="cyber-glass p-4 rounded-xl border-slate-800">
-                            <div class="flex justify-between items-center mb-2"><span class="text-xs text-slate-400">${o.date}</span> ${status}</div>
-                            <p class="text-sm font-bold text-white">${o.items.map(i=>i.product.title).join('، ')}</p>
-                            <p class="text-xs text-cyber-gold mt-1">المبلغ: ${o.total}$</p>
-                            ${downloads}
-                        </div>
-                    `;
-                });
-            } catch(e) { console.error(e); }
-        }
-
-        function downloadFile(pid) {
-            window.location.href = `/api/products/download/${pid}`; // أو عبر fetch للتحكم بالتنبيهات
-        }
-
-        // --- دوال لوحة الإدارة (تم إصلاحها برمجياً وتنظيمياً) ---
-        function switchAdminTab(tab) {
-            ['products', 'orders', 'requests'].forEach(t => {
-                document.getElementById(`admin-content-${t}`).classList.add('hidden');
-                document.getElementById(`tab-btn-${t}`).className = "px-5 py-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg font-bold text-sm transition";
-            });
-            document.getElementById(`admin-content-${tab}`).classList.remove('hidden');
-            document.getElementById(`tab-btn-${tab}`).className = "px-5 py-2.5 bg-cyber-gold text-black rounded-lg font-bold text-sm transition shadow-md shadow-cyber-gold/20";
-            
-            if(tab === 'orders') renderAdminOrders();
-            if(tab === 'products') renderAdminProducts();
-            if(tab === 'requests') fetchAdminRequests();
-        }
-
-        // رفع منتج جديد
-        async function adminAddProduct(e) {
-            e.preventDefault();
-            // الآن الـ currentUser.id هو "u-admin" الفعلي!
-            const form = new FormData();
-            form.append('title', document.getElementById('new-prod-title').value);
-            form.append('price', document.getElementById('new-prod-price').value);
-            form.append('type', document.getElementById('new-prod-type').value);
-            form.append('description', document.getElementById('new-prod-desc').value);
-            form.append('new-prod-file', document.getElementById('new-prod-file').files[0]);
-            
-            if(document.getElementById('new-prod-image-file').files[0]){
-                form.append('new-prod-image-file', document.getElementById('new-prod-image-file').files[0]);
-            }
-
-            try {
-                const res = await fetch('/api/products', {
-                    method: 'POST',
-                    headers: { 'x-user-id': currentUser.id }, // هذا الهيدر يمنح الصلاحية الآن بنجاح
-                    body: form
-                });
-                const data = await res.json();
-                if(data.success) {
-                    showToast(data.message, 'success');
-                    document.getElementById('product-form').reset();
-                    fetchProducts(); // يحدّث المعرض وجدول الإدارة
-                } else showToast(data.message, 'error');
-            } catch(e) { showToast('خطأ في الرفع', 'error'); }
-        }
-
-        function renderAdminProducts() {
-            const tbody = document.getElementById('admin-products-rows');
-            tbody.innerHTML = '';
-            products.forEach(p => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td class="font-bold text-white">${p.title}</td>
-                        <td class="text-xs text-slate-400">${p.type === 'code'? 'كود' : 'ملف'}</td>
-                        <td class="text-cyber-green font-mono">${p.price}$</td>
-                        <td class="text-[10px] text-slate-500">${p.fileName}</td>
-                        <td class="text-center"><button onclick="deleteProduct('${p.id}')" class="text-red-500 bg-red-500/10 px-3 py-1 rounded hover:bg-red-500 hover:text-white transition text-xs">إزالة</button></td>
-                    </tr>
-                `;
-            });
-        }
-
-        async function deleteProduct(id) {
-            if(confirm('متأكد من حذف المنتج وملفاته نهائياً؟')) {
-                try {
-                    const res = await fetch(`/api/products/${id}`, { method: 'DELETE', headers: window.authHeaders });
-                    const data = await res.json();
-                    if(data.success) { showToast(data.message, 'success'); fetchProducts(); }
-                } catch(e) {}
-            }
-        }
-
-        async function renderAdminOrders() {
-            const tbody = document.getElementById('admin-orders-rows');
-            try {
-                const res = await fetch('/api/orders', { headers: window.authHeaders });
-                const orders = await res.json();
-                tbody.innerHTML = orders.length === 0 ? '<tr><td colspan="5" class="text-center text-slate-500">لا توجد طلبات</td></tr>' : '';
-                orders.reverse().forEach(o => {
-                    let actions = o.status === 'pending' ? `
-                        <div class="flex gap-1 justify-center">
-                            <button onclick="updateOrderStatus('${o.id}', 'accepted')" class="bg-cyber-green text-black px-2 py-1 rounded text-[10px] font-bold">قبول</button>
-                            <button onclick="updateOrderStatus('${o.id}', 'rejected')" class="bg-red-500 text-white px-2 py-1 rounded text-[10px] font-bold">رفض</button>
-                        </div>
-                    ` : o.status === 'accepted' ? '<span class="text-cyber-green text-xs">مقبول</span>' : '<span class="text-red-500 text-xs">مرفوض</span>';
-
-                    tbody.innerHTML += `
-                        <tr>
-                            <td><span class="block text-white font-bold">${o.customerName}</span><span class="text-[9px] text-slate-500">${o.date}</span></td>
-                            <td class="text-xs text-slate-300">${o.items.map(i=>i.product.title).join('<br>')}</td>
-                            <td class="text-cyber-gold font-mono">${o.total}$</td>
-                            <td><a href="${o.receiptImg}" target="_blank" class="text-cyan-400 hover:underline text-xs">عرض الإيصال</a></td>
-                            <td class="text-center">${actions}</td>
-                        </tr>
-                    `;
-                });
+                if(data.success) { user = data.user; sessionStorage.setItem('tz_user', JSON.stringify(user)); renderAuthBox(); }
+                else logout();
             } catch(e) {}
         }
 
-        async function updateOrderStatus(id, status) {
-            try {
-                const res = await fetch(`/api/orders/${id}/status`, {
-                    method: 'POST', headers: { ...window.authHeaders, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({status})
-                });
-                if((await res.json()).success) renderAdminOrders();
-            } catch(e){}
-        }
-
-        // التنقل الرئيسي
-        function changeSection(sec) {
-            ['store', 'requests', 'tracker', 'admin', 'auth'].forEach(s => {
-                document.getElementById(`${s}-section`).classList.add('hidden');
-            });
-            ['store', 'requests', 'tracker', 'admin'].forEach(s => {
-                const btn = document.getElementById(`nav-${s}`);
-                if(btn) btn.className = "w-full flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition";
-            });
-
-            document.getElementById(`${sec}-section`).classList.remove('hidden');
-            const activeBtn = document.getElementById(`nav-${sec}`);
-            if(activeBtn && sec !== 'admin') activeBtn.className = "w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-cyber-green/10 text-cyber-green font-bold transition";
-            if(activeBtn && sec === 'admin') activeBtn.className = "w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-cyber-gold text-black font-bold transition";
-
-            if(sec === 'tracker') fetchMyOrders();
-            if(sec === 'admin') switchAdminTab('products');
+        function renderAuthBox() {
+            const box = document.getElementById('auth-box');
+            const av = document.getElementById('user-avatar');
+            const admBtn = document.getElementById('nav-admin-btn');
             
-            if(window.innerWidth < 1024 && !document.getElementById('sidebar').classList.contains('translate-x-full')) toggleMobileSidebar();
+            if(!user) {
+                av.classList.add('hidden'); admBtn.classList.add('hidden');
+                box.innerHTML = `
+                    <div class="text-center mb-5"><i class="fa-solid fa-user-shield text-4xl text-cyber-green"></i><h3 class="text-white font-bold mt-2">تسجيل الدخول</h3></div>
+                    <input type="text" id="l-user" placeholder="الاسم" class="input-cyber mb-3"><input type="password" id="l-pass" placeholder="المرور" class="input-cyber mb-4">
+                    <button onclick="auth('login')" class="w-full bg-cyber-green text-black font-bold py-2 rounded mb-2 btn-glow">دخول</button>
+                    <button onclick="auth('register')" class="w-full border border-slate-700 text-slate-300 font-bold py-2 rounded mb-4">إنشاء حساب</button>
+                    <button onclick="document.getElementById('admin-login-modal').classList.remove('hidden')" class="text-[10px] text-slate-600 w-full">دخول الإدارة السري</button>
+                `;
+            } else {
+                av.classList.remove('hidden'); av.innerHTML = `<span class="text-white font-bold text-sm">${user.username[0].toUpperCase()}</span>`;
+                if(user.role === 'admin') admBtn.classList.remove('hidden');
+                
+                let rank = user.role === 'admin' ? '<span class="rank-admin px-2 py-0.5 rounded text-[10px] font-black">ADMIN</span>' : `<span class="rank-vip px-2 py-0.5 rounded text-[10px] font-black">VIP LVL ${Math.floor(user.purchasesCount/2)+1}</span>`;
+                box.innerHTML = `
+                    <div class="text-center mb-5">
+                        <div class="w-20 h-20 mx-auto rounded-full bg-slate-800 border-2 border-cyber-green flex items-center justify-center text-3xl font-black mb-3 text-white">${user.username[0].toUpperCase()}</div>
+                        <h3 class="text-xl text-white font-bold mb-1">${user.username}</h3>${rank}
+                    </div>
+                    <div class="bg-black/50 p-4 rounded-lg border border-slate-800 mb-4 flex justify-between text-center">
+                        <div><p class="text-[10px] text-slate-400">مشتريات</p><p class="text-lg font-mono text-white">${user.purchasesCount}</p></div>
+                        <div><p class="text-[10px] text-slate-400">المدفوعات</p><p class="text-lg font-mono text-cyber-green">${user.totalSpent}$</p></div>
+                    </div>
+                    <button onclick="logout()" class="w-full bg-red-900/50 text-red-500 border border-red-500 font-bold py-2 rounded">تسجيل الخروج</button>
+                `;
+                fetchDownloads();
+            }
         }
 
-        // تهيئة مبدئية
-        renderUserProfile();
-        fetchProducts();
+        async function auth(type) {
+            const u = document.getElementById('l-user').value, p = document.getElementById('l-pass').value;
+            const res = await fetch(`/api/auth/${type}`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({username:u, password:p}) });
+            const data = await res.json();
+            if(data.success) { user = data.user; window.authHeaders = {'x-user-id':user.id}; sessionStorage.setItem('tz_user', JSON.stringify(user)); showToast(data.message,'success'); renderAuthBox(); changePage('store'); }
+            else showToast(data.message, 'error');
+        }
+
+        async function verifyAdmin() {
+            const p = document.getElementById('admin-pass').value;
+            const res = await fetch(`/api/auth/login`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({username:'admin', password:p}) });
+            const data = await res.json();
+            if(data.success && data.user.role === 'admin') {
+                user = data.user; window.authHeaders = {'x-user-id':user.id}; sessionStorage.setItem('tz_user', JSON.stringify(user));
+                document.getElementById('admin-login-modal').classList.add('hidden'); renderAuthBox(); changePage('admin'); showToast('مرحباً طرزان', 'success');
+            } else showToast('رمز خاطئ', 'error');
+        }
+
+        function logout() { user = null; window.authHeaders = {}; sessionStorage.removeItem('tz_user'); renderAuthBox(); changePage('profile'); }
+
+        // التنقل والواجهة
+        function changePage(page) {
+            document.querySelectorAll('.page-section').forEach(s => s.classList.add('hidden'));
+            document.querySelectorAll('.nav-item').forEach(n => { n.classList.remove('active', 'text-cyber-green'); n.classList.add('text-slate-500'); });
+            
+            document.getElementById(`page-${page}`).classList.remove('hidden');
+            const btn = document.getElementById(`nav-${page}`);
+            if(btn) { btn.classList.add('active', 'text-cyber-green'); btn.classList.remove('text-slate-500'); }
+            
+            if(page === 'store') loadStore();
+            if(page === 'downloads' && user) fetchDownloads();
+            if(page === 'requests' && user) fetchMyReqs();
+            if(page === 'admin' && user?.role === 'admin') { loadStore(); adminTab('add'); }
+            
+            if(!user && (page === 'downloads' || page === 'requests' || page === 'admin')) { changePage('profile'); showToast('سجل دخولك أولاً', 'error'); }
+        }
+
+        // المعرض
+        async function loadStore() {
+            const res = await fetch('/api/products'); products = await res.json(); renderStore(products);
+            if(user?.role==='admin') renderAdminProducts();
+        }
+
+        function renderStore(list) {
+            const grid = document.getElementById('products-grid'); grid.innerHTML = '';
+            list.forEach(p => {
+                grid.innerHTML += `
+                    <div class="glass-panel overflow-hidden flex flex-col">
+                        <div class="h-32 bg-slate-800 relative"><img src="${p.image}" class="w-full h-full object-cover opacity-80"><span class="absolute top-2 right-2 bg-black/80 px-2 py-0.5 rounded text-[10px] text-cyber-green border border-cyber-green/50">${p.type==='code'?'كود':'ملف'}</span></div>
+                        <div class="p-4 flex-1 flex flex-col justify-between">
+                            <h3 class="font-bold text-white mb-1 leading-tight">${p.title}</h3>
+                            <p class="text-[10px] text-slate-400 mb-3 line-clamp-2">${p.description}</p>
+                            <div class="flex justify-between items-center"><span class="text-cyber-green font-mono font-bold">${p.price}$</span><button onclick="addToCart('${p.id}')" class="bg-cyber-green/10 text-cyber-green px-3 py-1.5 rounded text-xs font-bold border border-cyber-green/30">إضافة للسلة</button></div>
+                        </div>
+                    </div>`;
+            });
+        }
+        function filterType(t) { renderStore(t==='all' ? products : products.filter(p=>p.type===t)); }
+
+        // السلة والدفع
+        function toggleCart() {
+            const c = document.getElementById('cart-drawer'), cnt = document.getElementById('cart-content');
+            if(c.classList.contains('hidden')) { c.classList.remove('hidden'); setTimeout(()=>cnt.classList.remove('translate-x-full'),10); updateCartUI(); }
+            else { cnt.classList.add('translate-x-full'); setTimeout(()=>c.classList.add('hidden'),300); }
+        }
+        function addToCart(id) {
+            if(!user) return changePage('profile'), showToast('سجل دخولك', 'error');
+            const p = products.find(x=>x.id===id), ex = cart.find(x=>x.p.id===id);
+            ex ? ex.q++ : cart.push({p, q:1}); updateCartUI(); showToast('تمت الإضافة', 'success');
+            document.getElementById('cart-badge').innerText = cart.reduce((s,i)=>s+i.q,0);
+        }
+        function updateCartUI() {
+            let html = '', total = 0;
+            cart.forEach((i, idx) => {
+                total += i.p.price * i.q;
+                html += `<div class="bg-slate-800/50 p-2 rounded flex gap-3 border border-slate-700"><div class="flex-1"><p class="text-xs text-white font-bold">${i.p.title}</p><p class="text-[10px] text-cyber-green mt-1">${i.p.price}$ × ${i.q}</p></div><button onclick="cart.splice(${idx},1); updateCartUI()" class="text-red-500 text-xs px-2"><i class="fa-solid fa-trash"></i></button></div>`;
+            });
+            document.getElementById('cart-items').innerHTML = html || '<p class="text-center text-slate-500 text-xs mt-10">السلة فارغة</p>';
+            document.getElementById('cart-total').innerText = total + '$';
+            document.getElementById('cart-badge').innerText = cart.reduce((s,i)=>s+i.q,0);
+        }
+        async function checkout(e) {
+            e.preventDefault(); if(cart.length===0) return showToast('السلة فارغة','error');
+            const fd = new FormData(); fd.append('cartItems', JSON.stringify(cart)); fd.append('total', cart.reduce((s,i)=>s+i.p.price*i.q,0)); fd.append('cust-receipt-file', document.getElementById('receipt-file').files[0]);
+            const res = await fetch('/api/orders', {method:'POST', headers:window.authHeaders, body:fd});
+            if((await res.json()).success) { showToast('تم الإرسال للإدارة','success'); cart=[]; updateCartUI(); toggleCart(); changePage('downloads'); }
+        }
+
+        // 🔴 التنزيل الآمن المطور (حل المشكلة جذرياً) 🔴
+        async function fetchDownloads() {
+            const res = await fetch('/api/user-orders', {headers:window.authHeaders}); const ords = await res.json();
+            const lst = document.getElementById('downloads-list'); lst.innerHTML='';
+            ords.reverse().forEach(o => {
+                let status = o.status==='pending'?'<span class="text-yellow-500 text-[10px] border border-yellow-500/50 px-1 rounded">مراجعة</span>':o.status==='accepted'?'<span class="text-cyber-green text-[10px] border border-cyber-green/50 px-1 rounded">مكتمل</span>':'<span class="text-red-500 text-[10px] border border-red-500/50 px-1 rounded">مرفوض</span>';
+                let files = o.status==='accepted' ? o.items.map(i=>`<button onclick="downloadSecureFile('${i.product.id}', '${i.product.title}')" class="w-full mt-2 bg-cyber-green/20 text-cyber-green hover:bg-cyber-green hover:text-black font-bold py-2 rounded text-xs transition border border-cyber-green/30"><i class="fa-solid fa-download"></i> تنزيل ${i.product.title}</button>`).join('') : '';
+                lst.innerHTML += `<div class="glass-panel p-4"><div class="flex justify-between items-center mb-2"><p class="text-[10px] text-slate-400">${o.date}</p>${status}</div><p class="text-sm font-bold text-white">${o.items.map(i=>i.product.title).join('، ')}</p>${files}</div>`;
+            });
+        }
+
+        async function downloadSecureFile(pid, title) {
+            showToast('جاري تجهيز وبناء الملف المشفر...', 'cyber');
+            try {
+                // استخدام Fetch بدلاً من الرابط المباشر لإرسال الهيدر الخاص بك
+                const res = await fetch(`/api/products/download/${pid}`, { method: 'GET', headers: window.authHeaders });
+                if (!res.ok) throw new Error((await res.json()).message || 'فشل التحميل');
+                
+                // تحويل الاستجابة إلى ملف حقيقي
+                const blob = await res.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none'; a.href = url;
+                a.download = `${title.replace(/\s+/g, '_')}_TarzanVIP.zip`; // اقتراح اسم
+                document.body.appendChild(a); a.click();
+                window.URL.revokeObjectURL(url);
+                showToast('اكتمل التنزيل بنجاح!', 'success');
+            } catch(e) { showToast(e.message, 'error'); }
+        }
+
+        // الطلبات الخاصة
+        async function submitCustomReq(e) {
+            e.preventDefault();
+            const res = await fetch('/api/requests', {method:'POST', headers:{...window.authHeaders,'Content-Type':'application/json'}, body:JSON.stringify({title:document.getElementById('req-title').value, description:document.getElementById('req-desc').value})});
+            if((await res.json()).success) { showToast('تم إرسال الطلب', 'success'); fetchMyReqs(); e.target.reset(); }
+        }
+        async function fetchMyReqs() {
+            const res = await fetch('/api/requests', {headers:window.authHeaders}); const reqs = await res.json();
+            const lst = document.getElementById('my-requests-list'); lst.innerHTML='';
+            reqs.reverse().forEach(r => {
+                let s = r.status==='pending'?'<span class="text-yellow-500">قيد الدراسة</span>':r.status==='priced'?`<span class="text-cyber-green">مطلوب للدفع: ${r.price}$</span>`:'<span class="text-red-500">مرفوض</span>';
+                lst.innerHTML += `<div class="bg-slate-900 p-3 rounded border border-slate-800"><div class="flex justify-between"><h4 class="font-bold text-sm text-white">${r.title}</h4><span class="text-[10px] font-bold ${s.includes('مطلوب')?'':'border border-current px-1 rounded'}">${s}</span></div><p class="text-[10px] text-slate-400 mt-1">${r.description}</p></div>`;
+            });
+        }
+
+        // 🔴 الإدارة والتنظيم 🔴
+        function adminTab(t) {
+            ['add','orders','reqs'].forEach(x=>{ document.getElementById(`admin-${x}`).classList.add('hidden'); document.getElementById(`tab-${x}`).className='flex-1 py-2 text-center text-slate-400 font-bold'; });
+            document.getElementById(`admin-${t}`).classList.remove('hidden'); document.getElementById(`tab-${t}`).className='flex-1 py-2 text-center bg-cyber-gold text-black font-bold rounded shadow-lg';
+            if(t==='orders') loadAdminOrders(); if(t==='reqs') loadAdminReqs();
+        }
+        async function submitProduct(e) {
+            e.preventDefault(); const fd = new FormData();
+            fd.append('title', document.getElementById('p-title').value); fd.append('price', document.getElementById('p-price').value); fd.append('type', document.getElementById('p-type').value); fd.append('description', document.getElementById('p-desc').value); fd.append('new-prod-file', document.getElementById('p-file').files[0]);
+            const res = await fetch('/api/products', {method:'POST', headers:window.authHeaders, body:fd});
+            if((await res.json()).success) { showToast('تم الرفع!', 'success'); loadStore(); e.target.reset(); }
+        }
+        function renderAdminProducts() {
+            const l = document.getElementById('admin-products-list'); l.innerHTML='';
+            products.forEach(p => l.innerHTML+=`<div class="flex justify-between bg-black/50 p-2 border border-slate-800 rounded"><span class="text-xs text-white">${p.title} - ${p.price}$</span><button onclick="delProd('${p.id}')" class="text-red-500 text-xs">حذف</button></div>`);
+        }
+        async function delProd(id) { if(confirm('حذف؟')) { await fetch(`/api/products/${id}`, {method:'DELETE', headers:window.authHeaders}); loadStore(); } }
+        
+        async function loadAdminOrders() {
+            const res = await fetch('/api/orders', {headers:window.authHeaders}); const ords = await res.json();
+            const l = document.getElementById('admin-orders'); l.innerHTML='';
+            ords.reverse().forEach(o => {
+                let btn = o.status==='pending'?`<div class="flex gap-2 mt-2"><button onclick="updOrd('${o.id}','accepted')" class="flex-1 bg-cyber-green text-black text-[10px] font-bold py-1 rounded">قبول وإتاحة التنزيل</button><button onclick="updOrd('${o.id}','rejected')" class="flex-1 bg-red-900 text-red-200 text-[10px] py-1 rounded">رفض</button></div>`:o.status==='accepted'?'<p class="text-cyber-green text-xs mt-2 text-center border border-cyber-green/30 rounded py-1">تم القبول</p>':'';
+                l.innerHTML+=`<div class="glass-panel p-3"><div class="flex justify-between"><p class="text-white font-bold text-sm">${o.customerName}</p><p class="text-cyber-gold font-mono">${o.total}$</p></div><p class="text-[10px] text-slate-400 mb-2">${o.items.map(i=>i.product.title).join(', ')}</p><a href="${o.receiptImg}" target="_blank" class="block text-center text-xs bg-slate-800 text-white py-1 rounded">🔍 عرض إيصال جيب</a>${btn}</div>`;
+            });
+        }
+        async function updOrd(id,st) { await fetch(`/api/orders/${id}/status`, {method:'POST', headers:{...window.authHeaders,'Content-Type':'application/json'}, body:JSON.stringify({status:st})}); loadAdminOrders(); }
+        
+        async function loadAdminReqs() {
+            const res = await fetch('/api/requests', {headers:window.authHeaders}); const reqs = await res.json();
+            const l = document.getElementById('admin-reqs'); l.innerHTML='';
+            reqs.reverse().forEach(r => {
+                let form = r.status==='pending'?`<div class="flex gap-2 mt-2"><input type="number" id="prc-${r.id}" placeholder="السعر" class="input-cyber py-1 text-xs w-20"><button onclick="priceReq('${r.id}')" class="bg-cyber-gold text-black text-xs font-bold px-3 rounded">تسعير</button></div>`:`<p class="text-cyber-gold text-xs mt-2">مسعر بـ: ${r.price}$</p>`;
+                l.innerHTML+=`<div class="glass-panel p-3"><p class="text-white font-bold text-sm">${r.username} - ${r.title}</p><p class="text-[10px] text-slate-400 mt-1">${r.description}</p>${form}</div>`;
+            });
+        }
+        async function priceReq(id) { await fetch(`/api/requests/${id}/status`, {method:'POST', headers:{...window.authHeaders,'Content-Type':'application/json'}, body:JSON.stringify({status:'priced', price:document.getElementById(`prc-${id}`).value})}); loadAdminReqs(); }
+
+        // البداية
+        checkProfile(); loadStore(); changePage('store');
     </script>
 </body>
 </html>
