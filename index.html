@@ -5,25 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tarzanalwaqdiy Cyber Store | متجر طرزان الوقدي VIP</title>
     
-    <!-- استدعاء المكاتب والأدوات الفخمة للواجهة -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     
-    <link rel="manifest" href="/manifest.json">
-
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
                         cyber: {
-                            950: '#020204',
-                            900: '#070a13',
-                            800: '#0c1322',
-                            green: '#00ff66',
-                            gold: '#d4af37',
-                            neon: '#39ff14'
+                            950: '#020204', 900: '#070a13', 800: '#0c1322',
+                            green: '#00ff66', gold: '#d4af37', neon: '#39ff14'
                         }
                     },
                     fontFamily: {
@@ -35,647 +28,438 @@
         }
     </script>
 
-    <!-- بناء تأثيرات الجمالية والأنيميشن السيبراني الفخم -->
     <style>
         body {
             font-family: 'Cairo', sans-serif;
             background-color: #020204;
             color: #f1f5f9;
             overflow-x: hidden;
-            scrollbar-width: thin;
-            scrollbar-color: #00ff66 #020204;
         }
         
-        ::-webkit-scrollbar {
-            width: 4px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #020204;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #00ff66;
-            box-shadow: 0 0 10px #00ff66;
-            border-radius: 10px;
-        }
-
-        .cyber-glow-border {
-            border: 1px solid rgba(0, 255, 102, 0.15);
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .cyber-glow-border:hover {
-            border-color: rgba(0, 255, 102, 0.7);
-            box-shadow: 0 0 25px rgba(0, 255, 102, 0.25);
-            transform: translateY(-3px);
-        }
-
-        .gold-glow-border {
-            border: 1px solid rgba(212, 175, 55, 0.15);
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .gold-glow-border:hover {
-            border-color: rgba(212, 175, 55, 0.7);
-            box-shadow: 0 0 25px rgba(212, 175, 55, 0.25);
-            transform: translateY(-3px);
-        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #020204; }
+        ::-webkit-scrollbar-thumb { background: #00ff66; border-radius: 10px; }
 
         .cyber-glass {
-            background: rgba(7, 10, 19, 0.85);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
+            background: rgba(7, 10, 19, 0.7);
+            backdrop-filter: blur(15px);
             border: 1px solid rgba(0, 255, 102, 0.1);
         }
-
+        .admin-panel-card {
+            background: #070a13;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 1rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        .form-input-clean {
+            width: 100%; background: #0c1322; border: 1px solid rgba(0,255,102,0.2); 
+            border-radius: 0.5rem; padding: 0.75rem 1rem; color: white; outline: none; transition: 0.3s;
+        }
+        .form-input-clean:focus { border-color: #00ff66; box-shadow: 0 0 10px rgba(0,255,102,0.1); }
+        
         #matrix-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.08;
-            pointer-events: none;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.05; pointer-events: none;
         }
 
-        .rank-bronze { background: linear-gradient(135deg, #cd7f32, #8c531d); }
-        .rank-silver { background: linear-gradient(135deg, #c0c0c0, #7d7d7d); }
-        .rank-gold { background: linear-gradient(135deg, #ffd700, #b8860b); }
-        .rank-legend { background: linear-gradient(135deg, #00ff66, #d4af37); animation: legendGlow 2s infinite alternate; }
-
-        @keyframes legendGlow {
-            0% { box-shadow: 0 0 5px rgba(0,255,102,0.5), 0 0 10px rgba(212,175,55,0.3); }
-            100% { box-shadow: 0 0 15px rgba(0,255,102,0.9), 0 0 20px rgba(212,175,55,0.6); }
+        /* تنسيقات الرتب */
+        .rank-badge {
+            background: linear-gradient(135deg, #00ff66, #008833);
+            color: #020204; font-weight: 900;
         }
+        .rank-admin {
+            background: linear-gradient(135deg, #ffd700, #b8860b);
+            color: #020204; font-weight: 900; animation: adminGlow 2s infinite alternate;
+        }
+        @keyframes adminGlow {
+            0% { box-shadow: 0 0 5px rgba(212,175,55,0.4); }
+            100% { box-shadow: 0 0 15px rgba(212,175,55,0.8); }
+        }
+
+        /* تحسين الجداول */
+        .admin-table th { background-color: rgba(12, 19, 34, 0.8); border-bottom: 2px solid rgba(212,175,55,0.3); color: #d4af37; padding: 1rem; text-align: right; }
+        .admin-table td { padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.05); vertical-align: middle; }
+        .admin-table tr:hover td { background-color: rgba(0,255,102,0.02); }
     </style>
 </head>
 <body class="min-h-screen flex flex-col lg:flex-row">
 
-    <!-- تهيئة لوحة الماتريكس والخلفية الرقمية -->
     <canvas id="matrix-canvas"></canvas>
-
-    <!-- نظام التنبيهات المخصص للـ VIP -->
     <div id="toast-container" class="fixed top-5 left-5 z-50 flex flex-col gap-3 pointer-events-none"></div>
 
-    <!-- نافذة مخصصة للقرارات والتأكيدات -->
-    <div id="custom-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 hidden opacity-0 transition-opacity duration-300">
-        <div class="cyber-glass max-w-md w-full p-6 rounded-2xl border border-cyber-green shadow-2xl transform scale-95 transition-transform duration-300">
-            <h3 id="modal-title" class="text-xl font-black text-cyber-green mb-3 flex items-center gap-2"></h3>
-            <p id="modal-desc" class="text-slate-300 text-sm leading-relaxed mb-6"></p>
-            <div class="flex justify-end gap-3" id="modal-buttons"></div>
-        </div>
-    </div>
-
-    <!-- لافتة التثبيت الفاخرة للـ PWA كـ APK حقيقي -->
-    <div id="pwa-banner" class="fixed top-4 left-4 right-4 md:left-auto md:right-4 md:w-[420px] cyber-glass p-5 rounded-2xl z-50 shadow-2xl border-l-4 border-l-cyber-green transform -translate-y-[180%] transition-all duration-700 ease-out flex items-center gap-4">
-        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyber-green to-teal-800 flex items-center justify-center text-cyber-950 shadow-lg text-xl">
-            <i class="fa-solid fa-download animate-bounce"></i>
-        </div>
-        <div class="flex-1">
-            <h4 class="text-sm font-bold text-white">تثبيت تطبيق Tarzanalwaqdiy VIP</h4>
-            <p class="text-xs text-slate-400 mt-1">احصل على المنصة الفاخرة على شاشتك الرئيسية لتصفح آمن وسريع جداً.</p>
-            <div class="flex gap-3 mt-3">
-                <button onclick="triggerInstall()" class="bg-cyber-green hover:bg-emerald-400 text-cyber-950 font-black text-xs px-4 py-2 rounded-lg transition-all shadow-md shadow-cyber-green/20">تثبيت الآن</button>
-                <button onclick="dismissBanner()" class="text-xs text-slate-400 hover:text-white px-3 py-2 rounded-lg transition">تجاهل</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- هيدر الجوال والشاشات الصغيرة -->
+    <!-- هيدر الجوال -->
     <div class="lg:hidden w-full bg-cyber-950/90 border-b border-cyber-green/15 p-4 flex justify-between items-center sticky top-0 z-40 backdrop-blur-md">
-        <h1 class="text-xl font-black text-cyber-green tracking-wider flex items-center gap-2 font-mono">
-            TARZAN <i class="fa-solid fa-shield-halved text-sm"></i>
-        </h1>
-        <div class="flex items-center gap-4">
+        <h1 class="text-xl font-black text-cyber-green font-mono">TARZAN VIP</h1>
+        <div class="flex gap-4">
             <button onclick="toggleCartDrawer()" class="relative text-cyber-green text-xl">
-                <i class="fa-solid fa-basket-shopping"></i>
+                <i class="fa-solid fa-cart-shopping"></i>
                 <span id="mobile-cart-count" class="absolute -top-2 -left-2 bg-red-600 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold">0</span>
             </button>
-            <button onclick="toggleMobileSidebar()" class="text-cyber-green text-2xl focus:outline-none">
-                <i class="fa-solid fa-bars-staggered"></i>
-            </button>
+            <button onclick="toggleMobileSidebar()" class="text-cyber-green text-2xl"><i class="fa-solid fa-bars"></i></button>
         </div>
     </div>
 
-    <!-- بناء القائمة الجانبية الإمبراطورية الفخمة جداً -->
-    <aside id="sidebar" class="w-80 bg-cyber-950/95 border-l border-cyber-green/15 flex flex-col justify-between fixed lg:sticky inset-y-0 right-0 z-50 transform translate-x-full lg:translate-x-0 transition-transform duration-500 ease-out shadow-2xl lg:shadow-none">
-        
+    <!-- القائمة الجانبية الموحدة والمحسنة -->
+    <aside id="sidebar" class="w-72 bg-cyber-950 border-l border-cyber-green/20 flex flex-col justify-between fixed lg:sticky inset-y-0 right-0 z-50 transform translate-x-full lg:translate-x-0 transition-transform duration-300 shadow-2xl">
         <div>
-            <div class="p-6 text-center border-b border-cyber-green/10 relative">
-                <button onclick="toggleMobileSidebar()" class="lg:hidden absolute top-4 left-4 text-slate-400 hover:text-white">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-                <div class="w-16 h-16 mx-auto mb-3 bg-gradient-to-tr from-cyber-green to-cyber-gold rounded-2xl flex items-center justify-center text-cyber-950 text-2xl font-mono font-black shadow-lg shadow-cyber-green/10">
-                    TZ
-                </div>
-                <h1 class="text-xl font-black text-cyber-green tracking-wider uppercase font-mono">
-                    TARZANALWAQDIY
-                </h1>
-                <p class="text-[9px] text-cyber-gold tracking-[0.2em] font-mono mt-1">VIP SECURE PORTAL v2.0</p>
+            <div class="p-6 text-center border-b border-cyber-green/10">
+                <button onclick="toggleMobileSidebar()" class="lg:hidden absolute top-4 left-4 text-slate-400"><i class="fa-solid fa-xmark"></i></button>
+                <div class="w-16 h-16 mx-auto mb-3 bg-cyber-green rounded-xl flex items-center justify-center text-cyber-950 text-2xl font-black shadow-lg shadow-cyber-green/20">TZ</div>
+                <h1 class="text-lg font-black text-white tracking-widest font-mono">TARZANALWAQDIY</h1>
+                <p class="text-[10px] text-cyber-green tracking-widest">VIP STORE V2.1</p>
             </div>
 
-            <!-- معلومات حساب المستخدم وتصنيف العضوية الملكية -->
-            <div id="user-profile-section" class="p-5 border-b border-cyber-green/10 bg-cyber-900/50"></div>
+            <div id="user-profile-section" class="p-5 border-b border-cyber-green/10 bg-slate-900/30"></div>
 
-            <!-- أزرار التصفح الفخمة جداً -->
-            <nav class="p-5 space-y-2">
-                <button onclick="changeSection('store')" id="nav-store" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl bg-cyber-green/10 text-cyber-green border border-cyber-green/30 font-bold transition-all duration-300">
-                    <i class="fa-solid fa-terminal text-sm"></i>
-                    <span>المعرض السيبراني</span>
+            <nav class="p-4 space-y-1" id="main-nav">
+                <!-- أزرار التصفح العادية -->
+                <button onclick="changeSection('store')" id="nav-store" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-cyber-green/10 text-cyber-green font-bold transition">
+                    <i class="fa-solid fa-store w-5"></i><span>المعرض</span>
                 </button>
-                <button onclick="toggleCartDrawer()" class="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-cyber-green/5 text-slate-400 hover:text-cyber-green transition-all duration-300">
-                    <div class="flex items-center gap-4">
-                        <i class="fa-solid fa-cart-shopping text-sm"></i>
-                        <span>الحقيبة المشفرة</span>
-                    </div>
-                    <span id="sidebar-cart-count" class="bg-cyber-green text-cyber-950 font-black text-xs w-5 h-5 rounded-lg flex items-center justify-center">0</span>
+                <button onclick="toggleCartDrawer()" class="w-full flex items-center justify-between px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
+                    <div class="flex items-center gap-3"><i class="fa-solid fa-cart-shopping w-5"></i><span>السلة</span></div>
+                    <span id="sidebar-cart-count" class="bg-cyber-green text-cyber-950 font-bold text-xs px-2 py-0.5 rounded">0</span>
                 </button>
-                <button onclick="changeSection('requests')" id="nav-requests" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-cyber-green/5 text-slate-400 hover:text-cyber-green transition-all duration-300">
-                    <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
-                    <span>طلب منتج خاص</span>
+                <button onclick="changeSection('requests')" id="nav-requests" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
+                    <i class="fa-solid fa-pen-ruler w-5"></i><span>طلب خاص</span>
                 </button>
-                <button onclick="changeSection('tracker')" id="nav-tracker" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-cyber-green/5 text-slate-400 hover:text-cyber-green transition-all duration-300">
-                    <i class="fa-solid fa-download text-sm"></i>
-                    <span>مشترياتي وتنزيلاتي</span>
+                <button onclick="changeSection('tracker')" id="nav-tracker" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
+                    <i class="fa-solid fa-cloud-arrow-down w-5"></i><span>مشترياتي</span>
                 </button>
+                
+                <!-- زر لوحة الإدارة (يظهر فقط للأدمن) -->
+                <div id="admin-nav-button" class="hidden mt-4 pt-4 border-t border-slate-800">
+                    <button onclick="changeSection('admin')" id="nav-admin" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-cyber-gold border border-cyber-gold/30 hover:bg-cyber-gold/10 font-bold transition">
+                        <i class="fa-solid fa-gauge-high w-5"></i><span>لوحة التحكم</span>
+                    </button>
+                </div>
             </nav>
         </div>
 
-        <!-- أزرار التحكم بالدخول والخروج وبوابة الإدارة الملكية -->
-        <div class="p-5 border-t border-cyber-green/10 bg-cyber-950/90 space-y-3">
-            <div id="auth-buttons" class="grid grid-cols-2 gap-2"></div>
-            <button onclick="loginAdminPrompt()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyber-gold to-yellow-600 text-cyber-950 font-black text-sm tracking-wide hover:from-yellow-500 hover:to-cyber-gold transition-all duration-300 shadow-xl shadow-cyber-gold/5 flex items-center justify-center gap-2">
-                <i class="fa-solid fa-fingerprint text-base animate-pulse"></i>
-                <span>الإدارة الملكية</span>
-            </button>
+        <div class="p-4 border-t border-cyber-green/10 bg-cyber-950">
+            <div id="auth-buttons" class="space-y-2"></div>
+            <!-- زر تسجيل دخول الأدمن المخفي للمستخدم العادي -->
+            <button id="secret-admin-btn" onclick="promptAdminLogin()" class="w-full mt-2 py-2 text-[10px] text-slate-600 hover:text-cyber-gold transition">دخول الإدارة</button>
         </div>
     </aside>
 
-    <!-- مساحة المحتوى الكلية لمتصفح العميل -->
-    <main class="flex-1 p-6 md:p-12 lg:max-h-screen lg:overflow-y-auto z-10">
+    <!-- منطقة المحتوى -->
+    <main class="flex-1 p-4 md:p-8 overflow-y-auto h-screen z-10 relative pb-24">
         
-        <!-- قسم تسجيل الدخول / التسجيل للـ VIP -->
-        <div id="auth-section" class="hidden max-w-md mx-auto my-12 cyber-glass p-8 rounded-3xl border border-cyber-green/20 animate-fade-up">
-            <div class="text-center mb-8">
-                <i class="fa-solid fa-user-lock text-4xl text-cyber-green mb-3"></i>
-                <h3 class="text-2xl font-black text-white" id="auth-title">تسجيل دخول الأعضاء VIP</h3>
-                <p class="text-xs text-slate-400 mt-2">احصل على هويتك المشفرة واستمتع بمزايا التنزيل الفوري ورقمنة العضويات.</p>
+        <!-- قسم المصادقة -->
+        <div id="auth-section" class="hidden max-w-md mx-auto mt-10 cyber-glass p-8 rounded-2xl">
+            <div class="text-center mb-6">
+                <i class="fa-solid fa-shield-halved text-4xl text-cyber-green mb-2"></i>
+                <h2 class="text-2xl font-black text-white" id="auth-title">تسجيل الدخول</h2>
             </div>
-
             <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
-                <div class="space-y-1">
-                    <label class="block text-xs text-slate-400">اسم المستخدم</label>
-                    <input type="text" id="auth-username" required class="w-full bg-cyber-950 border border-cyber-green/20 rounded-xl p-3 text-white focus:border-cyber-green outline-none text-sm transition font-mono">
-                </div>
-                <div class="space-y-1">
-                    <label class="block text-xs text-slate-400">كلمة المرور</label>
-                    <input type="password" id="auth-password" required class="w-full bg-cyber-950 border border-cyber-green/20 rounded-xl p-3 text-white focus:border-cyber-green outline-none text-sm transition font-mono">
-                </div>
-                <button type="submit" class="w-full py-3 rounded-xl bg-cyber-green hover:bg-emerald-400 text-cyber-950 font-black text-sm transition shadow-lg shadow-cyber-green/10" id="auth-submit-btn">
-                    ولوج آمن للشبكة
-                </button>
-            </form>
-
-            <p class="text-center text-xs text-slate-400 mt-6">
-                <span id="auth-switch-text">ليس لديك حساب بعد؟</span>
-                <button onclick="toggleAuthMode()" class="text-cyber-green font-bold hover:underline" id="auth-switch-btn">إنشاء حساب مشفر</button>
-            </p>
-        </div>
-
-        <!-- قسم المعرض السيبراني الرئيسي لبيع الأكواد والملفات -->
-        <div id="store-section" class="animate-fade-up">
-            <header class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12 border-b border-cyber-green/10 pb-8">
                 <div>
-                    <h2 class="text-3xl md:text-4xl font-black text-white flex items-center gap-3">
-                        مستودع الأكواد والملفات الفخمة <span class="text-xs px-3 py-1 rounded bg-cyber-green/10 text-cyber-green border border-cyber-green/30 font-mono">VIP STABLE</span>
-                    </h2>
-                    <p class="text-slate-400 mt-2 text-sm">استثمر في أقوى الأكواد البرمجية والملفات الرقمية الحقيقية الجاهزة للتنزيل المباشر والآمن فور القبول.</p>
+                    <label class="text-xs text-slate-400 mb-1 block">اسم المستخدم</label>
+                    <input type="text" id="auth-username" required class="form-input-clean">
                 </div>
-                
-                <div class="flex p-1.5 rounded-xl bg-cyber-900 border border-cyber-green/10">
-                    <button onclick="filterProducts('all')" class="px-5 py-2.5 rounded-lg text-xs md:text-sm font-bold bg-cyber-green text-cyber-950 shadow-md shadow-cyber-green/10 transition" id="filter-all">الكل</button>
-                    <button onclick="filterProducts('code')" class="px-5 py-2.5 rounded-lg text-xs md:text-sm font-bold text-slate-400 hover:text-white transition" id="filter-code">أكواد</button>
-                    <button onclick="filterProducts('file')" class="px-5 py-2.5 rounded-lg text-xs md:text-sm font-bold text-slate-400 hover:text-white transition" id="filter-file">ملفات</button>
+                <div>
+                    <label class="text-xs text-slate-400 mb-1 block">كلمة المرور</label>
+                    <input type="password" id="auth-password" required class="form-input-clean">
                 </div>
-            </header>
-
-            <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 animate-fade-up"></div>
+                <button type="submit" class="w-full py-3 bg-cyber-green text-cyber-950 font-bold rounded-lg hover:bg-emerald-400 transition" id="auth-submit-btn">دخول</button>
+            </form>
+            <div class="text-center mt-4">
+                <button onclick="toggleAuthMode()" id="auth-switch-btn" class="text-xs text-slate-400 hover:text-cyber-green underline">إنشاء حساب جديد</button>
+            </div>
         </div>
 
-        <!-- قسم طلب تصميم برمجي خاص وعرض الطلبات السابقة -->
-        <div id="requests-section" class="hidden animate-fade-up max-w-3xl mx-auto">
-            <div class="text-center mb-8">
-                <i class="fa-solid fa-cube text-4xl text-cyber-green mb-3"></i>
-                <h2 class="text-3xl font-black text-white">طلب برمجية أو تصميم خاص</h2>
-                <p class="text-slate-400 text-sm mt-1">اكتب مواصفات الأداة، السكربت، أو التطبيق الذي ترغب في أن يقوم طرزان بتصميمه لك بشكل احترافي ومحمي.</p>
+        <!-- المعرض -->
+        <div id="store-section" class="animate-fade-up">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                <h2 class="text-3xl font-black text-white">المعرض السيبراني</h2>
+                <div class="flex bg-slate-900 rounded-lg p-1 border border-slate-800">
+                    <button onclick="filterProducts('all')" class="px-4 py-2 text-sm rounded bg-cyber-green text-black font-bold" id="filter-all">الكل</button>
+                    <button onclick="filterProducts('code')" class="px-4 py-2 text-sm rounded text-slate-400 hover:text-white font-bold" id="filter-code">أكواد</button>
+                    <button onclick="filterProducts('file')" class="px-4 py-2 text-sm rounded text-slate-400 hover:text-white font-bold" id="filter-file">ملفات</button>
+                </div>
             </div>
+            <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+        </div>
 
-            <div class="cyber-glass p-8 rounded-3xl border border-cyber-green/20">
-                <form id="custom-request-form" onsubmit="submitCustomRequest(event)" class="space-y-6">
-                    <div class="space-y-2">
-                        <label class="block text-sm font-bold text-slate-300">عنوان الطلب الفخم</label>
-                        <input type="text" id="req-title" required placeholder="مثال: بوت تليجرام مشفر للمضاربة التلقائية" class="w-full bg-cyber-950 border border-cyber-green/20 focus:border-cyber-green rounded-xl p-4 text-white outline-none text-sm transition">
-                    </div>
-                    <div class="space-y-2">
-                        <label class="block text-sm font-bold text-slate-300">الوصف التفصيلي الدقيق للمشروع</label>
-                        <textarea id="req-desc" rows="6" required placeholder="يرجى وصف ما تريده بدقة، مثل لغات البرمجة المفضلة، المميزات، وطريقة عمل الأداة..." class="w-full bg-cyber-950 border border-cyber-green/20 focus:border-cyber-green rounded-xl p-4 text-white outline-none text-sm transition"></textarea>
-                    </div>
-                    <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-cyber-green to-emerald-600 text-cyber-950 font-black text-sm transition shadow-lg shadow-cyber-green/10 flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-paper-plane"></i> إرسال تفاصيل الطلب لطرزان للتقييم والتصميم
-                    </button>
+        <!-- قسم الطلبات الخاصة -->
+        <div id="requests-section" class="hidden animate-fade-up max-w-4xl mx-auto">
+            <h2 class="text-2xl font-black text-white mb-6">طلب مشروع خاص</h2>
+            <div class="cyber-glass p-6 rounded-2xl mb-8">
+                <form id="custom-request-form" onsubmit="submitCustomRequest(event)" class="space-y-4">
+                    <input type="text" id="req-title" required placeholder="عنوان الطلب..." class="form-input-clean">
+                    <textarea id="req-desc" rows="4" required placeholder="اشرح تفاصيل المشروع بدقة..." class="form-input-clean"></textarea>
+                    <button type="submit" class="bg-cyber-green text-black font-bold py-3 px-6 rounded-lg w-full md:w-auto">إرسال الطلب</button>
                 </form>
             </div>
-
-            <div class="mt-8 space-y-4">
-                <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-list-check text-cyber-green"></i> طلباتك الخاصة السابقة</h3>
-                <div id="my-requests-list" class="space-y-4"></div>
-            </div>
+            <h3 class="font-bold text-white mb-4">طلباتك السابقة</h3>
+            <div id="my-requests-list" class="space-y-3"></div>
         </div>
 
-        <!-- قسم تتبع الطلبيات وتنزيل الملفات المشتراة بعد القبول الإداري -->
+        <!-- قسم المشتريات والتنزيل -->
         <div id="tracker-section" class="hidden animate-fade-up max-w-4xl mx-auto">
-            <h2 class="text-3xl font-black text-cyber-green mb-6 flex items-center gap-3 font-mono">
-                <i class="fa-solid fa-user-shield"></i> SECURE DECRYPTOR & DOWNLOADS
-            </h2>
-            <p class="text-slate-400 mb-8 text-sm">بمجرد موافقة الإدارة على إثبات التحويل المالي لمحافظ جيب المعتمدة، ستتمكن من تنزيل الملف الأصلي المرفوع فوراً وبشكل حقيقي وآمن بالكامل.</p>
-            
-            <div id="tracker-results" class="space-y-6"></div>
+            <h2 class="text-2xl font-black text-white mb-6">مشترياتي وتنزيلاتي</h2>
+            <div id="tracker-results" class="space-y-4"></div>
         </div>
 
-        <!-- لوحة التحكم الإدارية الملكية لطرزان للتحكم المطلق -->
-        <div id="admin-section" class="hidden animate-fade-up space-y-12">
-            <div class="flex items-center justify-between border-b border-cyber-green/20 pb-6">
+        <!-- 🔴 لوحة الإدارة المرتبة والجديدة كلياً 🔴 -->
+        <div id="admin-section" class="hidden animate-fade-up">
+            <div class="flex items-center justify-between mb-8 border-b border-cyber-gold/20 pb-4">
                 <div>
-                    <h2 class="text-3xl font-black text-cyber-gold flex items-center gap-3">
-                        <i class="fa-solid fa-shield-virus"></i> لوحة الإدارة السيبرانية لـ طرزان
-                    </h2>
-                    <p class="text-xs text-slate-400 mt-1">تحكم بالمتجر، أضف برمجياتك، وقم بالموافقة على عمليات الدفع وتنزيل الملفات الحقيقية.</p>
-                </div>
-                <button onclick="logoutAdmin()" class="bg-red-600/10 text-red-500 border border-red-500/30 hover:bg-red-600 hover:text-white px-5 py-2.5 rounded-xl font-bold transition">خروج آمن</button>
-            </div>
-
-            <div class="flex gap-4 border-b border-slate-800 pb-4">
-                <button onclick="toggleAdminTab('orders')" id="btn-admin-orders" class="px-6 py-3 rounded-xl bg-cyber-green text-cyber-950 font-black text-sm transition">إدارة المعاملات المالية والتحميلات</button>
-                <button onclick="toggleAdminTab('products')" id="btn-admin-products" class="px-6 py-3 rounded-xl text-slate-400 hover:text-white font-bold text-sm transition">رفع منتجات وملفات جديدة</button>
-                <button onclick="toggleAdminTab('custom-reqs')" id="btn-admin-reqs" class="px-6 py-3 rounded-xl text-slate-400 hover:text-white font-bold text-sm transition">طلبات البرمجيات الخاصة</button>
-            </div>
-
-            <!-- تبويب إدارة الطلبيات وإيصالات جيب -->
-            <div id="admin-tab-orders" class="space-y-6 animate-fade-up">
-                <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-receipt text-cyber-gold"></i> فحص فواتير وإيصالات جيب (737996293)</h3>
-                
-                <div class="overflow-x-auto cyber-glass rounded-2xl border border-cyber-green/15">
-                    <table class="w-full text-right text-sm">
-                        <thead class="bg-cyber-900 border-b border-cyber-green/10 text-cyber-green">
-                            <tr>
-                                <th class="p-5 font-bold">العميل العضو</th>
-                                <th class="p-5 font-bold">المنتجات والملفات</th>
-                                <th class="p-5 font-bold">المبلغ</th>
-                                <th class="p-5 font-bold">إثبات الدفع</th>
-                                <th class="p-5 font-bold text-center">إجراءات القبول الفوري للتحميل</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-orders-rows" class="divide-y divide-slate-800"></tbody>
-                    </table>
+                    <h2 class="text-3xl font-black text-cyber-gold"><i class="fa-solid fa-gauge"></i> لوحة تحكم الإدارة</h2>
+                    <p class="text-slate-400 text-sm mt-1">إدارة المتجر، المنتجات، والطلبات بصلاحيات كاملة.</p>
                 </div>
             </div>
 
-            <!-- تبويب رفع المنتجات وملفات التحميل الحقيقية -->
-            <div id="admin-tab-products" class="hidden space-y-8 animate-fade-up">
-                <div class="cyber-glass p-8 rounded-2xl border border-cyber-gold/20">
-                    <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                        <i class="fa-solid fa-plus text-cyber-gold"></i> رفع منتج سيبراني جديد مع كوده أو ملفه الحقيقي
-                    </h3>
-                    <form id="product-form" onsubmit="adminAddProduct(event)" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="space-y-2">
-                            <label class="block text-xs font-semibold text-slate-400">اسم الكود أو البرمجية</label>
-                            <input type="text" id="new-prod-title" required class="w-full bg-cyber-950 border border-cyber-green/20 focus:border-cyber-green rounded-xl p-3.5 text-white outline-none transition text-sm">
+            <!-- تبويبات الإدارة العلوية -->
+            <div class="flex flex-wrap gap-2 mb-6">
+                <button onclick="switchAdminTab('products')" id="tab-btn-products" class="px-5 py-2.5 bg-cyber-gold text-black rounded-lg font-bold text-sm transition shadow-md shadow-cyber-gold/20"><i class="fa-solid fa-box"></i> إدارة المنتجات والرفع</button>
+                <button onclick="switchAdminTab('orders')" id="tab-btn-orders" class="px-5 py-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg font-bold text-sm transition"><i class="fa-solid fa-receipt"></i> مراجعة المدفوعات</button>
+                <button onclick="switchAdminTab('requests')" id="tab-btn-requests" class="px-5 py-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg font-bold text-sm transition"><i class="fa-solid fa-envelope-open-text"></i> الطلبات الخاصة</button>
+            </div>
+
+            <!-- محتوى الإدارة: المنتجات والرفع -->
+            <div id="admin-content-products" class="space-y-6">
+                <!-- فورم رفع منتج جديد بتصميم نظيف (شبكي) -->
+                <div class="admin-panel-card p-6">
+                    <h3 class="text-xl font-bold text-cyber-gold mb-4 border-b border-slate-800 pb-2"><i class="fa-solid fa-upload"></i> إضافة منتج جديد</h3>
+                    <form id="product-form" onsubmit="adminAddProduct(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-xs text-slate-400 mb-1 block">اسم المنتج</label>
+                            <input type="text" id="new-prod-title" required class="form-input-clean">
                         </div>
-                        <div class="space-y-2">
-                            <label class="block text-xs font-semibold text-slate-400">السعر الملكي ($)</label>
-                            <input type="number" step="0.01" id="new-prod-price" required class="w-full bg-cyber-950 border border-cyber-green/20 focus:border-cyber-green rounded-xl p-3.5 text-white outline-none transition text-sm">
+                        <div>
+                            <label class="text-xs text-slate-400 mb-1 block">السعر ($)</label>
+                            <input type="number" step="0.01" id="new-prod-price" required class="form-input-clean">
                         </div>
-                        <div class="space-y-2">
-                            <label class="block text-xs font-semibold text-slate-400">تصنيف البرمجية</label>
-                            <select id="new-prod-type" required class="w-full bg-cyber-950 border border-cyber-green/20 focus:border-cyber-green rounded-xl p-3.5 text-white outline-none transition text-sm">
+                        <div>
+                            <label class="text-xs text-slate-400 mb-1 block">النوع</label>
+                            <select id="new-prod-type" required class="form-input-clean">
                                 <option value="code">كود برمجي</option>
-                                <option value="file">ملف رقمي جاهز</option>
+                                <option value="file">ملف رقمي</option>
                             </select>
                         </div>
-                        <div class="space-y-2">
-                            <label class="block text-xs font-semibold text-slate-400">ارفع الملف الفعلي (.zip, .txt, .js) الذي سيتسلمه المشتري</label>
-                            <input type="file" id="new-prod-file" required class="w-full bg-cyber-950 border border-cyber-green/20 focus:border-cyber-green rounded-xl p-2.5 text-slate-400 outline-none transition text-xs">
+                        <div>
+                            <label class="text-xs text-cyber-gold mb-1 block font-bold">الملف الفعلي (المشفر للعميل)</label>
+                            <input type="file" id="new-prod-file" required class="form-input-clean border-cyber-gold/40 bg-cyber-900 cursor-pointer">
                         </div>
-                        <div class="md:col-span-2 space-y-2">
-                            <label class="block text-xs font-semibold text-slate-400">صورة العرض الفاخرة للبرمجية</label>
-                            <input type="file" id="new-prod-image-file" accept="image/*" class="w-full bg-cyber-950 border border-cyber-green/20 focus:border-cyber-green rounded-xl p-2.5 text-slate-400 outline-none transition text-xs">
+                        <div class="md:col-span-2">
+                            <label class="text-xs text-slate-400 mb-1 block">صورة العرض (اختياري)</label>
+                            <input type="file" id="new-prod-image-file" accept="image/*" class="form-input-clean">
                         </div>
-                        <div class="md:col-span-2 space-y-2">
-                            <label class="block text-xs font-semibold text-slate-400">وصف الميزات والخصائص بالتفصيل</label>
-                            <textarea id="new-prod-desc" rows="4" required class="w-full bg-cyber-950 border border-cyber-green/20 focus:border-cyber-green rounded-xl p-3.5 text-white outline-none transition text-sm"></textarea>
+                        <div class="md:col-span-2">
+                            <label class="text-xs text-slate-400 mb-1 block">الوصف المكتوب</label>
+                            <textarea id="new-prod-desc" rows="3" required class="form-input-clean"></textarea>
                         </div>
-                        <div class="md:col-span-2 text-left">
-                            <button type="submit" class="bg-cyber-gold hover:bg-yellow-500 text-cyber-950 font-black px-8 py-4 rounded-xl transition shadow-lg shadow-cyber-gold/10">رفع وتشفير البرمجية في المعرض</button>
+                        <div class="md:col-span-2 mt-2">
+                            <button type="submit" class="w-full bg-cyber-gold hover:bg-yellow-500 text-black font-black py-3 rounded-lg transition shadow-lg text-lg">
+                                رفع المنتج للمعرض
+                            </button>
                         </div>
                     </form>
                 </div>
 
-                <!-- جدول المنتجات الحالية المتاحة للحذف والتحكم -->
-                <div class="cyber-glass p-8 rounded-2xl border border-cyber-green/15">
-                    <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2"><i class="fa-solid fa-boxes-packing text-cyber-green"></i> إدارة المنتجات المتوفرة حالياً بالمتجر</h3>
+                <!-- جدول المنتجات الحالية -->
+                <div class="admin-panel-card overflow-hidden">
+                    <h3 class="text-lg font-bold text-white p-5 border-b border-slate-800 bg-slate-900/50">المنتجات المتوفرة حالياً</h3>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-right text-sm">
-                            <thead class="bg-cyber-900 border-b border-cyber-green/10 text-cyber-green">
+                        <table class="w-full admin-table text-sm">
+                            <thead>
                                 <tr>
-                                    <th class="p-4">المنتج</th>
-                                    <th class="p-4">نوعه</th>
-                                    <th class="p-4">اسم الملف الحقيقي المرفق</th>
-                                    <th class="p-4">السعر</th>
-                                    <th class="p-4 text-center">الإجراء</th>
+                                    <th>اسم المنتج</th>
+                                    <th>النوع</th>
+                                    <th>السعر</th>
+                                    <th>الملف المرفق</th>
+                                    <th class="text-center">الإجراء</th>
                                 </tr>
                             </thead>
-                            <tbody id="admin-products-rows" class="divide-y divide-slate-800"></tbody>
+                            <tbody id="admin-products-rows"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- تبويب إدارة طلبات التصميم الخاصة للعملاء -->
-            <div id="admin-tab-custom-reqs" class="hidden space-y-6 animate-fade-up">
-                <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles text-cyber-gold"></i> طلبات التصميم البرمجي المخصصة</h3>
-                <div id="admin-custom-reqs-rows" class="space-y-4"></div>
+            <!-- محتوى الإدارة: المدفوعات -->
+            <div id="admin-content-orders" class="hidden admin-panel-card overflow-hidden">
+                <h3 class="text-lg font-bold text-white p-5 border-b border-slate-800 bg-slate-900/50">مراجعة التحويلات المالية (جيب)</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full admin-table text-sm">
+                        <thead>
+                            <tr>
+                                <th>العميل & التاريخ</th>
+                                <th>المشتريات</th>
+                                <th>المبلغ</th>
+                                <th>الإثبات</th>
+                                <th class="text-center">القرار</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-orders-rows"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- محتوى الإدارة: الطلبات الخاصة -->
+            <div id="admin-content-requests" class="hidden space-y-4">
+                <div class="admin-panel-card p-6 border-cyber-green/20">
+                    <h3 class="text-lg font-bold text-white mb-4">طلبات المشاريع المخصصة من العملاء</h3>
+                    <div id="admin-custom-reqs-rows" class="space-y-4"></div>
+                </div>
             </div>
         </div>
+
     </main>
 
-    <!-- بناء حقيبة المشتريات المشفرة الفخمة جداً -->
-    <div id="cart-drawer" class="fixed inset-y-0 left-0 w-full sm:w-[480px] bg-cyber-950 border-r border-cyber-green/20 z-50 transform -translate-x-full transition-transform duration-500 ease-out flex flex-col justify-between shadow-2xl">
-        <div class="p-6 flex flex-col h-full justify-between">
-            <div>
-                <div class="flex items-center justify-between border-b border-cyber-green/10 pb-5">
-                    <h3 class="text-xl font-bold text-white flex items-center gap-2 font-mono">
-                        <i class="fa-solid fa-basket-shopping text-cyber-green animate-pulse"></i> SECURE BASKET
-                    </h3>
-                    <button onclick="toggleCartDrawer()" class="text-slate-400 hover:text-white transition"><i class="fa-solid fa-xmark text-xl"></i></button>
-                </div>
-                
-                <div id="cart-items-list" class="mt-6 space-y-4 overflow-y-auto max-h-[45vh] pr-1"></div>
+    <!-- سلة المشتريات -->
+    <div id="cart-drawer" class="fixed inset-y-0 left-0 w-full sm:w-96 bg-cyber-950 border-r border-cyber-green/20 z-50 transform -translate-x-full transition-transform duration-300 shadow-2xl flex flex-col">
+        <div class="p-5 border-b border-cyber-green/10 flex justify-between items-center bg-slate-900/50">
+            <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-basket-shopping text-cyber-green"></i> حقيبة المشتريات</h3>
+            <button onclick="toggleCartDrawer()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+        </div>
+        
+        <div id="cart-items-list" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
+
+        <div class="p-5 border-t border-cyber-green/10 bg-cyber-950">
+            <div class="flex justify-between items-center mb-4 text-white font-bold">
+                <span>الإجمالي:</span>
+                <span id="cart-total" class="text-cyber-green text-xl font-mono">0.00$</span>
             </div>
-
-            <div class="border-t border-cyber-green/10 pt-6 space-y-4 bg-cyber-950">
-                <div class="flex justify-between items-center text-lg font-bold">
-                    <span>قيمة الفاتورة المشفرة:</span>
-                    <span id="cart-total" class="text-cyber-green font-mono text-2xl">0.00$</span>
+            <form id="checkout-form" onsubmit="submitOrder(event)" class="space-y-3">
+                <div class="bg-slate-900 p-3 rounded-lg border border-slate-800 text-xs text-slate-300">
+                    <p class="text-cyber-green font-bold mb-1">محفظة جيب المعتمدة:</p>
+                    <div class="flex justify-between items-center bg-black p-2 rounded">
+                        <span class="font-mono text-sm">737996293</span>
+                        <button type="button" onclick="navigator.clipboard.writeText('737996293'); showToast('تم النسخ', 'success')" class="text-cyber-green hover:text-white px-2">نسخ</button>
+                    </div>
                 </div>
-
-                <form id="checkout-form" onsubmit="submitOrder(event)" class="space-y-4">
-                    <div class="p-4 rounded-xl bg-cyber-green/5 border border-cyber-green/20 space-y-2 text-xs">
-                        <p class="font-bold text-cyber-green text-sm flex items-center gap-1">
-                            <i class="fa-solid fa-wallet"></i> تحويل مالي معتمد:
-                        </p>
-                        <p class="text-slate-300">قم بتحويل قيمة المشتريات بالدولار أو ما يقابلها إلى محفظة جيب:</p>
-                        <div class="flex items-center justify-between bg-cyber-950 p-2.5 rounded-lg border border-cyber-green/30">
-                            <span class="text-cyber-green font-mono font-bold text-base" id="wallet-number">737996293</span>
-                            <button type="button" onclick="copyWallet()" class="bg-cyber-green hover:bg-emerald-400 text-cyber-950 font-bold px-3 py-1 rounded text-[10px] transition">نسخ الرقم</button>
-                        </div>
-                    </div>
-
-                    <div class="space-y-1">
-                        <label class="block text-[10px] text-slate-400">اسم العميل بالكامل (المسجل بالحساب)</label>
-                        <input type="text" id="cust-name" required readonly class="w-full bg-cyber-900 border border-cyber-green/10 rounded-xl p-3 text-slate-400 outline-none text-xs transition">
-                    </div>
-
-                    <div class="space-y-1">
-                        <label class="block text-[10px] text-slate-400">ارفع صورة إثبات التحويل المالي (Screenshot):</label>
-                        <input type="file" id="cust-receipt-file" accept="image/*" required class="w-full bg-cyber-900 border border-cyber-green/10 focus:border-cyber-green rounded-xl p-2.5 text-slate-400 outline-none text-[10px] transition">
-                    </div>
-
-                    <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-cyber-green to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-cyber-950 font-black text-sm tracking-wide transition shadow-lg shadow-cyber-green/10">
-                        تأكيد وإرسال الفاتورة للمطابقة
-                    </button>
-                </form>
-            </div>
+                <div>
+                    <label class="text-[10px] text-slate-400 block mb-1">ارفع إثبات التحويل (صورة)</label>
+                    <input type="file" id="cust-receipt-file" accept="image/*" required class="form-input-clean text-xs py-2">
+                </div>
+                <button type="submit" class="w-full bg-cyber-green hover:bg-emerald-400 text-black font-bold py-3 rounded-lg transition">تأكيد وإرسال للإدارة</button>
+            </form>
         </div>
     </div>
 
-    <!-- بناء السكربتات وتدفق العمليات البرمجية والحماية للعميل -->
     <script>
+        // إعدادات المتغيرات الأساسية
         let cart = [];
         let products = [];
-        let orders = [];
-        let customRequests = [];
         let currentUser = JSON.parse(sessionStorage.getItem('tarzan_logged_user')) || null;
-        let deferredPrompt;
+        let authMode = 'login';
 
-        // تأثير الماتريكس الرائع في الخلفية
+        // خلفية الماتريكس
         const canvas = document.getElementById('matrix-canvas');
         const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        const katakana = "ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        const alphabet = katakana.split("");
-        const fontSize = 16;
-        const columns = canvas.width / fontSize;
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".split("");
+        const fontSize = 14; const columns = canvas.width / fontSize;
         const rainDrops = Array(Math.floor(columns)).fill(1);
-
-        function drawMatrix() {
-            ctx.fillStyle = 'rgba(2, 2, 4, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#00ff66';
-            ctx.font = fontSize + 'px monospace';
-
+        setInterval(() => {
+            ctx.fillStyle = 'rgba(2, 2, 4, 0.05)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#00ff66'; ctx.font = fontSize + 'px monospace';
             for (let i = 0; i < rainDrops.length; i++) {
                 const text = alphabet[Math.floor(Math.random() * alphabet.length)];
                 ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
-                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                    rainDrops[i] = 0;
-                }
+                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) rainDrops[i] = 0;
                 rainDrops[i]++;
             }
-        }
-        setInterval(drawMatrix, 30);
+        }, 30);
+        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
 
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
-
-        // إدارة PWA
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            document.getElementById('pwa-banner').style.transform = 'translateY(0)';
-        });
-
-        function dismissBanner() {
-            document.getElementById('pwa-banner').style.transform = 'translateY(-180%)';
-        }
-
-        function triggerInstall() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        showToast('مرحباً بك في عالم طرزان المشفر مباشرة من هاتفك!', 'success');
-                    }
-                    dismissBanner();
-                });
-            }
-        }
-
-        // نظام التنبيهات المخصص (Custom Toast)
+        // نظام التنبيهات
         function showToast(message, type = 'cyber') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            toast.className = `p-4 rounded-xl shadow-2xl flex items-center gap-3 border transition-all duration-500 transform translate-x-[-120%] pointer-events-auto min-w-[280px] text-xs font-bold `;
-            
-            if (type === 'success') {
-                toast.className += 'bg-emerald-950/90 border-emerald-500/50 text-cyber-green';
-                toast.innerHTML = `<i class="fa-solid fa-circle-check text-base"></i> <span>${message}</span>`;
-            } else if (type === 'error') {
-                toast.className += 'bg-red-950/90 border-red-500/50 text-red-400';
-                toast.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-base"></i> <span>${message}</span>`;
-            } else {
-                toast.className += 'bg-cyber-900/95 border-cyber-green/50 text-cyber-green';
-                toast.innerHTML = `<i class="fa-solid fa-user-shield text-base"></i> <span>${message}</span>`;
-            }
-
+            let colors = type === 'success' ? 'bg-emerald-900 border-emerald-500 text-emerald-400' : 
+                         type === 'error' ? 'bg-red-900 border-red-500 text-red-400' : 'bg-slate-900 border-cyber-green text-cyber-green';
+            toast.className = `p-4 rounded-xl shadow-lg border ${colors} text-sm font-bold flex items-center gap-2 transform transition-all duration-300 translate-x-[-120%]`;
+            toast.innerHTML = `<span>${message}</span>`;
             container.appendChild(toast);
-            setTimeout(() => { toast.style.transform = 'translateX(0)'; }, 50);
-            setTimeout(() => {
-                toast.style.transform = 'translateX(-120%)';
-                setTimeout(() => { toast.remove(); }, 500);
-            }, 4000);
+            setTimeout(() => toast.style.transform = 'translateX(0)', 10);
+            setTimeout(() => { toast.style.transform = 'translateX(-120%)'; setTimeout(() => toast.remove(), 300); }, 3000);
         }
 
-        // بناء وتخصيص النوافذ التفاعلية بديل لـ alert و confirm
-        function showCustomModal(title, desc, buttons) {
-            const modal = document.getElementById('custom-modal');
-            document.getElementById('modal-title').innerHTML = title;
-            document.getElementById('modal-desc').innerText = desc;
-            
-            const btnContainer = document.getElementById('modal-buttons');
-            btnContainer.innerHTML = '';
-
-            buttons.forEach(btn => {
-                const b = document.createElement('button');
-                b.className = `px-4 py-2 rounded-xl text-xs font-bold transition-all ${btn.class || 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`;
-                b.innerText = btn.text;
-                b.onclick = () => {
-                    btn.action();
-                    closeCustomModal();
-                };
-                btnContainer.appendChild(b);
-            });
-
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.classList.add('opacity-100');
-                modal.firstElementChild.classList.remove('scale-95');
-                modal.firstElementChild.classList.add('scale-100');
-            }, 50);
-        }
-
-        function closeCustomModal() {
-            const modal = document.getElementById('custom-modal');
-            modal.classList.remove('opacity-100');
-            modal.firstElementChild.classList.add('scale-95');
-            modal.firstElementChild.classList.remove('scale-100');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300);
-        }
-
-        // جلب وعرض معلومات حساب المستخدم وتصنيف العضوية الملكية
+        // تحديث واجهة المستخدم والقائمة
         function renderUserProfile() {
             const section = document.getElementById('user-profile-section');
             const authBtns = document.getElementById('auth-buttons');
+            const adminNavBtn = document.getElementById('admin-nav-button');
+            const secretBtn = document.getElementById('secret-admin-btn');
             
             if (!currentUser) {
-                section.innerHTML = `
-                    <div class="text-center py-2">
-                        <p class="text-xs text-slate-400">تتصفح المتجر كـ <span class="text-cyber-green font-bold">زائر مجهول</span></p>
-                        <p class="text-[10px] text-slate-500 mt-1">سجل دخولك لتتمكن من الشراء والترقي في العضوية.</p>
-                    </div>
-                `;
+                section.innerHTML = `<div class="text-center py-2"><p class="text-xs text-slate-400">زائر غير مسجل</p></div>`;
                 authBtns.innerHTML = `
-                    <button onclick="showAuthPortal('login')" class="py-2.5 rounded-lg bg-cyber-green/10 hover:bg-cyber-green text-cyber-green hover:text-cyber-950 text-xs font-bold border border-cyber-green/20 transition-all text-center">دخول</button>
-                    <button onclick="showAuthPortal('register')" class="py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-bold transition-all text-center">تسجيل</button>
+                    <button onclick="showAuthPortal('login')" class="w-full py-2 rounded bg-cyber-green text-black text-xs font-bold transition">تسجيل دخول</button>
+                    <button onclick="showAuthPortal('register')" class="w-full py-2 rounded bg-slate-800 text-slate-300 text-xs transition">إنشاء حساب</button>
                 `;
+                adminNavBtn.classList.add('hidden');
+                secretBtn.classList.remove('hidden');
                 return;
             }
 
-            let rankClass = "rank-bronze";
-            let rankName = "Bronze VIP";
-            
-            if (currentUser.purchasesCount >= 1 && currentUser.purchasesCount <= 2) {
-                rankClass = "rank-silver";
-                rankName = "Silver VIP";
-            } else if (currentUser.purchasesCount >= 3 && currentUser.purchasesCount <= 5) {
-                rankClass = "rank-gold";
-                rankName = "Gold VIP";
-            } else if (currentUser.purchasesCount > 5) {
-                rankClass = "rank-legend";
-                rankName = "VIP LEGEND";
-            }
+            secretBtn.classList.add('hidden');
+            let isAdm = currentUser.role === 'admin';
+            let rankClass = isAdm ? 'rank-admin' : 'rank-badge';
+            let rankText = isAdm ? 'ADMIN' : 'VIP';
 
-            if (currentUser.role === 'admin') {
-                rankClass = "rank-legend";
-                rankName = "EMPEROR ADMIN";
+            if(isAdm) {
+                adminNavBtn.classList.remove('hidden');
+            } else {
+                adminNavBtn.classList.add('hidden');
             }
 
             section.innerHTML = `
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-mono font-black text-sm uppercase ${rankClass}">
-                        ${currentUser.username[0]}
-                    </div>
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between">
-                            <h4 class="font-bold text-white text-sm font-mono">${currentUser.username}</h4>
-                            <span class="text-[8px] font-black uppercase text-white px-1.5 py-0.5 rounded ${rankClass}">${rankName}</span>
-                        </div>
-                        <p class="text-[10px] text-slate-400 mt-1 flex items-center gap-2">
-                            <span>الطلبات: <b>${currentUser.purchasesCount}</b></span>
-                            <span>الإنفاق: <b class="text-cyber-green">${currentUser.totalSpent.toFixed(2)}$</b></span>
-                        </p>
+                    <div class="w-10 h-10 rounded-lg flex items-center justify-center ${rankClass} text-sm">${currentUser.username[0].toUpperCase()}</div>
+                    <div>
+                        <h4 class="font-bold text-white text-sm">${currentUser.username}</h4>
+                        <span class="text-[9px] px-1.5 rounded ${rankClass}">${rankText}</span>
                     </div>
                 </div>
             `;
-
-            authBtns.innerHTML = `
-                <button onclick="logoutUser()" class="col-span-2 py-2.5 rounded-lg bg-red-600/10 hover:bg-red-600 text-red-500 hover:text-white border border-red-500/20 text-xs font-bold transition-all text-center">تسجيل خروج</button>
-            `;
+            authBtns.innerHTML = `<button onclick="logoutUser()" class="w-full py-2 rounded border border-red-500/30 text-red-500 hover:bg-red-500 hover:text-white text-xs font-bold transition">تسجيل خروج</button>`;
+            
+            // إضافة هيدر x-user-id الافتراضي لعمليات fetch القادمة
+            window.authHeaders = { 'x-user-id': currentUser.id };
         }
 
-        let authMode = 'login';
-
+        // المصادقة والتسجيل (تشمل الإدارة والمستخدمين)
         function showAuthPortal(mode) {
             authMode = mode;
             changeSection('auth');
-            toggleAuthMode();
+            toggleAuthMode(true);
         }
 
-        function toggleAuthMode() {
-            const title = document.getElementById('auth-title');
-            const submitBtn = document.getElementById('auth-submit-btn');
-            const switchText = document.getElementById('auth-switch-text');
-            const switchBtn = document.getElementById('auth-switch-btn');
+        function toggleAuthMode(forceUpdate = false) {
+            if(!forceUpdate) authMode = authMode === 'login' ? 'register' : 'login';
+            document.getElementById('auth-title').innerText = authMode === 'login' ? 'تسجيل الدخول' : 'إنشاء حساب جديد';
+            document.getElementById('auth-submit-btn').innerText = authMode === 'login' ? 'دخول' : 'تسجيل';
+            document.getElementById('auth-switch-btn').innerText = authMode === 'login' ? 'ليس لديك حساب؟ إنشاء جديد' : 'لديك حساب؟ سجل دخولك';
+        }
 
-            if (authMode === 'login') {
-                title.innerText = "تسجيل دخول الأعضاء VIP";
-                submitBtn.innerText = "ولوج آمن للشبكة";
-                switchText.innerText = "ليس لديك حساب بعد؟ ";
-                switchBtn.innerText = "إنشاء حساب مشفر";
-            } else {
-                title.innerText = "إنشاء عضوية VIP جديدة";
-                submitBtn.innerText = "توليد الحساب وتشفيره";
-                switchText.innerText = "لديك حساب بالفعل؟ ";
-                switchBtn.innerText = "تسجيل دخول";
+        // الدخول السري للآدمن (يتم التحقق منه عبر الخادم الآن!)
+        async function promptAdminLogin() {
+            const pass = prompt('أدخل الرمز السري للإدارة (tarzanb):');
+            if (pass) {
+                // ارسال طلب دخول كأدمن للخادم الحقيقي
+                try {
+                    const res = await fetch('/api/auth/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username: 'admin', password: pass })
+                    });
+                    const data = await res.json();
+                    if(data.success && data.user.role === 'admin') {
+                        currentUser = data.user;
+                        sessionStorage.setItem('tarzan_logged_user', JSON.stringify(currentUser));
+                        renderUserProfile();
+                        showToast('تم تسجيل الدخول كمدير للنظام بنجاح', 'success');
+                        changeSection('admin');
+                    } else {
+                        showToast('الرمز السري خاطئ أو ليس لديك صلاحيات', 'error');
+                    }
+                } catch(e) { showToast('خطأ في الاتصال بالخادم', 'error'); }
             }
         }
 
-        // معالجة تسجيل الدخول والاتصال الآمن بالسيرفر
         async function handleAuthSubmit(e) {
             e.preventDefault();
             const username = document.getElementById('auth-username').value.trim();
@@ -683,810 +467,294 @@
             const url = authMode === 'login' ? '/api/auth/login' : '/api/auth/register';
 
             try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                const res = await fetch(url, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password })
                 });
-                const result = await response.json();
-                
-                if (result.success) {
-                    showToast(result.message, 'success');
-                    currentUser = result.user;
-                    sessionStorage.setItem('tarzan_logged_user', JSON.stringify(result.user));
+                const data = await res.json();
+                if (data.success) {
+                    showToast(data.message, 'success');
+                    currentUser = data.user;
+                    sessionStorage.setItem('tarzan_logged_user', JSON.stringify(data.user));
                     renderUserProfile();
                     changeSection('store');
-                    document.getElementById('auth-form').reset();
-                } else {
-                    showToast(result.message, 'error');
-                }
-            } catch (err) {
-                showToast('خطأ في الاتصال بالخادم الرئيسي للموقع.', 'error');
-            }
+                } else { showToast(data.message, 'error'); }
+            } catch (err) { showToast('خطأ بالاتصال بالخادم', 'error'); }
         }
 
         function logoutUser() {
             currentUser = null;
             sessionStorage.removeItem('tarzan_logged_user');
-            cart = [];
-            updateCartUI();
             renderUserProfile();
             changeSection('store');
-            showToast('تم تسجيل الخروج وتأمين الجلسة بنجاح.', 'success');
+            showToast('تم تسجيل الخروج', 'success');
         }
 
-        // جلب المنتجات الفعلية وتوليد كروت المعرض
+        // جلب وعرض المنتجات
         async function fetchProducts() {
             try {
-                const response = await fetch('/api/products');
-                products = await response.json();
+                const res = await fetch('/api/products');
+                products = await res.json();
                 renderProducts(products);
-            } catch (err) {
-                showToast('فشل جلب المعروضات السيبرانية من السيرفر.', 'error');
-            }
+                if(currentUser && currentUser.role === 'admin') renderAdminProducts();
+            } catch (e) { showToast('فشل جلب المنتجات', 'error'); }
         }
 
-        function renderProducts(productsList) {
+        function renderProducts(list) {
             const grid = document.getElementById('products-grid');
-            grid.innerHTML = '';
-
-            if (productsList.length === 0) {
-                grid.innerHTML = `
-                    <div class="col-span-full text-center py-20 cyber-glass rounded-3xl border border-cyber-green/10">
-                        <i class="fa-solid fa-folder-open text-5xl text-cyber-green/20 mb-3"></i>
-                        <p class="text-slate-500 font-bold">لا تتوفر برمجيات في هذا التصنيف حالياً.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            productsList.forEach(product => {
+            grid.innerHTML = list.length === 0 ? `<p class="text-slate-500 col-span-full text-center">لا توجد منتجات حالياً.</p>` : '';
+            list.forEach(p => {
                 grid.innerHTML += `
-                    <div class="cyber-glass p-5 rounded-3xl transition-all duration-300 cyber-glow-border flex flex-col justify-between h-full group relative overflow-hidden">
-                        <div>
-                            <div class="relative overflow-hidden rounded-2xl h-48 mb-4">
-                                <img src="${product.image}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="${product.title}">
-                                <div class="absolute top-3 right-3 bg-cyber-950/95 text-cyber-green text-[10px] font-black px-3 py-1.5 rounded-xl border border-cyber-green/20 uppercase tracking-wider flex items-center gap-1.5">
-                                    ${product.type === 'code' ? '<i class="fa-solid fa-terminal"></i> كود' : '<i class="fa-solid fa-file-zipper"></i> ملف'}
+                    <div class="cyber-glass rounded-xl overflow-hidden flex flex-col transition hover:border-cyber-green/50">
+                        <img src="${p.image}" class="h-40 w-full object-cover">
+                        <div class="p-4 flex-1 flex flex-col justify-between">
+                            <div>
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="font-bold text-lg text-white font-mono">${p.title}</h3>
+                                    <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-1 rounded">${p.type === 'code' ? 'كود' : 'ملف'}</span>
                                 </div>
+                                <p class="text-xs text-slate-400 mb-4 line-clamp-2">${p.description}</p>
                             </div>
-                            <h3 class="text-lg font-black text-white mb-2 font-mono group-hover:text-cyber-green transition">${product.title}</h3>
-                            <p class="text-slate-400 text-xs leading-relaxed mb-4 line-clamp-3">${product.description}</p>
-                        </div>
-                        <div class="pt-4 border-t border-slate-800/60 flex items-center justify-between">
-                            <span class="text-xl font-bold font-mono text-cyber-gold">${product.price.toFixed(2)}$</span>
-                            <button onclick="addToCart('${product.id}')" class="bg-cyber-green hover:bg-emerald-400 text-cyber-950 font-black px-4 py-2.5 rounded-xl transition shadow-lg shadow-cyber-green/10 flex items-center gap-2 text-xs">
-                                <i class="fa-solid fa-cart-plus"></i> إضافة للسلة
-                            </button>
+                            <div class="flex justify-between items-center border-t border-slate-800/50 pt-3">
+                                <span class="font-bold text-cyber-green text-lg font-mono">${p.price}$</span>
+                                <button onclick="addToCart('${p.id}')" class="bg-cyber-green/10 text-cyber-green hover:bg-cyber-green hover:text-black px-3 py-1.5 rounded text-xs font-bold transition">إضافة للسلة</button>
+                            </div>
                         </div>
                     </div>
                 `;
             });
         }
 
-        // تصفية وتحديث الأقسام النشطة
         function filterProducts(type) {
             ['all', 'code', 'file'].forEach(t => {
                 const btn = document.getElementById(`filter-${t}`);
-                if (t === type) {
-                    btn.className = "px-5 py-2.5 rounded-lg text-xs md:text-sm font-bold bg-cyber-green text-cyber-950 transition";
-                } else {
-                    btn.className = "px-5 py-2.5 rounded-lg text-xs md:text-sm font-bold text-slate-400 hover:text-white transition";
-                }
+                btn.className = t === type ? "px-4 py-2 text-sm rounded bg-cyber-green text-black font-bold" : "px-4 py-2 text-sm rounded text-slate-400 hover:text-white font-bold";
             });
-
-            if (type === 'all') {
-                renderProducts(products);
-            } else {
-                const filtered = products.filter(p => p.type === type);
-                renderProducts(filtered);
-            }
+            renderProducts(type === 'all' ? products : products.filter(p => p.type === type));
         }
 
-        function toggleCartDrawer() {
-            const drawer = document.getElementById('cart-drawer');
-            drawer.classList.toggle('-translate-x-full');
-        }
-
-        function toggleMobileSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('translate-x-full');
-        }
+        // السلة والطلبات المالية
+        function toggleCartDrawer() { document.getElementById('cart-drawer').classList.toggle('-translate-x-full'); }
+        function toggleMobileSidebar() { document.getElementById('sidebar').classList.toggle('translate-x-full'); }
 
         function addToCart(id) {
-            if (!currentUser) {
-                showToast('يرجى تسجيل الدخول أولاً لتتمكن من حجز البرمجيات.', 'error');
-                showAuthPortal('login');
-                return;
-            }
-            const product = products.find(p => p.id === id);
-            const exist = cart.find(item => item.product.id === id);
-            if (exist) {
-                exist.quantity++;
-            } else {
-                cart.push({ product, quantity: 1 });
-            }
+            if (!currentUser) { showToast('سجل دخولك أولاً', 'error'); return showAuthPortal('login'); }
+            const prod = products.find(p => p.id === id);
+            const exist = cart.find(i => i.product.id === id);
+            exist ? exist.quantity++ : cart.push({ product: prod, quantity: 1 });
             updateCartUI();
-            showToast(`تم إدراج "${product.title}" بنجاح في السلة!`, 'success');
-        }
-
-        function removeFromCart(id) {
-            cart = cart.filter(item => item.product.id !== id);
-            updateCartUI();
-            showToast('تم إخراج الملف من العربة.', 'error');
+            showToast('تمت الإضافة للسلة', 'success');
         }
 
         function updateCartUI() {
             const list = document.getElementById('cart-items-list');
-            const totalText = document.getElementById('cart-total');
-            const sidebarCount = document.getElementById('sidebar-cart-count');
-            const mobileCount = document.getElementById('mobile-cart-count');
-            
             list.innerHTML = '';
-            let total = 0;
-            let count = 0;
-
+            let total = 0, count = 0;
             cart.forEach(item => {
-                total += item.product.price * item.quantity;
-                count += item.quantity;
-
+                total += item.product.price * item.quantity; count += item.quantity;
                 list.innerHTML += `
-                    <div class="flex items-center gap-4 bg-cyber-900/60 p-4 rounded-2xl border border-cyber-green/10">
-                        <img src="${item.product.image}" class="w-12 h-12 object-cover rounded-xl border border-slate-800" alt="">
+                    <div class="flex gap-3 bg-slate-900/50 p-3 rounded-lg border border-slate-800">
+                        <img src="${item.product.image}" class="w-12 h-12 rounded object-cover">
                         <div class="flex-1">
-                            <h4 class="font-bold text-white text-xs line-clamp-1 font-mono">${item.product.title}</h4>
-                            <div class="flex items-center justify-between mt-1">
-                                <span class="text-cyber-gold font-bold text-xs">${(item.product.price * item.quantity).toFixed(2)}$</span>
-                                <span class="text-[9px] bg-cyber-950 text-slate-400 px-2 py-0.5 rounded">كمية: ${item.quantity}</span>
+                            <h4 class="text-white text-xs font-bold">${item.product.title}</h4>
+                            <div class="flex justify-between text-[10px] mt-1">
+                                <span class="text-cyber-green">${item.product.price}$ × ${item.quantity}</span>
+                                <button onclick="cart.splice(cart.indexOf(${item}), 1); updateCartUI();" class="text-red-500">حذف</button>
                             </div>
                         </div>
-                        <button onclick="removeFromCart('${item.product.id}')" class="text-red-500 hover:text-red-400 p-2"><i class="fa-solid fa-trash-can text-sm"></i></button>
                     </div>
                 `;
             });
-
-            totalText.innerText = total.toFixed(2) + '$';
-            sidebarCount.innerText = count;
-            mobileCount.innerText = count;
-
-            if (currentUser) {
-                document.getElementById('cust-name').value = currentUser.username;
-            }
+            document.getElementById('cart-total').innerText = total.toFixed(2) + '$';
+            document.getElementById('sidebar-cart-count').innerText = count;
+            document.getElementById('mobile-cart-count').innerText = count;
         }
 
-        function copyWallet() {
-            const num = document.getElementById('wallet-number').innerText;
-            const el = document.createElement('textarea');
-            el.value = num;
-            document.body.appendChild(el);
-            el.select();
-            document.execCommand('copy');
-            document.body.removeChild(el);
-            showToast('تم نسخ رقم محفظة جيب 737996293 بنجاح!', 'success');
-        }
-
-        // إرسال الطلبيات والملفات وإثباتات جيب إلى السيرفر
         async function submitOrder(e) {
             e.preventDefault();
-            if (cart.length === 0) {
-                showToast('عربتك فارغة!', 'error');
-                return;
-            }
-
-            const fileInput = document.getElementById('cust-receipt-file');
-            const file = fileInput.files[0];
-
-            if (!file) {
-                showToast('يرجى رفع لقطة شاشة لإثبات الدفع عبر جيب.', 'error');
-                return;
-            }
+            if(cart.length === 0) return showToast('السلة فارغة', 'error');
+            const file = document.getElementById('cust-receipt-file').files[0];
+            if(!file) return showToast('ارفع صورة الإيصال', 'error');
 
             const formData = new FormData();
             formData.append('cartItems', JSON.stringify(cart));
-            formData.append('total', cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0));
+            formData.append('total', cart.reduce((s, i) => s + (i.product.price * i.quantity), 0));
             formData.append('cust-receipt-file', file);
 
             try {
-                const response = await fetch('/api/orders', {
-                    method: 'POST',
-                    headers: { 'x-user-id': currentUser.id },
-                    body: formData
+                const res = await fetch('/api/orders', {
+                    method: 'POST', headers: window.authHeaders, body: formData
                 });
-                const result = await response.json();
-
-                if (result.success) {
-                    showToast(result.message, 'success');
-                    cart = [];
-                    updateCartUI();
-                    toggleCartDrawer();
-                    document.getElementById('checkout-form').reset();
-                    changeSection('tracker');
-                } else {
-                    showToast(result.message, 'error');
-                }
-            } catch (err) {
-                showToast('حدث خطأ فني أثناء رفع إثبات الدفع.', 'error');
-            }
+                const data = await res.json();
+                if(data.success) {
+                    showToast(data.message, 'success');
+                    cart = []; updateCartUI(); toggleCartDrawer(); changeSection('tracker');
+                } else showToast(data.message, 'error');
+            } catch(e) { showToast('خطأ في إرسال الطلب', 'error'); }
         }
 
-        // إدارة إرسال طلب تصميم خاص للمستخدمين
-        async function submitCustomRequest(e) {
-            e.preventDefault();
-            if (!currentUser) {
-                showToast('يرجى تسجيل الدخول لطلب التصاميم والبرامج.', 'error');
-                return;
-            }
-
-            const title = document.getElementById('req-title').value.trim();
-            const description = document.getElementById('req-desc').value.trim();
-
+        // تتبع المشتريات والتنزيل
+        async function fetchMyOrders() {
+            if(!currentUser) return;
+            const container = document.getElementById('tracker-results');
             try {
-                const response = await fetch('/api/requests', {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'x-user-id': currentUser.id 
-                    },
-                    body: JSON.stringify({ title, description })
-                });
-                const result = await response.json();
-
-                if (result.success) {
-                    showToast(result.message, 'success');
-                    document.getElementById('custom-request-form').reset();
-                    fetchMyRequests();
-                } else {
-                    showToast(result.message, 'error');
-                }
-            } catch (err) {
-                showToast('خطأ في إرسال طلبك الخاص.', 'error');
-            }
-        }
-
-        // جلب طلبات التصميم الخاصة بالمستخدم الحالي
-        async function fetchMyRequests() {
-            try {
-                const response = await fetch('/api/requests', {
-                    headers: { 'x-user-id': currentUser.id }
-                });
-                const data = await response.json();
-                const container = document.getElementById('my-requests-list');
-                container.innerHTML = '';
-
-                if (data.length === 0) {
-                    container.innerHTML = `<p class="text-xs text-slate-500 text-center py-4">لم تقم بإرسال أي طلبات خاصة مسبقاً.</p>`;
-                    return;
-                }
-
-                data.reverse().forEach(req => {
-                    let statusHtml = '';
-                    if (req.status === 'pending') {
-                        statusHtml = `<span class="text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-1 rounded text-[10px]">قيد الدراسة والتسعير</span>`;
-                    } else if (req.status === 'rejected') {
-                        statusHtml = `<span class="text-red-500 bg-red-500/10 border border-red-500/20 px-2 py-1 rounded text-[10px]">مرفوض</span>`;
-                    } else {
-                        statusHtml = `<span class="text-cyber-green bg-cyber-green/10 border border-cyber-green/20 px-2 py-1 rounded text-[10px]">تم القبول بسعر: ${req.price}$</span>`;
-                    }
+                const res = await fetch('/api/user-orders', { headers: window.authHeaders });
+                const orders = await res.json();
+                container.innerHTML = orders.length === 0 ? '<p class="text-slate-500">لا توجد مشتريات.</p>' : '';
+                orders.reverse().forEach(o => {
+                    let status = o.status === 'pending' ? '<span class="text-yellow-500 bg-yellow-500/10 px-2 py-1 rounded text-xs">قيد المراجعة</span>' :
+                                 o.status === 'accepted' ? '<span class="text-cyber-green bg-cyber-green/10 px-2 py-1 rounded text-xs">مقبول - التنزيل متاح</span>' :
+                                 '<span class="text-red-500 bg-red-500/10 px-2 py-1 rounded text-xs">مرفوض</span>';
+                    
+                    let downloads = o.status === 'accepted' ? o.items.map(i => `<button onclick="downloadFile('${i.product.id}')" class="mt-2 text-xs bg-cyber-green text-black px-3 py-2 rounded font-bold w-full"><i class="fa-solid fa-download"></i> تنزيل ${i.product.title}</button>`).join('') : '';
 
                     container.innerHTML += `
-                        <div class="bg-cyber-900/40 p-4 rounded-xl border border-cyber-green/10">
-                            <div class="flex justify-between items-center mb-2">
-                                <h4 class="font-bold text-white text-sm font-mono">${req.title}</h4>
-                                ${statusHtml}
-                            </div>
-                            <p class="text-slate-400 text-xs leading-relaxed line-clamp-2">${req.description}</p>
-                            <span class="text-[9px] text-slate-500 block mt-2">${req.date}</span>
+                        <div class="cyber-glass p-4 rounded-xl border-slate-800">
+                            <div class="flex justify-between items-center mb-2"><span class="text-xs text-slate-400">${o.date}</span> ${status}</div>
+                            <p class="text-sm font-bold text-white">${o.items.map(i=>i.product.title).join('، ')}</p>
+                            <p class="text-xs text-cyber-gold mt-1">المبلغ: ${o.total}$</p>
+                            ${downloads}
                         </div>
                     `;
                 });
-            } catch (err) {
-                console.error(err);
-            }
+            } catch(e) { console.error(e); }
         }
 
-        // بناء تتبع المشتريات وتنزيل الملفات الحقيقية والآمنة للعميل
-        async function trackMyOrders() {
-            const resultsDiv = document.getElementById('tracker-results');
-            resultsDiv.innerHTML = '';
-
-            if (!currentUser) {
-                resultsDiv.innerHTML = `
-                    <div class="cyber-glass p-8 text-center rounded-2xl border border-cyber-green/10">
-                        <i class="fa-solid fa-lock text-4xl text-cyber-green/20 mb-3 animate-pulse"></i>
-                        <h4 class="font-bold text-white">الملفات والتحميلات مقفلة بانتظار ولوجك</h4>
-                        <p class="text-slate-500 text-xs mt-1">يرجى تسجيل الدخول بحساب العضوية VIP لعرض الملفات المتاحة للتحميل الفوري.</p>
-                        <button onclick="showAuthPortal('login')" class="mt-4 px-6 py-2.5 bg-cyber-green text-cyber-950 font-bold text-xs rounded-xl hover:bg-emerald-400 transition shadow-lg">تسجيل الدخول الآن</button>
-                    </div>
-                `;
-                return;
-            }
-
-            try {
-                const res = await fetch('/api/orders', {
-                    headers: { 'x-user-id': currentUser.id }
-                });
-                const allOrders = await res.json();
-                const myOrders = currentUser.role === 'admin' ? allOrders : allOrders.filter(o => o.userId === currentUser.id);
-
-                if (myOrders.length === 0) {
-                    resultsDiv.innerHTML = `
-                        <div class="cyber-glass p-8 text-center rounded-2xl border border-cyber-green/10">
-                            <i class="fa-solid fa-folder-open text-4xl text-cyber-green/20 mb-3"></i>
-                            <h4 class="font-bold text-white">لم تقتنِ أي برمجية مشفرة بعد</h4>
-                            <p class="text-slate-500 text-xs mt-1">تصفح المعرض البرمجي واختر أداتك المفضلة لبدء الفخامة.</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                myOrders.reverse().forEach(order => {
-                    let statusHtml = '';
-                    let downloadBlock = '';
-
-                    if (order.status === 'pending') {
-                        statusHtml = `<span class="bg-amber-500/10 text-amber-500 px-3 py-1.5 rounded-lg border border-amber-500/30 font-bold text-xs"><i class="fa-solid fa-spinner animate-spin"></i> بانتظار مطابقة إيصال جيب</span>`;
-                        downloadBlock = `<button class="w-full mt-4 py-3 rounded-xl bg-slate-900/60 text-slate-500 font-bold text-xs cursor-not-allowed border border-slate-800" disabled><i class="fa-solid fa-lock"></i> مفتاح التنزيل مغلق - بانتظار مطابقة الفاتورة</button>`;
-                    } else if (order.status === 'rejected') {
-                        statusHtml = `<span class="bg-red-500/10 text-red-500 px-3 py-1.5 rounded-lg border border-red-500/30 font-bold text-xs"><i class="fa-solid fa-circle-xmark"></i> عملية تحويل ملغاة</span>`;
-                        downloadBlock = `<div class="mt-4 p-3 bg-red-950/20 border border-red-500/30 rounded-xl text-red-400 text-xs text-center font-semibold">تواصل مع الإدارة للتحقق من المعاملة المرفوضة.</div>`;
-                    } else {
-                        statusHtml = `<span class="bg-cyber-green/10 text-cyber-green px-3 py-1.5 rounded-lg border border-cyber-green/30 font-bold text-xs"><i class="fa-solid fa-circle-check animate-pulse"></i> تم تنشيط مفاتيح التنزيل</span>`;
-                        
-                        let btnLinks = '';
-                        order.items.forEach(item => {
-                            btnLinks += `
-                                <button onclick="downloadSecureFile('${item.product.id}')" class="w-full mt-2 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-cyber-green hover:from-emerald-500 hover:to-emerald-400 text-cyber-950 font-black text-xs transition shadow-lg shadow-cyber-green/15 flex items-center justify-center gap-2">
-                                    <i class="fa-solid fa-cloud-arrow-down"></i> تحميل وفك تشفير: ${item.product.title}
-                                </button>
-                            `;
-                        });
-                        downloadBlock = btnLinks;
-                    }
-
-                    const itemsText = order.items.map(i => `<span class="text-white font-bold font-mono">${i.product.title} (${i.quantity}x)</span>`).join(' ، ');
-
-                    resultsDiv.innerHTML += `
-                        <div class="cyber-glass p-6 rounded-2xl border border-cyber-green/10 space-y-4">
-                            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 pb-4 border-b border-slate-800">
-                                <div>
-                                    <span class="text-[9px] text-slate-500 font-mono tracking-widest block">${order.id}</span>
-                                    <h4 class="font-bold text-cyber-gold mt-1 text-xs">${order.date}</h4>
-                                </div>
-                                <div>${statusHtml}</div>
-                            </div>
-                            <div class="text-xs space-y-2 text-slate-400">
-                                <p><span class="text-slate-500">المنتجات:</span> ${itemsText}</p>
-                                <p><span class="text-slate-500">إجمالي قيمة الصفقة:</span> <span class="text-cyber-green font-bold">${order.total.toFixed(2)}$</span></p>
-                            </div>
-                            ${downloadBlock}
-                        </div>
-                    `;
-                });
-
-            } catch (err) {
-                console.error(err);
-            }
+        function downloadFile(pid) {
+            window.location.href = `/api/products/download/${pid}`; // أو عبر fetch للتحكم بالتنبيهات
         }
 
-        // دالة تنزيل الملفات المؤمنة والآمنة حقيقياً من السيرفر
-        function downloadSecureFile(productId) {
-            if (!currentUser) return;
-            const downloadUrl = `/api/products/download/${productId}`;
-            
-            showToast('جاري تحضير وتنزيل الملف الآمن من الخادم الرئيسي...', 'success');
-            
-            fetch(downloadUrl, {
-                headers: { 'x-user-id': currentUser.id }
-            })
-            .then(res => {
-                if (!res.ok) {
-                    throw new Error('فشل التنزيل! يرجى التحقق من قبول دفعتك من الإدارة.');
-                }
-                return res.blob();
-            })
-            .then(blob => {
-                const blobUrl = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = blobUrl;
-                a.download = `tarzan-secure-${productId}.zip`; // سيأخذ اسمه الفعلي تلقائياً من السيرفر
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-            })
-            .catch(err => {
-                showToast(err.message, 'error');
+        // --- دوال لوحة الإدارة (تم إصلاحها برمجياً وتنظيمياً) ---
+        function switchAdminTab(tab) {
+            ['products', 'orders', 'requests'].forEach(t => {
+                document.getElementById(`admin-content-${t}`).classList.add('hidden');
+                document.getElementById(`tab-btn-${t}`).className = "px-5 py-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg font-bold text-sm transition";
             });
-        }
-
-        // التنقل بين الأقسام والصفحات بالتأثيرات
-        function changeSection(section) {
-            document.getElementById('store-section').classList.add('hidden');
-            document.getElementById('requests-section').classList.add('hidden');
-            document.getElementById('tracker-section').classList.add('hidden');
-            document.getElementById('admin-section').classList.add('hidden');
-            document.getElementById('auth-section').classList.add('hidden');
-
-            ['nav-store', 'nav-requests', 'nav-tracker'].forEach(id => {
-                const btn = document.getElementById(id);
-                if (btn) {
-                    btn.className = "w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-cyber-green/5 text-slate-400 hover:text-cyber-green border border-transparent hover:border-cyber-green/10 transition-all duration-300";
-                }
-            });
-
-            if (section === 'store') {
-                document.getElementById('store-section').classList.remove('hidden');
-                document.getElementById('nav-store').className = "w-full flex items-center gap-4 px-4 py-3 rounded-xl bg-cyber-green/10 text-cyber-green border border-cyber-green/30 font-bold transition-all duration-300";
-            } else if (section === 'requests') {
-                document.getElementById('requests-section').classList.remove('hidden');
-                document.getElementById('nav-requests').className = "w-full flex items-center gap-4 px-4 py-3 rounded-xl bg-cyber-green/10 text-cyber-green border border-cyber-green/30 font-bold transition-all duration-300";
-                fetchMyRequests();
-            } else if (section === 'tracker') {
-                document.getElementById('tracker-section').classList.remove('hidden');
-                document.getElementById('nav-tracker').className = "w-full flex items-center gap-4 px-4 py-3 rounded-xl bg-cyber-green/10 text-cyber-green border border-cyber-green/30 font-bold transition-all duration-300";
-                trackMyOrders();
-            } else if (section === 'admin') {
-                document.getElementById('admin-section').classList.remove('hidden');
-            } else if (section === 'auth') {
-                document.getElementById('auth-section').classList.remove('hidden');
-            }
-
-            const sidebar = document.getElementById('sidebar');
-            if (!sidebar.classList.contains('translate-x-full')) {
-                toggleMobileSidebar();
-            }
-        }
-
-        // حماية الدخول للمسؤول الإداري
-        function loginAdminPrompt() {
-            showCustomModal(
-                `<i class="fa-solid fa-user-shield text-cyber-gold"></i> بوابة التحكم الملكية للإدارة`,
-                'أدخل كلمة مرور الإدارة لفك التشفير عن مركز التحكم:',
-                [
-                    {
-                        text: 'تأكيد الرمز',
-                        class: 'bg-cyber-gold text-cyber-950 hover:bg-yellow-500',
-                        action: () => {
-                            const pass = prompt('الرجاء إدخال كلمة المرور (tarzanb):');
-                            if (pass === 'tarzanb') {
-                                showToast('تم فك القفل عن الإدارة الملكية بنجاح!', 'success');
-                                changeSection('admin');
-                                renderAdminOrders();
-                                renderAdminProducts();
-                                renderAdminCustomRequests();
-                            } else if (pass !== null) {
-                                showToast('الدخول مرفوض! الرمز غير صحيح.', 'error');
-                            }
-                        }
-                    },
-                    {
-                        text: 'إلغاء',
-                        action: () => {}
-                    }
-                ]
-            );
-        }
-
-        function logoutAdmin() {
-            changeSection('store');
-            showToast('تم إغلاق البوابة وتأمين المتجر بنجاح.', 'success');
-        }
-
-        function toggleAdminTab(tab) {
-            const ordersTab = document.getElementById('admin-tab-orders');
-            const productsTab = document.getElementById('admin-tab-products');
-            const customReqsTab = document.getElementById('admin-tab-custom-reqs');
+            document.getElementById(`admin-content-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-btn-${tab}`).className = "px-5 py-2.5 bg-cyber-gold text-black rounded-lg font-bold text-sm transition shadow-md shadow-cyber-gold/20";
             
-            const btnOrders = document.getElementById('btn-admin-orders');
-            const btnProducts = document.getElementById('btn-admin-products');
-            const btnReqs = document.getElementById('btn-admin-reqs');
-
-            ordersTab.classList.add('hidden');
-            productsTab.classList.add('hidden');
-            customReqsTab.classList.add('hidden');
-
-            btnOrders.className = "px-6 py-3 rounded-xl text-slate-400 hover:text-white font-bold text-sm transition";
-            btnProducts.className = "px-6 py-3 rounded-xl text-slate-400 hover:text-white font-bold text-sm transition";
-            btnReqs.className = "px-6 py-3 rounded-xl text-slate-400 hover:text-white font-bold text-sm transition";
-
-            if (tab === 'orders') {
-                ordersTab.classList.remove('hidden');
-                btnOrders.className = "px-6 py-3 rounded-xl bg-cyber-green text-cyber-950 font-black text-sm transition";
-                renderAdminOrders();
-            } else if (tab === 'products') {
-                productsTab.classList.remove('hidden');
-                btnProducts.className = "px-6 py-3 rounded-xl bg-cyber-green text-cyber-950 font-black text-sm transition";
-                renderAdminProducts();
-            } else {
-                customReqsTab.classList.remove('hidden');
-                btnReqs.className = "px-6 py-3 rounded-xl bg-cyber-green text-cyber-950 font-black text-sm transition";
-                renderAdminCustomRequests();
-            }
+            if(tab === 'orders') renderAdminOrders();
+            if(tab === 'products') renderAdminProducts();
+            if(tab === 'requests') fetchAdminRequests();
         }
 
-        // عرض المعاملات المالية المرفوعة للإدارة للمطابقة والقبول
-        async function renderAdminOrders() {
-            const tbody = document.getElementById('admin-orders-rows');
-            tbody.innerHTML = '';
-
-            try {
-                const response = await fetch('/api/orders', {
-                    headers: { 'x-user-id': currentUser.id }
-                });
-                const data = await response.json();
-
-                if (data.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-slate-500">لا توجد أي معاملات شراء معلقة حالياً.</td></tr>`;
-                    return;
-                }
-
-                data.slice().reverse().forEach(order => {
-                    const itemsText = order.items.map(i => `${i.product.title} (x${i.quantity})`).join('<br>');
-                    
-                    let actionHtml = '';
-                    if (order.status === 'pending') {
-                        actionHtml = `
-                            <div class="flex gap-2 justify-center">
-                                <button onclick="changeOrderStatus('${order.id}', 'accepted')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-xs transition">موافقة وتنشيط التنزيل</button>
-                                <button onclick="changeOrderStatus('${order.id}', 'rejected')" class="bg-red-600 hover:bg-red-500 text-white font-bold px-4 py-2 rounded-xl text-xs transition">رفض</button>
-                            </div>
-                        `;
-                    } else if (order.status === 'accepted') {
-                        actionHtml = `<span class="text-cyber-green bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-cyber-green/30 text-xs font-black">مقبول والتحميل نشط</span>`;
-                    } else {
-                        actionHtml = `<span class="text-red-500 bg-red-500/10 px-3 py-1.5 rounded-lg border border-red-500/30 text-xs font-bold">مرفوض وملغي</span>`;
-                    }
-
-                    tbody.innerHTML += `
-                        <tr class="hover:bg-slate-900/40 transition">
-                            <td class="p-5">
-                                <p class="font-bold text-white font-mono">${order.customerName}</p>
-                                <span class="text-slate-500 text-[9px] block font-mono mt-1">${order.id}</span>
-                                <span class="text-slate-600 text-[10px] block">${order.date}</span>
-                            </td>
-                            <td class="p-5 text-xs text-slate-300 leading-relaxed">${itemsText}</td>
-                            <td class="p-5 font-mono font-bold text-cyber-gold text-base">${order.total.toFixed(2)}$</td>
-                            <td class="p-5">
-                                <a href="${order.receiptImg}" target="_blank" class="text-cyber-green hover:underline flex items-center gap-1 text-xs font-bold font-mono">
-                                    <i class="fa-solid fa-eye"></i> إثبات جيب
-                                </a>
-                            </td>
-                            <td class="p-5 text-center">${actionHtml}</td>
-                        </tr>
-                    `;
-                });
-            } catch (err) {
-                console.error(err);
-            }
-        }
-
-        // معالجة ترقيات العضويات وقبول المبيعات في الإدارة
-        async function changeOrderStatus(orderId, status) {
-            try {
-                const response = await fetch(`/api/orders/${orderId}/status`, {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'x-user-id': currentUser.id 
-                    },
-                    body: JSON.stringify({ status })
-                });
-                const result = await response.json();
-
-                if (result.success) {
-                    showToast(result.message, 'success');
-                    renderAdminOrders();
-                } else {
-                    showToast(result.message, 'error');
-                }
-            } catch (err) {
-                showToast('خطأ في الاتصال بالخادم.', 'error');
-            }
-        }
-
-        // عرض قائمة المنتجات المعروضة في الإدارة مع إمكانية الحذف الفوري
-        async function renderAdminProducts() {
-            const tbody = document.getElementById('admin-products-rows');
-            tbody.innerHTML = '';
-
-            try {
-                const response = await fetch('/api/products');
-                const data = await response.json();
-
-                data.forEach(product => {
-                    tbody.innerHTML += `
-                        <tr class="hover:bg-slate-900/40 transition">
-                            <td class="p-4 flex items-center gap-3">
-                                <img src="${product.image}" class="w-10 h-10 object-cover rounded-lg border border-slate-800" alt="">
-                                <span class="font-bold text-white font-mono">${product.title}</span>
-                            </td>
-                            <td class="p-4 text-xs font-mono">
-                                ${product.type === 'code' ? '<span class="text-cyber-green">كود</span>' : '<span class="text-cyan-500">ملف</span>'}
-                            </td>
-                            <td class="p-4 font-mono text-xs text-slate-400">${product.fileName || 'لا يوجد ملف مرفق'}</td>
-                            <td class="p-4 font-mono font-bold text-cyber-gold">${product.price.toFixed(2)}$</td>
-                            <td class="p-4 text-center">
-                                <button onclick="adminDeleteProduct('${product.id}')" class="bg-red-600/10 text-red-500 hover:bg-red-600 hover:text-white px-3 py-1.5 rounded-xl text-xs font-bold transition">إزالة</button>
-                            </td>
-                        </tr>
-                    `;
-                });
-            } catch (err) {
-                console.error(err);
-            }
-        }
-
-        // حذف المنتجات من الخادم
-        function adminDeleteProduct(prodId) {
-            showCustomModal(
-                `<i class="fa-solid fa-triangle-exclamation text-red-500"></i> تأكيد الحذف النهائي`,
-                'هل أنت متأكد تماماً من إزالة هذه البرمجية وحذف ملفها الأصلي من الخادم؟',
-                [
-                    {
-                        text: 'حذف المنتج',
-                        class: 'bg-red-600 text-white hover:bg-red-700',
-                        action: async () => {
-                            try {
-                                const response = await fetch(`/api/products/${prodId}`, {
-                                    method: 'DELETE',
-                                    headers: { 'x-user-id': currentUser.id }
-                                });
-                                const result = await response.json();
-                                if (result.success) {
-                                    showToast(result.message, 'success');
-                                    renderAdminProducts();
-                                    fetchProducts();
-                                }
-                            } catch (err) {
-                                showToast('خطأ في إرسال طلب الحذف للسيرفر.', 'error');
-                            }
-                        }
-                    },
-                    {
-                        text: 'تراجع',
-                        action: () => {}
-                    }
-                ]
-            );
-        }
-
-        // رفع منتج جديد مشفر بالكامل وملفه المعزول الحقيقي
+        // رفع منتج جديد
         async function adminAddProduct(e) {
             e.preventDefault();
-            const title = document.getElementById('new-prod-title').value.trim();
-            const price = parseFloat(document.getElementById('new-prod-price').value);
-            const type = document.getElementById('new-prod-type').value;
-            const description = document.getElementById('new-prod-desc').value.trim();
+            // الآن الـ currentUser.id هو "u-admin" الفعلي!
+            const form = new FormData();
+            form.append('title', document.getElementById('new-prod-title').value);
+            form.append('price', document.getElementById('new-prod-price').value);
+            form.append('type', document.getElementById('new-prod-type').value);
+            form.append('description', document.getElementById('new-prod-desc').value);
+            form.append('new-prod-file', document.getElementById('new-prod-file').files[0]);
             
-            const fileInput = document.getElementById('new-prod-file');
-            const file = fileInput.files[0];
-
-            const imageInput = document.getElementById('new-prod-image-file');
-            const imageFile = imageInput.files[0];
-
-            if (!file) {
-                showToast('يرجى رفع الملف البرمجي الحقيقي للعملية.', 'error');
-                return;
-            }
-
-            const formData = new FormData();
-            formData.append('title', title);
-            formData.append('price', price);
-            formData.append('type', type);
-            formData.append('description', description);
-            formData.append('new-prod-file', file);
-            if (imageFile) {
-                formData.append('new-prod-image-file', imageFile);
+            if(document.getElementById('new-prod-image-file').files[0]){
+                form.append('new-prod-image-file', document.getElementById('new-prod-image-file').files[0]);
             }
 
             try {
-                const response = await fetch('/api/products', {
+                const res = await fetch('/api/products', {
                     method: 'POST',
-                    headers: { 'x-user-id': currentUser.id },
-                    body: formData
+                    headers: { 'x-user-id': currentUser.id }, // هذا الهيدر يمنح الصلاحية الآن بنجاح
+                    body: form
                 });
-                const result = await response.json();
-
-                if (result.success) {
-                    showToast(result.message, 'success');
+                const data = await res.json();
+                if(data.success) {
+                    showToast(data.message, 'success');
                     document.getElementById('product-form').reset();
-                    renderAdminProducts();
-                    fetchProducts();
-                } else {
-                    showToast(result.message, 'error');
-                }
-            } catch (err) {
-                showToast('حدث خطأ في الشبكة أثناء رفع وتشفير الملف.', 'error');
+                    fetchProducts(); // يحدّث المعرض وجدول الإدارة
+                } else showToast(data.message, 'error');
+            } catch(e) { showToast('خطأ في الرفع', 'error'); }
+        }
+
+        function renderAdminProducts() {
+            const tbody = document.getElementById('admin-products-rows');
+            tbody.innerHTML = '';
+            products.forEach(p => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="font-bold text-white">${p.title}</td>
+                        <td class="text-xs text-slate-400">${p.type === 'code'? 'كود' : 'ملف'}</td>
+                        <td class="text-cyber-green font-mono">${p.price}$</td>
+                        <td class="text-[10px] text-slate-500">${p.fileName}</td>
+                        <td class="text-center"><button onclick="deleteProduct('${p.id}')" class="text-red-500 bg-red-500/10 px-3 py-1 rounded hover:bg-red-500 hover:text-white transition text-xs">إزالة</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        async function deleteProduct(id) {
+            if(confirm('متأكد من حذف المنتج وملفاته نهائياً؟')) {
+                try {
+                    const res = await fetch(`/api/products/${id}`, { method: 'DELETE', headers: window.authHeaders });
+                    const data = await res.json();
+                    if(data.success) { showToast(data.message, 'success'); fetchProducts(); }
+                } catch(e) {}
             }
         }
 
-        // عرض طلبات تصميم البرمجيات الخاصة المرفوعة للإدارة للمراجعة والتسعير
-        async function renderAdminCustomRequests() {
-            const container = document.getElementById('admin-custom-reqs-rows');
-            container.innerHTML = '';
-
+        async function renderAdminOrders() {
+            const tbody = document.getElementById('admin-orders-rows');
             try {
-                const response = await fetch('/api/requests', {
-                    headers: { 'x-user-id': currentUser.id }
-                });
-                const data = await response.json();
-
-                if (data.length === 0) {
-                    container.innerHTML = `<p class="text-xs text-slate-500 text-center py-6">لا توجد طلبات خاصة من العملاء بعد.</p>`;
-                    return;
-                }
-
-                data.slice().reverse().forEach(req => {
-                    let actionHtml = '';
-                    if (req.status === 'pending') {
-                        actionHtml = `
-                            <div class="flex gap-2 mt-4">
-                                <button onclick="priceCustomRequest('${req.id}')" class="px-4 py-2 bg-cyber-gold text-cyber-950 font-bold text-xs rounded-lg transition hover:bg-yellow-500">قبول وتحديد السعر</button>
-                                <button onclick="rejectCustomRequest('${req.id}')" class="px-4 py-2 bg-red-600/20 text-red-400 border border-red-500/30 font-bold text-xs rounded-lg transition hover:bg-red-600 hover:text-white">رفض</button>
-                            </div>
-                        `;
-                    } else if (req.status === 'rejected') {
-                        actionHtml = `<span class="text-red-500 font-bold text-xs block mt-4"><i class="fa-solid fa-circle-xmark"></i> تم الرفض</span>`;
-                    } else {
-                        actionHtml = `<span class="text-cyber-green font-bold text-xs block mt-4"><i class="fa-solid fa-circle-check"></i> تم القبول بسعر: ${req.price}$</span>`;
-                    }
-
-                    container.innerHTML += `
-                        <div class="cyber-glass p-6 rounded-2xl border border-cyber-gold/15">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h4 class="font-bold text-white text-base font-mono">${req.title}</h4>
-                                    <p class="text-[10px] text-slate-500 mt-1">العميل العضو: <span class="text-cyber-green font-mono font-bold">${req.username}</span></p>
-                                </div>
-                                <span class="text-[10px] text-slate-500 font-mono">${req.date}</span>
-                            </div>
-                            <p class="text-slate-300 text-xs leading-relaxed mt-4 bg-cyber-950 p-4 rounded-xl border border-slate-900">${req.description}</p>
-                            ${actionHtml}
+                const res = await fetch('/api/orders', { headers: window.authHeaders });
+                const orders = await res.json();
+                tbody.innerHTML = orders.length === 0 ? '<tr><td colspan="5" class="text-center text-slate-500">لا توجد طلبات</td></tr>' : '';
+                orders.reverse().forEach(o => {
+                    let actions = o.status === 'pending' ? `
+                        <div class="flex gap-1 justify-center">
+                            <button onclick="updateOrderStatus('${o.id}', 'accepted')" class="bg-cyber-green text-black px-2 py-1 rounded text-[10px] font-bold">قبول</button>
+                            <button onclick="updateOrderStatus('${o.id}', 'rejected')" class="bg-red-500 text-white px-2 py-1 rounded text-[10px] font-bold">رفض</button>
                         </div>
+                    ` : o.status === 'accepted' ? '<span class="text-cyber-green text-xs">مقبول</span>' : '<span class="text-red-500 text-xs">مرفوض</span>';
+
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><span class="block text-white font-bold">${o.customerName}</span><span class="text-[9px] text-slate-500">${o.date}</span></td>
+                            <td class="text-xs text-slate-300">${o.items.map(i=>i.product.title).join('<br>')}</td>
+                            <td class="text-cyber-gold font-mono">${o.total}$</td>
+                            <td><a href="${o.receiptImg}" target="_blank" class="text-cyan-400 hover:underline text-xs">عرض الإيصال</a></td>
+                            <td class="text-center">${actions}</td>
+                        </tr>
                     `;
                 });
-            } catch (err) {
-                console.error(err);
-            }
+            } catch(e) {}
         }
 
-        function priceCustomRequest(reqId) {
-            const price = prompt('الرجاء إدخال السعر المقترح لتصميم هذه البرمجية بالدولار ($):');
-            if (price !== null && !isNaN(price) && price !== "") {
-                updateCustomRequestStatus(reqId, 'priced', parseFloat(price));
-            }
-        }
-
-        function rejectCustomRequest(reqId) {
-            updateCustomRequestStatus(reqId, 'rejected', 0);
-        }
-
-        // تحديث حالة الطلبات الخاصة للعملاء بالتسعير أو الرفض
-        async function updateCustomRequestStatus(reqId, status, price) {
+        async function updateOrderStatus(id, status) {
             try {
-                const response = await fetch(`/api/requests/${reqId}/status`, {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'x-user-id': currentUser.id 
-                    },
-                    body: JSON.stringify({ status, price })
+                const res = await fetch(`/api/orders/${id}/status`, {
+                    method: 'POST', headers: { ...window.authHeaders, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({status})
                 });
-                const result = await response.json();
-
-                if (result.success) {
-                    showToast(result.message, 'success');
-                    renderAdminCustomRequests();
-                } else {
-                    showToast(result.message, 'error');
-                }
-            } catch (err) {
-                showToast('خطأ في إرسال الرد للخادم.', 'error');
-            }
+                if((await res.json()).success) renderAdminOrders();
+            } catch(e){}
         }
 
-        // تهيئة المتجر والمنتجات الفورية عند التشغيل لأول مرة
-        fetchProducts();
+        // التنقل الرئيسي
+        function changeSection(sec) {
+            ['store', 'requests', 'tracker', 'admin', 'auth'].forEach(s => {
+                document.getElementById(`${s}-section`).classList.add('hidden');
+            });
+            ['store', 'requests', 'tracker', 'admin'].forEach(s => {
+                const btn = document.getElementById(`nav-${s}`);
+                if(btn) btn.className = "w-full flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition";
+            });
+
+            document.getElementById(`${sec}-section`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`nav-${sec}`);
+            if(activeBtn && sec !== 'admin') activeBtn.className = "w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-cyber-green/10 text-cyber-green font-bold transition";
+            if(activeBtn && sec === 'admin') activeBtn.className = "w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-cyber-gold text-black font-bold transition";
+
+            if(sec === 'tracker') fetchMyOrders();
+            if(sec === 'admin') switchAdminTab('products');
+            
+            if(window.innerWidth < 1024 && !document.getElementById('sidebar').classList.contains('translate-x-full')) toggleMobileSidebar();
+        }
+
+        // تهيئة مبدئية
         renderUserProfile();
+        fetchProducts();
     </script>
 </body>
 </html>
