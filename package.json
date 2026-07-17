@@ -1,15 +1,15 @@
 {
-  "name": "tarzanalwaqdiy-store",
-  "version": "1.0.0",
-  "description": "Luxurious Digital Store for Tarzanalwaqdiy",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js"
-  },
-  "dependencies": {
-    "express": "^4.19.2",
-    "multer": "^1.4.5-lts.1",
-    "body-parser": "^1.20.2",
-    "uuid": "^9.0.1"
-  }
+"name": "tarzanalwaqdiy-vip-store",
+"version": "2.0.0",
+"description": "Premium Cyberpunk Digital Store for TarzanAlwaqdiy VIP",
+"main": "index.js",
+"scripts": {
+"start": "node index.js"
+},
+"dependencies": {
+"express": "^4.19.2",
+"multer": "^1.4.5-lts.1",
+"body-parser": "^1.20.2",
+"uuid": "^9.0.1"
+}
 }
