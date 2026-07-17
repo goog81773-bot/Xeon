@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tarzanalwaqdiy Cyber Store | متجر طرزان الوقدي VIP</title>
     
+    <!-- استدعاء المكاتب والأدوات الفخمة للواجهة -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     
-    <!-- PWA Config -->
-    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIm1hdGphciBUYXJ6YW5hbHdhcWRpeSBWSVAiLAogICJuYW1lX3Nob3J0IjogIlRhcnphblZJUCIsCiAgInN0YXJ0X3VybCI6ICIuIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjMDIwMjA0IiwKICAidGhlbWVfY29sb3IiOiAiIzAwZmY2NiIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImh0dHBzOi8vY2RuLWljb25zLXBuZy5mbGF0aWNvbi5jb20vNTEyLzI2MjYvMjYyNjI2OS5wbmciLAogICAgICAic2l6ZXMiOiAiMTkyeDE5MiIsCiAgICAgICJ0eXBlIjogImltYWdlL3BuZyIKICAgIH0KICBdCn0=">
+    <link rel="manifest" href="/manifest.json">
 
     <script>
         tailwind.config = {
@@ -35,6 +35,7 @@
         }
     </script>
 
+    <!-- بناء تأثيرات الجمالية والأنيميشن السيبراني الفخم -->
     <style>
         body {
             font-family: 'Cairo', sans-serif;
@@ -45,7 +46,6 @@
             scrollbar-color: #00ff66 #020204;
         }
         
-        /* شريط التمرير السيبراني المضيء */
         ::-webkit-scrollbar {
             width: 4px;
         }
@@ -58,7 +58,6 @@
             border-radius: 10px;
         }
 
-        /* توهج سيبراني فخم للغاية */
         .cyber-glow-border {
             border: 1px solid rgba(0, 255, 102, 0.15);
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
@@ -81,7 +80,6 @@
             transform: translateY(-3px);
         }
 
-        /* زجاج سيبراني */
         .cyber-glass {
             background: rgba(7, 10, 19, 0.85);
             backdrop-filter: blur(25px);
@@ -89,7 +87,6 @@
             border: 1px solid rgba(0, 255, 102, 0.1);
         }
 
-        /* خلفية تأثير الماتريكس الرقمية */
         #matrix-canvas {
             position: fixed;
             top: 0;
@@ -101,7 +98,6 @@
             pointer-events: none;
         }
 
-        /* الرتب السيبرانية وتدرجاتها */
         .rank-bronze { background: linear-gradient(135deg, #cd7f32, #8c531d); }
         .rank-silver { background: linear-gradient(135deg, #c0c0c0, #7d7d7d); }
         .rank-gold { background: linear-gradient(135deg, #ffd700, #b8860b); }
@@ -115,24 +111,22 @@
 </head>
 <body class="min-h-screen flex flex-col lg:flex-row">
 
-    <!-- لوحة الماتريكس في الخلفية -->
+    <!-- تهيئة لوحة الماتريكس والخلفية الرقمية -->
     <canvas id="matrix-canvas"></canvas>
 
-    <!-- نظام الإشعارات والنوافذ المخصصة VIP (بديل الـ alert) -->
+    <!-- نظام التنبيهات المخصص للـ VIP -->
     <div id="toast-container" class="fixed top-5 left-5 z-50 flex flex-col gap-3 pointer-events-none"></div>
 
-    <!-- نافذة مخصصة لتأكيد القرارات والمودالز التفاعلية -->
+    <!-- نافذة مخصصة للقرارات والتأكيدات -->
     <div id="custom-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 hidden opacity-0 transition-opacity duration-300">
         <div class="cyber-glass max-w-md w-full p-6 rounded-2xl border border-cyber-green shadow-2xl transform scale-95 transition-transform duration-300">
             <h3 id="modal-title" class="text-xl font-black text-cyber-green mb-3 flex items-center gap-2"></h3>
             <p id="modal-desc" class="text-slate-300 text-sm leading-relaxed mb-6"></p>
-            <div class="flex justify-end gap-3" id="modal-buttons">
-                <!-- أزرار تولد برمجياً -->
-            </div>
+            <div class="flex justify-end gap-3" id="modal-buttons"></div>
         </div>
     </div>
 
-    <!-- لافتة التثبيت الفاخرة للـ PWA -->
+    <!-- لافتة التثبيت الفاخرة للـ PWA كـ APK حقيقي -->
     <div id="pwa-banner" class="fixed top-4 left-4 right-4 md:left-auto md:right-4 md:w-[420px] cyber-glass p-5 rounded-2xl z-50 shadow-2xl border-l-4 border-l-cyber-green transform -translate-y-[180%] transition-all duration-700 ease-out flex items-center gap-4">
         <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyber-green to-teal-800 flex items-center justify-center text-cyber-950 shadow-lg text-xl">
             <i class="fa-solid fa-download animate-bounce"></i>
@@ -163,7 +157,7 @@
         </div>
     </div>
 
-    <!-- القائمة الجانبية الإمبراطورية الفخمة جداً (Sidebar) -->
+    <!-- بناء القائمة الجانبية الإمبراطورية الفخمة جداً -->
     <aside id="sidebar" class="w-80 bg-cyber-950/95 border-l border-cyber-green/15 flex flex-col justify-between fixed lg:sticky inset-y-0 right-0 z-50 transform translate-x-full lg:translate-x-0 transition-transform duration-500 ease-out shadow-2xl lg:shadow-none">
         
         <div>
@@ -180,10 +174,8 @@
                 <p class="text-[9px] text-cyber-gold tracking-[0.2em] font-mono mt-1">VIP SECURE PORTAL v2.0</p>
             </div>
 
-            <!-- معلومات حساب المستخدم النشط وتصنيف العضوية الملكية -->
-            <div id="user-profile-section" class="p-5 border-b border-cyber-green/10 bg-cyber-900/50">
-                <!-- يتم بناؤها برمجياً بناءً على تسجيل الدخول -->
-            </div>
+            <!-- معلومات حساب المستخدم وتصنيف العضوية الملكية -->
+            <div id="user-profile-section" class="p-5 border-b border-cyber-green/10 bg-cyber-900/50"></div>
 
             <!-- أزرار التصفح الفخمة جداً -->
             <nav class="p-5 space-y-2">
@@ -211,9 +203,7 @@
 
         <!-- أزرار التحكم بالدخول والخروج وبوابة الإدارة الملكية -->
         <div class="p-5 border-t border-cyber-green/10 bg-cyber-950/90 space-y-3">
-            <div id="auth-buttons" class="grid grid-cols-2 gap-2">
-                <!-- يتم توليدها ديناميكياً (دخول / خروج) -->
-            </div>
+            <div id="auth-buttons" class="grid grid-cols-2 gap-2"></div>
             <button onclick="loginAdminPrompt()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyber-gold to-yellow-600 text-cyber-950 font-black text-sm tracking-wide hover:from-yellow-500 hover:to-cyber-gold transition-all duration-300 shadow-xl shadow-cyber-gold/5 flex items-center justify-center gap-2">
                 <i class="fa-solid fa-fingerprint text-base animate-pulse"></i>
                 <span>الإدارة الملكية</span>
@@ -224,7 +214,7 @@
     <!-- مساحة المحتوى الكلية لمتصفح العميل -->
     <main class="flex-1 p-6 md:p-12 lg:max-h-screen lg:overflow-y-auto z-10">
         
-        <!-- قسم تسجيل الدخول / التسجيل (يظهر عندما لا يكون مسجلاً ويبدأ التصفح كـ VIP) -->
+        <!-- قسم تسجيل الدخول / التسجيل للـ VIP -->
         <div id="auth-section" class="hidden max-w-md mx-auto my-12 cyber-glass p-8 rounded-3xl border border-cyber-green/20 animate-fade-up">
             <div class="text-center mb-8">
                 <i class="fa-solid fa-user-lock text-4xl text-cyber-green mb-3"></i>
@@ -262,7 +252,6 @@
                     <p class="text-slate-400 mt-2 text-sm">استثمر في أقوى الأكواد البرمجية والملفات الرقمية الحقيقية الجاهزة للتنزيل المباشر والآمن فور القبول.</p>
                 </div>
                 
-                <!-- تصفية الفلتر -->
                 <div class="flex p-1.5 rounded-xl bg-cyber-900 border border-cyber-green/10">
                     <button onclick="filterProducts('all')" class="px-5 py-2.5 rounded-lg text-xs md:text-sm font-bold bg-cyber-green text-cyber-950 shadow-md shadow-cyber-green/10 transition" id="filter-all">الكل</button>
                     <button onclick="filterProducts('code')" class="px-5 py-2.5 rounded-lg text-xs md:text-sm font-bold text-slate-400 hover:text-white transition" id="filter-code">أكواد</button>
@@ -270,12 +259,10 @@
                 </div>
             </header>
 
-            <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 animate-fade-up">
-                <!-- توليد المنتجات السيبرانية ديناميكياً هنا -->
-            </div>
+            <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 animate-fade-up"></div>
         </div>
 
-        <!-- قسم طلب منتج مخصص (طلب خاص لتصميم برنامج) -->
+        <!-- قسم طلب تصميم برمجي خاص وعرض الطلبات السابقة -->
         <div id="requests-section" class="hidden animate-fade-up max-w-3xl mx-auto">
             <div class="text-center mb-8">
                 <i class="fa-solid fa-cube text-4xl text-cyber-green mb-3"></i>
@@ -301,25 +288,21 @@
 
             <div class="mt-8 space-y-4">
                 <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-list-check text-cyber-green"></i> طلباتك الخاصة السابقة</h3>
-                <div id="my-requests-list" class="space-y-4">
-                    <!-- طلبات العميل الخاصة تدرج هنا -->
-                </div>
+                <div id="my-requests-list" class="space-y-4"></div>
             </div>
         </div>
 
-        <!-- قسم تتبع الطلبيات وتنزيل الملفات المشتراة -->
+        <!-- قسم تتبع الطلبيات وتنزيل الملفات المشتراة بعد القبول الإداري -->
         <div id="tracker-section" class="hidden animate-fade-up max-w-4xl mx-auto">
             <h2 class="text-3xl font-black text-cyber-green mb-6 flex items-center gap-3 font-mono">
                 <i class="fa-solid fa-user-shield"></i> SECURE DECRYPTOR & DOWNLOADS
             </h2>
-            <p class="text-slate-400 mb-8 text-sm">بمجرد موافقة الإدارة على إثبات التحويل المالي لمحفظة جيب، ستتحول الحالة هنا إلى "مقبول" وستتمكن من تنزيل الملف الأصلي المرفوع فوراً وبشكل حقيقي وآمن بالكامل.</p>
+            <p class="text-slate-400 mb-8 text-sm">بمجرد موافقة الإدارة على إثبات التحويل المالي لمحافظ جيب المعتمدة، ستتمكن من تنزيل الملف الأصلي المرفوع فوراً وبشكل حقيقي وآمن بالكامل.</p>
             
-            <div id="tracker-results" class="space-y-6">
-                <!-- نتائج المشتريات والتحميلات تظهر هنا -->
-            </div>
+            <div id="tracker-results" class="space-y-6"></div>
         </div>
 
-        <!-- لوحة التحكم الإدارية الملكية لطرزان (باسوورد: tarzanb) -->
+        <!-- لوحة التحكم الإدارية الملكية لطرزان للتحكم المطلق -->
         <div id="admin-section" class="hidden animate-fade-up space-y-12">
             <div class="flex items-center justify-between border-b border-cyber-green/20 pb-6">
                 <div>
@@ -331,14 +314,13 @@
                 <button onclick="logoutAdmin()" class="bg-red-600/10 text-red-500 border border-red-500/30 hover:bg-red-600 hover:text-white px-5 py-2.5 rounded-xl font-bold transition">خروج آمن</button>
             </div>
 
-            <!-- تبويبات لوحة التحكم -->
             <div class="flex gap-4 border-b border-slate-800 pb-4">
                 <button onclick="toggleAdminTab('orders')" id="btn-admin-orders" class="px-6 py-3 rounded-xl bg-cyber-green text-cyber-950 font-black text-sm transition">إدارة المعاملات المالية والتحميلات</button>
                 <button onclick="toggleAdminTab('products')" id="btn-admin-products" class="px-6 py-3 rounded-xl text-slate-400 hover:text-white font-bold text-sm transition">رفع منتجات وملفات جديدة</button>
                 <button onclick="toggleAdminTab('custom-reqs')" id="btn-admin-reqs" class="px-6 py-3 rounded-xl text-slate-400 hover:text-white font-bold text-sm transition">طلبات البرمجيات الخاصة</button>
             </div>
 
-            <!-- تبويب إدارة الطلبيات المرفوعة -->
+            <!-- تبويب إدارة الطلبيات وإيصالات جيب -->
             <div id="admin-tab-orders" class="space-y-6 animate-fade-up">
                 <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-receipt text-cyber-gold"></i> فحص فواتير وإيصالات جيب (737996293)</h3>
                 
@@ -353,9 +335,7 @@
                                 <th class="p-5 font-bold text-center">إجراءات القبول الفوري للتحميل</th>
                             </tr>
                         </thead>
-                        <tbody id="admin-orders-rows" class="divide-y divide-slate-800">
-                            <!-- جدول عمليات الشراء يدرج هنا -->
-                        </tbody>
+                        <tbody id="admin-orders-rows" class="divide-y divide-slate-800"></tbody>
                     </table>
                 </div>
             </div>
@@ -383,7 +363,6 @@
                             </select>
                         </div>
                         <div class="space-y-2">
-                            <!-- تلبية لطلبك: رفع الملف الفعلي الذي يتم تحميله عند القبول -->
                             <label class="block text-xs font-semibold text-slate-400">ارفع الملف الفعلي (.zip, .txt, .js) الذي سيتسلمه المشتري</label>
                             <input type="file" id="new-prod-file" required class="w-full bg-cyber-950 border border-cyber-green/20 focus:border-cyber-green rounded-xl p-2.5 text-slate-400 outline-none transition text-xs">
                         </div>
@@ -415,29 +394,24 @@
                                     <th class="p-4 text-center">الإجراء</th>
                                 </tr>
                             </thead>
-                            <tbody id="admin-products-rows" class="divide-y divide-slate-800">
-                                <!-- سيتم التوليد هنا -->
-                            </tbody>
+                            <tbody id="admin-products-rows" class="divide-y divide-slate-800"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- تبويب إدارة الطلبات الخاصة للعملاء -->
+            <!-- تبويب إدارة طلبات التصميم الخاصة للعملاء -->
             <div id="admin-tab-custom-reqs" class="hidden space-y-6 animate-fade-up">
                 <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles text-cyber-gold"></i> طلبات التصميم البرمجي المخصصة</h3>
-                <div id="admin-custom-reqs-rows" class="space-y-4">
-                    <!-- تظهر طلبات تصميم برامج العملاء هنا -->
-                </div>
+                <div id="admin-custom-reqs-rows" class="space-y-4"></div>
             </div>
         </div>
     </main>
 
-    <!-- درج حقيبة المشتريات المشفرة الفخم جداً (Shopping Cart Drawer) -->
+    <!-- بناء حقيبة المشتريات المشفرة الفخمة جداً -->
     <div id="cart-drawer" class="fixed inset-y-0 left-0 w-full sm:w-[480px] bg-cyber-950 border-r border-cyber-green/20 z-50 transform -translate-x-full transition-transform duration-500 ease-out flex flex-col justify-between shadow-2xl">
         <div class="p-6 flex flex-col h-full justify-between">
             <div>
-                <!-- هيدر العربة -->
                 <div class="flex items-center justify-between border-b border-cyber-green/10 pb-5">
                     <h3 class="text-xl font-bold text-white flex items-center gap-2 font-mono">
                         <i class="fa-solid fa-basket-shopping text-cyber-green animate-pulse"></i> SECURE BASKET
@@ -445,13 +419,9 @@
                     <button onclick="toggleCartDrawer()" class="text-slate-400 hover:text-white transition"><i class="fa-solid fa-xmark text-xl"></i></button>
                 </div>
                 
-                <!-- محتوى العربة -->
-                <div id="cart-items-list" class="mt-6 space-y-4 overflow-y-auto max-h-[45vh] pr-1">
-                    <!-- يولد برمجياً -->
-                </div>
+                <div id="cart-items-list" class="mt-6 space-y-4 overflow-y-auto max-h-[45vh] pr-1"></div>
             </div>
 
-            <!-- إرسال التحويل المالي والدفع والرفع -->
             <div class="border-t border-cyber-green/10 pt-6 space-y-4 bg-cyber-950">
                 <div class="flex justify-between items-center text-lg font-bold">
                     <span>قيمة الفاتورة المشفرة:</span>
@@ -488,53 +458,12 @@
         </div>
     </div>
 
+    <!-- بناء السكربتات وتدفق العمليات البرمجية والحماية للعميل -->
     <script>
-        // إعدادات قواعد البيانات التفاعلية والمحلية الحية
-        const defaultProducts = [
-            {
-                id: "tarzan-vip-p1",
-                title: "كاشف الثغرات ومحلل المنافذ المؤتمت",
-                description: "برنامج حقيقي بلغة Python يقوم بفحص خوادم الويب وتحديد الثغرات وتوثيقها بتقرير مفصل للمختبرين الأمنيين.",
-                price: 79.00,
-                type: "code",
-                image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=600&q=80",
-                fileName: "scanner_script.py",
-                fileData: "data:text/plain;base64,IyBTY2FubmVyIFNjcmlwdCBieSBUYXJ6YW5hbHdhcWRpeSBWSVAKcHJpbnQoIlN0YXJ0aW5nIFBvcnQgU2Nhbm5lci4uLiIpCmltcG9ydCBzb2NrZXQKZm9yIHBvcnQgaW4gWzIyLCA4MCwgNDQzXS8vOgoKICAgIHNvY2sgPSBzb2NrZXQuc29ja2V0KHNvY2suQUZfSU5FVCwgc29jay5TT0NLX1NUUkVBTSkKICAgIHJlc3VsdCA9IHNvY2suY29ubmVjdF9leCgoJzEyNy4wLjAuMScsIHBvcnQpKQogICAgaWYgcmVzdWx0ID09IDA6CiAgICAgICAgcHJpbnQoZiJQb3J0IHtwb3J0fSBpcyBPcGVuISIp"
-            },
-            {
-                id: "tarzan-vip-p2",
-                title: "حقيبة جدار الحماية والأمان للشركات الناشئة",
-                description: "ملف مضغوط يحتوي على قواعد حماية وقوائم حظر وإرشادات جدار حماية متقدمة لتأمين خوادم لينكس والأنظمة السحابية.",
-                price: 130.00,
-                type: "file",
-                image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&q=80",
-                fileName: "cyber_firewall_rules.zip",
-                fileData: "data:application/zip;base64,UEsFBgAAAAAAAAAAAAAAAAAAAAAAAA=="
-            }
-        ];
-
-        // تهيئة قواعد البيانات محلياً لمنع فقدان البيانات بعد الرفرش
-        if (!localStorage.getItem('tarzan_products')) {
-            localStorage.setItem('tarzan_products', JSON.stringify(defaultProducts));
-        }
-        if (!localStorage.getItem('tarzan_orders')) {
-            localStorage.setItem('tarzan_orders', JSON.stringify([]));
-        }
-        if (!localStorage.getItem('tarzan_users')) {
-            // مستخدمين افتراضيين (المدير والمستخدمين)
-            localStorage.setItem('tarzan_users', JSON.stringify([
-                { id: "u-admin", username: "admin", password: "tarzanb", role: "admin", totalSpent: 0, purchasesCount: 0 }
-            ]));
-        }
-        if (!localStorage.getItem('tarzan_custom_requests')) {
-            localStorage.setItem('tarzan_custom_requests', JSON.stringify([]));
-        }
-
-        let products = JSON.parse(localStorage.getItem('tarzan_products'));
-        let orders = JSON.parse(localStorage.getItem('tarzan_orders'));
-        let users = JSON.parse(localStorage.getItem('tarzan_users'));
-        let customRequests = JSON.parse(localStorage.getItem('tarzan_custom_requests'));
         let cart = [];
+        let products = [];
+        let orders = [];
+        let customRequests = [];
         let currentUser = JSON.parse(sessionStorage.getItem('tarzan_logged_user')) || null;
         let deferredPrompt;
 
@@ -620,7 +549,7 @@
             }, 4000);
         }
 
-        // إظهار المودال المخصص الفخم كبديل للـ prompt و confirm
+        // بناء وتخصيص النوافذ التفاعلية بديل لـ alert و confirm
         function showCustomModal(title, desc, buttons) {
             const modal = document.getElementById('custom-modal');
             document.getElementById('modal-title').innerHTML = title;
@@ -658,7 +587,7 @@
             }, 300);
         }
 
-        // نظام تسجيل حسابات المستخدمين والـ VIP Ranks
+        // جلب وعرض معلومات حساب المستخدم وتصنيف العضوية الملكية
         function renderUserProfile() {
             const section = document.getElementById('user-profile-section');
             const authBtns = document.getElementById('auth-buttons');
@@ -677,7 +606,6 @@
                 return;
             }
 
-            // تحديد رتبة العضوية بناءً على المشتريات التراكمية
             let rankClass = "rank-bronze";
             let rankName = "Bronze VIP";
             
@@ -720,7 +648,7 @@
             `;
         }
 
-        let authMode = 'login'; // login or register
+        let authMode = 'login';
 
         function showAuthPortal(mode) {
             authMode = mode;
@@ -747,50 +675,33 @@
             }
         }
 
-        document.getElementById('auth-switch-btn').addEventListener('click', () => {
-            authMode = (authMode === 'login') ? 'register' : 'login';
-            toggleAuthMode();
-        });
-
-        function handleAuthSubmit(e) {
+        // معالجة تسجيل الدخول والاتصال الآمن بالسيرفر
+        async function handleAuthSubmit(e) {
             e.preventDefault();
             const username = document.getElementById('auth-username').value.trim();
-            const pass = document.getElementById('auth-password').value.trim();
+            const password = document.getElementById('auth-password').value.trim();
+            const url = authMode === 'login' ? '/api/auth/login' : '/api/auth/register';
 
-            if (authMode === 'login') {
-                const user = users.find(u => u.username.toLowerCase() === username.toLowerCase() && u.password === pass);
-                if (user) {
-                    currentUser = user;
-                    sessionStorage.setItem('tarzan_logged_user', JSON.stringify(user));
-                    showToast(`أهلاً بك مجدداً يا ${username}!`, 'success');
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast(result.message, 'success');
+                    currentUser = result.user;
+                    sessionStorage.setItem('tarzan_logged_user', JSON.stringify(result.user));
                     renderUserProfile();
                     changeSection('store');
                     document.getElementById('auth-form').reset();
                 } else {
-                    showToast('اسم المستخدم أو كلمة المرور غير صالحة.', 'error');
+                    showToast(result.message, 'error');
                 }
-            } else {
-                const exist = users.find(u => u.username.toLowerCase() === username.toLowerCase());
-                if (exist) {
-                    showToast('اسم المستخدم هذا محجوز لعميل آخر.', 'error');
-                    return;
-                }
-                const newUser = {
-                    id: 'u-' + Date.now(),
-                    username,
-                    password: pass,
-                    role: 'user',
-                    totalSpent: 0,
-                    purchasesCount: 0
-                };
-                users.push(newUser);
-                localStorage.setItem('tarzan_users', JSON.stringify(users));
-                currentUser = newUser;
-                sessionStorage.setItem('tarzan_logged_user', JSON.stringify(newUser));
-                showToast('تمت صياغة حسابك وعضويتك بنجاح!', 'success');
-                renderUserProfile();
-                changeSection('store');
-                document.getElementById('auth-form').reset();
+            } catch (err) {
+                showToast('خطأ في الاتصال بالخادم الرئيسي للموقع.', 'error');
             }
         }
 
@@ -801,10 +712,20 @@
             updateCartUI();
             renderUserProfile();
             changeSection('store');
-            showToast('تم الخروج الآمن من النظام.', 'success');
+            showToast('تم تسجيل الخروج وتأمين الجلسة بنجاح.', 'success');
         }
 
-        // عرض المنتجات السيبرانية الفاخرة
+        // جلب المنتجات الفعلية وتوليد كروت المعرض
+        async function fetchProducts() {
+            try {
+                const response = await fetch('/api/products');
+                products = await response.json();
+                renderProducts(products);
+            } catch (err) {
+                showToast('فشل جلب المعروضات السيبرانية من السيرفر.', 'error');
+            }
+        }
+
         function renderProducts(productsList) {
             const grid = document.getElementById('products-grid');
             grid.innerHTML = '';
@@ -843,6 +764,7 @@
             });
         }
 
+        // تصفية وتحديث الأقسام النشطة
         function filterProducts(type) {
             ['all', 'code', 'file'].forEach(t => {
                 const btn = document.getElementById(`filter-${t}`);
@@ -861,7 +783,6 @@
             }
         }
 
-        // معالجة العربة والشراء
         function toggleCartDrawer() {
             const drawer = document.getElementById('cart-drawer');
             drawer.classList.toggle('-translate-x-full');
@@ -886,7 +807,7 @@
                 cart.push({ product, quantity: 1 });
             }
             updateCartUI();
-            showToast(`تم إدراج "${product.title}" بنجاح!`, 'success');
+            showToast(`تم إدراج "${product.title}" بنجاح في السلة!`, 'success');
         }
 
         function removeFromCart(id) {
@@ -935,7 +856,6 @@
 
         function copyWallet() {
             const num = document.getElementById('wallet-number').innerText;
-            // استخدام الطريقة المتوافقة مع الـ iFrames
             const el = document.createElement('textarea');
             el.value = num;
             document.body.appendChild(el);
@@ -945,8 +865,8 @@
             showToast('تم نسخ رقم محفظة جيب 737996293 بنجاح!', 'success');
         }
 
-        // إرسال الطلب مع إيصال التحويل
-        function submitOrder(e) {
+        // إرسال الطلبيات والملفات وإثباتات جيب إلى السيرفر
+        async function submitOrder(e) {
             e.preventDefault();
             if (cart.length === 0) {
                 showToast('عربتك فارغة!', 'error');
@@ -961,38 +881,36 @@
                 return;
             }
 
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const base64Img = event.target.result;
-                let totalPrice = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+            const formData = new FormData();
+            formData.append('cartItems', JSON.stringify(cart));
+            formData.append('total', cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0));
+            formData.append('cust-receipt-file', file);
 
-                const newOrder = {
-                    id: 'tarzan-vip-order-' + Date.now(),
-                    userId: currentUser.id,
-                    customerName: currentUser.username,
-                    items: [...cart],
-                    total: totalPrice,
-                    receiptImg: base64Img,
-                    status: 'pending',
-                    date: new Date().toLocaleDateString('ar-YE', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })
-                };
+            try {
+                const response = await fetch('/api/orders', {
+                    method: 'POST',
+                    headers: { 'x-user-id': currentUser.id },
+                    body: formData
+                });
+                const result = await response.json();
 
-                orders.push(newOrder);
-                localStorage.setItem('tarzan_orders', JSON.stringify(orders));
-
-                cart = [];
-                updateCartUI();
-                toggleCartDrawer();
-                document.getElementById('checkout-form').reset();
-                
-                showToast('تم إرسال التحويل بنجاح! جاري فحصه وتنشيط تحميلك.', 'success');
-                changeSection('tracker');
-            };
-            reader.readAsDataURL(file);
+                if (result.success) {
+                    showToast(result.message, 'success');
+                    cart = [];
+                    updateCartUI();
+                    toggleCartDrawer();
+                    document.getElementById('checkout-form').reset();
+                    changeSection('tracker');
+                } else {
+                    showToast(result.message, 'error');
+                }
+            } catch (err) {
+                showToast('حدث خطأ فني أثناء رفع إثبات الدفع.', 'error');
+            }
         }
 
-        // نظام طلب برمجيات مخصصة
-        function submitCustomRequest(e) {
+        // إدارة إرسال طلب تصميم خاص للمستخدمين
+        async function submitCustomRequest(e) {
             e.preventDefault();
             if (!currentUser) {
                 showToast('يرجى تسجيل الدخول لطلب التصاميم والبرامج.', 'error');
@@ -1000,64 +918,187 @@
             }
 
             const title = document.getElementById('req-title').value.trim();
-            const desc = document.getElementById('req-desc').value.trim();
+            const description = document.getElementById('req-desc').value.trim();
 
-            const newReq = {
-                id: 'req-' + Date.now(),
-                userId: currentUser.id,
-                username: currentUser.username,
-                title,
-                description: desc,
-                status: 'pending', // pending, priced, rejected
-                price: 0,
-                date: new Date().toLocaleDateString('ar-YE')
-            };
+            try {
+                const response = await fetch('/api/requests', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'x-user-id': currentUser.id 
+                    },
+                    body: JSON.stringify({ title, description })
+                });
+                const result = await response.json();
 
-            customRequests.push(newReq);
-            localStorage.setItem('tarzan_custom_requests', JSON.stringify(customRequests));
-
-            document.getElementById('custom-request-form').reset();
-            showToast('تم إرسال طلبك الخاص بنجاح! سيتم تسعيره قريباً.', 'success');
-            renderMyRequests();
+                if (result.success) {
+                    showToast(result.message, 'success');
+                    document.getElementById('custom-request-form').reset();
+                    fetchMyRequests();
+                } else {
+                    showToast(result.message, 'error');
+                }
+            } catch (err) {
+                showToast('خطأ في إرسال طلبك الخاص.', 'error');
+            }
         }
 
-        function renderMyRequests() {
-            const container = document.getElementById('my-requests-list');
-            container.innerHTML = '';
+        // جلب طلبات التصميم الخاصة بالمستخدم الحالي
+        async function fetchMyRequests() {
+            try {
+                const response = await fetch('/api/requests', {
+                    headers: { 'x-user-id': currentUser.id }
+                });
+                const data = await response.json();
+                const container = document.getElementById('my-requests-list');
+                container.innerHTML = '';
 
-            if (!currentUser) return;
+                if (data.length === 0) {
+                    container.innerHTML = `<p class="text-xs text-slate-500 text-center py-4">لم تقم بإرسال أي طلبات خاصة مسبقاً.</p>`;
+                    return;
+                }
 
-            const myReqs = customRequests.filter(r => r.userId === currentUser.id);
+                data.reverse().forEach(req => {
+                    let statusHtml = '';
+                    if (req.status === 'pending') {
+                        statusHtml = `<span class="text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-1 rounded text-[10px]">قيد الدراسة والتسعير</span>`;
+                    } else if (req.status === 'rejected') {
+                        statusHtml = `<span class="text-red-500 bg-red-500/10 border border-red-500/20 px-2 py-1 rounded text-[10px]">مرفوض</span>`;
+                    } else {
+                        statusHtml = `<span class="text-cyber-green bg-cyber-green/10 border border-cyber-green/20 px-2 py-1 rounded text-[10px]">تم القبول بسعر: ${req.price}$</span>`;
+                    }
 
-            if (myReqs.length === 0) {
-                container.innerHTML = `<p class="text-xs text-slate-500 text-center py-4">لم تقم بإرسال أي طلبات خاصة مسبقاً.</p>`;
+                    container.innerHTML += `
+                        <div class="bg-cyber-900/40 p-4 rounded-xl border border-cyber-green/10">
+                            <div class="flex justify-between items-center mb-2">
+                                <h4 class="font-bold text-white text-sm font-mono">${req.title}</h4>
+                                ${statusHtml}
+                            </div>
+                            <p class="text-slate-400 text-xs leading-relaxed line-clamp-2">${req.description}</p>
+                            <span class="text-[9px] text-slate-500 block mt-2">${req.date}</span>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // بناء تتبع المشتريات وتنزيل الملفات الحقيقية والآمنة للعميل
+        async function trackMyOrders() {
+            const resultsDiv = document.getElementById('tracker-results');
+            resultsDiv.innerHTML = '';
+
+            if (!currentUser) {
+                resultsDiv.innerHTML = `
+                    <div class="cyber-glass p-8 text-center rounded-2xl border border-cyber-green/10">
+                        <i class="fa-solid fa-lock text-4xl text-cyber-green/20 mb-3 animate-pulse"></i>
+                        <h4 class="font-bold text-white">الملفات والتحميلات مقفلة بانتظار ولوجك</h4>
+                        <p class="text-slate-500 text-xs mt-1">يرجى تسجيل الدخول بحساب العضوية VIP لعرض الملفات المتاحة للتحميل الفوري.</p>
+                        <button onclick="showAuthPortal('login')" class="mt-4 px-6 py-2.5 bg-cyber-green text-cyber-950 font-bold text-xs rounded-xl hover:bg-emerald-400 transition shadow-lg">تسجيل الدخول الآن</button>
+                    </div>
+                `;
                 return;
             }
 
-            myReqs.reverse().forEach(req => {
-                let statusHtml = '';
-                if (req.status === 'pending') {
-                    statusHtml = `<span class="text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-1 rounded text-[10px]">قيد الدراسة والتسعير</span>`;
-                } else if (req.status === 'rejected') {
-                    statusHtml = `<span class="text-red-500 bg-red-500/10 border border-red-500/20 px-2 py-1 rounded text-[10px]">مرفوض</span>`;
-                } else {
-                    statusHtml = `<span class="text-cyber-green bg-cyber-green/10 border border-cyber-green/20 px-2 py-1 rounded text-[10px]">تم القبول بسعر: ${req.price}$</span>`;
+            try {
+                const res = await fetch('/api/orders', {
+                    headers: { 'x-user-id': currentUser.id }
+                });
+                const allOrders = await res.json();
+                const myOrders = currentUser.role === 'admin' ? allOrders : allOrders.filter(o => o.userId === currentUser.id);
+
+                if (myOrders.length === 0) {
+                    resultsDiv.innerHTML = `
+                        <div class="cyber-glass p-8 text-center rounded-2xl border border-cyber-green/10">
+                            <i class="fa-solid fa-folder-open text-4xl text-cyber-green/20 mb-3"></i>
+                            <h4 class="font-bold text-white">لم تقتنِ أي برمجية مشفرة بعد</h4>
+                            <p class="text-slate-500 text-xs mt-1">تصفح المعرض البرمجي واختر أداتك المفضلة لبدء الفخامة.</p>
+                        </div>
+                    `;
+                    return;
                 }
 
-                container.innerHTML += `
-                    <div class="bg-cyber-900/40 p-4 rounded-xl border border-cyber-green/10">
-                        <div class="flex justify-between items-center mb-2">
-                            <h4 class="font-bold text-white text-sm font-mono">${req.title}</h4>
-                            ${statusHtml}
+                myOrders.reverse().forEach(order => {
+                    let statusHtml = '';
+                    let downloadBlock = '';
+
+                    if (order.status === 'pending') {
+                        statusHtml = `<span class="bg-amber-500/10 text-amber-500 px-3 py-1.5 rounded-lg border border-amber-500/30 font-bold text-xs"><i class="fa-solid fa-spinner animate-spin"></i> بانتظار مطابقة إيصال جيب</span>`;
+                        downloadBlock = `<button class="w-full mt-4 py-3 rounded-xl bg-slate-900/60 text-slate-500 font-bold text-xs cursor-not-allowed border border-slate-800" disabled><i class="fa-solid fa-lock"></i> مفتاح التنزيل مغلق - بانتظار مطابقة الفاتورة</button>`;
+                    } else if (order.status === 'rejected') {
+                        statusHtml = `<span class="bg-red-500/10 text-red-500 px-3 py-1.5 rounded-lg border border-red-500/30 font-bold text-xs"><i class="fa-solid fa-circle-xmark"></i> عملية تحويل ملغاة</span>`;
+                        downloadBlock = `<div class="mt-4 p-3 bg-red-950/20 border border-red-500/30 rounded-xl text-red-400 text-xs text-center font-semibold">تواصل مع الإدارة للتحقق من المعاملة المرفوضة.</div>`;
+                    } else {
+                        statusHtml = `<span class="bg-cyber-green/10 text-cyber-green px-3 py-1.5 rounded-lg border border-cyber-green/30 font-bold text-xs"><i class="fa-solid fa-circle-check animate-pulse"></i> تم تنشيط مفاتيح التنزيل</span>`;
+                        
+                        let btnLinks = '';
+                        order.items.forEach(item => {
+                            btnLinks += `
+                                <button onclick="downloadSecureFile('${item.product.id}')" class="w-full mt-2 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-cyber-green hover:from-emerald-500 hover:to-emerald-400 text-cyber-950 font-black text-xs transition shadow-lg shadow-cyber-green/15 flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-cloud-arrow-down"></i> تحميل وفك تشفير: ${item.product.title}
+                                </button>
+                            `;
+                        });
+                        downloadBlock = btnLinks;
+                    }
+
+                    const itemsText = order.items.map(i => `<span class="text-white font-bold font-mono">${i.product.title} (${i.quantity}x)</span>`).join(' ، ');
+
+                    resultsDiv.innerHTML += `
+                        <div class="cyber-glass p-6 rounded-2xl border border-cyber-green/10 space-y-4">
+                            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 pb-4 border-b border-slate-800">
+                                <div>
+                                    <span class="text-[9px] text-slate-500 font-mono tracking-widest block">${order.id}</span>
+                                    <h4 class="font-bold text-cyber-gold mt-1 text-xs">${order.date}</h4>
+                                </div>
+                                <div>${statusHtml}</div>
+                            </div>
+                            <div class="text-xs space-y-2 text-slate-400">
+                                <p><span class="text-slate-500">المنتجات:</span> ${itemsText}</p>
+                                <p><span class="text-slate-500">إجمالي قيمة الصفقة:</span> <span class="text-cyber-green font-bold">${order.total.toFixed(2)}$</span></p>
+                            </div>
+                            ${downloadBlock}
                         </div>
-                        <p class="text-slate-400 text-xs leading-relaxed line-clamp-2">${req.description}</p>
-                        <span class="text-[9px] text-slate-500 block mt-2">${req.date}</span>
-                    </div>
-                `;
+                    `;
+                });
+
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // دالة تنزيل الملفات المؤمنة والآمنة حقيقياً من السيرفر
+        function downloadSecureFile(productId) {
+            if (!currentUser) return;
+            const downloadUrl = `/api/products/download/${productId}`;
+            
+            showToast('جاري تحضير وتنزيل الملف الآمن من الخادم الرئيسي...', 'success');
+            
+            fetch(downloadUrl, {
+                headers: { 'x-user-id': currentUser.id }
+            })
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error('فشل التنزيل! يرجى التحقق من قبول دفعتك من الإدارة.');
+                }
+                return res.blob();
+            })
+            .then(blob => {
+                const blobUrl = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = blobUrl;
+                a.download = `tarzan-secure-${productId}.zip`; // سيأخذ اسمه الفعلي تلقائياً من السيرفر
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            })
+            .catch(err => {
+                showToast(err.message, 'error');
             });
         }
 
-        // التنقل والتبديل السلس للواجهات
+        // التنقل بين الأقسام والصفحات بالتأثيرات
         function changeSection(section) {
             document.getElementById('store-section').classList.add('hidden');
             document.getElementById('requests-section').classList.add('hidden');
@@ -1078,7 +1119,7 @@
             } else if (section === 'requests') {
                 document.getElementById('requests-section').classList.remove('hidden');
                 document.getElementById('nav-requests').className = "w-full flex items-center gap-4 px-4 py-3 rounded-xl bg-cyber-green/10 text-cyber-green border border-cyber-green/30 font-bold transition-all duration-300";
-                renderMyRequests();
+                fetchMyRequests();
             } else if (section === 'tracker') {
                 document.getElementById('tracker-section').classList.remove('hidden');
                 document.getElementById('nav-tracker').className = "w-full flex items-center gap-4 px-4 py-3 rounded-xl bg-cyber-green/10 text-cyber-green border border-cyber-green/30 font-bold transition-all duration-300";
@@ -1095,102 +1136,8 @@
             }
         }
 
-        // تتبع المشتريات وتحميل الملفات الحقيقية والآمنة للعميل
-        function trackMyOrders() {
-            const resultsDiv = document.getElementById('tracker-results');
-            resultsDiv.innerHTML = '';
-
-            if (!currentUser) {
-                resultsDiv.innerHTML = `
-                    <div class="cyber-glass p-8 text-center rounded-2xl border border-cyber-green/10">
-                        <i class="fa-solid fa-lock text-4xl text-cyber-green/20 mb-3 animate-pulse"></i>
-                        <h4 class="font-bold text-white">الملفات والتحميلات مقفلة بانتظار ولوجك</h4>
-                        <p class="text-slate-500 text-xs mt-1">يرجى تسجيل الدخول بحساب العضوية VIP لعرض الملفات المتاحة للتحميل الفوري.</p>
-                        <button onclick="showAuthPortal('login')" class="mt-4 px-6 py-2.5 bg-cyber-green text-cyber-950 font-bold text-xs rounded-xl hover:bg-emerald-400 transition shadow-lg">تسجيل الدخول الآن</button>
-                    </div>
-                `;
-                return;
-            }
-
-            const myOrders = orders.filter(o => o.userId === currentUser.id);
-
-            if (myOrders.length === 0) {
-                resultsDiv.innerHTML = `
-                    <div class="cyber-glass p-8 text-center rounded-2xl border border-cyber-green/10">
-                        <i class="fa-solid fa-folder-open text-4xl text-cyber-green/20 mb-3"></i>
-                        <h4 class="font-bold text-white">لم تقتنِ أي برمجية مشفرة بعد</h4>
-                        <p class="text-slate-500 text-xs mt-1">تصفح المعرض البرمجي واختر أداتك المفضلة لبدء الفخامة.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            myOrders.reverse().forEach(order => {
-                let statusHtml = '';
-                let downloadBlock = '';
-
-                if (order.status === 'pending') {
-                    statusHtml = `<span class="bg-amber-500/10 text-amber-500 px-3 py-1.5 rounded-lg border border-amber-500/30 font-bold text-xs"><i class="fa-solid fa-spinner animate-spin"></i> بانتظار مطابقة إيصال جيب</span>`;
-                    downloadBlock = `<button class="w-full mt-4 py-3 rounded-xl bg-slate-900/60 text-slate-500 font-bold text-xs cursor-not-allowed border border-slate-800" disabled><i class="fa-solid fa-lock"></i> مفتاح التنزيل مغلق - بانتظار مطابقة الفاتورة</button>`;
-                } else if (order.status === 'rejected') {
-                    statusHtml = `<span class="bg-red-500/10 text-red-500 px-3 py-1.5 rounded-lg border border-red-500/30 font-bold text-xs"><i class="fa-solid fa-circle-xmark"></i> عملية تحويل ملغاة</span>`;
-                    downloadBlock = `<div class="mt-4 p-3 bg-red-950/20 border border-red-500/30 rounded-xl text-red-400 text-xs text-center font-semibold">تواصل مع الإدارة للتحقق من المعاملة المرفوضة.</div>`;
-                } else {
-                    statusHtml = `<span class="bg-cyber-green/10 text-cyber-green px-3 py-1.5 rounded-lg border border-cyber-green/30 font-bold text-xs"><i class="fa-solid fa-circle-check animate-pulse"></i> تم تنشيط مفاتيح التنزيل</span>`;
-                    
-                    // هنا الميزة الحصرية: تحميل حقيقي وتام للملفات
-                    let btnLinks = '';
-                    order.items.forEach(item => {
-                        btnLinks += `
-                            <button onclick="downloadSecureFile('${item.product.id}')" class="w-full mt-2 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-cyber-green hover:from-emerald-500 hover:to-emerald-400 text-cyber-950 font-black text-xs transition shadow-lg shadow-cyber-green/15 flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-cloud-arrow-down"></i> تحميل وفك تشفير: ${item.product.title} (${item.product.fileName})
-                            </button>
-                        `;
-                    });
-                    downloadBlock = btnLinks;
-                }
-
-                const itemsText = order.items.map(i => `<span class="text-white font-bold font-mono">${i.product.title} (${i.quantity}x)</span>`).join(' ، ');
-
-                resultsDiv.innerHTML += `
-                    <div class="cyber-glass p-6 rounded-2xl border border-cyber-green/10 space-y-4">
-                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 pb-4 border-b border-slate-800">
-                            <div>
-                                <span class="text-[9px] text-slate-500 font-mono tracking-widest block">${order.id}</span>
-                                <h4 class="font-bold text-cyber-gold mt-1 text-xs">${order.date}</h4>
-                            </div>
-                            <div>${statusHtml}</div>
-                        </div>
-                        <div class="text-xs space-y-2 text-slate-400">
-                            <p><span class="text-slate-500">المنتجات:</span> ${itemsText}</p>
-                            <p><span class="text-slate-500">إجمالي قيمة الصفقة:</span> <span class="text-cyber-green font-bold">${order.total.toFixed(2)}$</span></p>
-                        </div>
-                        ${downloadBlock}
-                    </div>
-                `;
-            });
-        }
-
-        // دالة تنزيل الملفات محلياً
-        function downloadSecureFile(productId) {
-            const prod = products.find(p => p.id === productId);
-            if (!prod || !prod.fileData) {
-                showToast('خطأ في استرجاع ملف التحميل.', 'error');
-                return;
-            }
-
-            const link = document.createElement('a');
-            link.href = prod.fileData;
-            link.download = prod.fileName || "download.zip";
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            showToast(`جاري تنزيل الملف: ${prod.fileName} بنجاح!`, 'success');
-        }
-
-        // مركز تحكم الإمبراطور الإداري لـ طرزان
+        // حماية الدخول للمسؤول الإداري
         function loginAdminPrompt() {
-            // استخدام المودال المنبثق الفخم والمخصص بدلاً من prompt للحفاظ على فخامة الواجهة
             showCustomModal(
                 `<i class="fa-solid fa-user-shield text-cyber-gold"></i> بوابة التحكم الملكية للإدارة`,
                 'أدخل كلمة مرور الإدارة لفك التشفير عن مركز التحكم:',
@@ -1199,7 +1146,6 @@
                         text: 'تأكيد الرمز',
                         class: 'bg-cyber-gold text-cyber-950 hover:bg-yellow-500',
                         action: () => {
-                            // ننشئ نافذة إدخال مخصصة
                             const pass = prompt('الرجاء إدخال كلمة المرور (tarzanb):');
                             if (pass === 'tarzanb') {
                                 showToast('تم فك القفل عن الإدارة الملكية بنجاح!', 'success');
@@ -1257,107 +1203,119 @@
             }
         }
 
-        // عرض المعاملات المالية للإدارة والقبول الحقيقي
-        function renderAdminOrders() {
+        // عرض المعاملات المالية المرفوعة للإدارة للمطابقة والقبول
+        async function renderAdminOrders() {
             const tbody = document.getElementById('admin-orders-rows');
             tbody.innerHTML = '';
 
-            if (orders.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-slate-500">لا توجد أي معاملات شراء معلقة حالياً.</td></tr>`;
-                return;
-            }
+            try {
+                const response = await fetch('/api/orders', {
+                    headers: { 'x-user-id': currentUser.id }
+                });
+                const data = await response.json();
 
-            orders.slice().reverse().forEach(order => {
-                const itemsText = order.items.map(i => `${i.product.title} (x${i.quantity})`).join('<br>');
-                
-                let actionHtml = '';
-                if (order.status === 'pending') {
-                    actionHtml = `
-                        <div class="flex gap-2 justify-center">
-                            <button onclick="changeOrderStatus('${order.id}', 'accepted')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-xs transition">موافقة وتنشيط التنزيل</button>
-                            <button onclick="changeOrderStatus('${order.id}', 'rejected')" class="bg-red-600 hover:bg-red-500 text-white font-bold px-4 py-2 rounded-xl text-xs transition">رفض</button>
-                        </div>
-                    `;
-                } else if (order.status === 'accepted') {
-                    actionHtml = `<span class="text-cyber-green bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-cyber-green/30 text-xs font-black">مقبول والتحميل نشط</span>`;
-                } else {
-                    actionHtml = `<span class="text-red-500 bg-red-500/10 px-3 py-1.5 rounded-lg border border-red-500/30 text-xs font-bold">مرفوض وملغي</span>`;
+                if (data.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-slate-500">لا توجد أي معاملات شراء معلقة حالياً.</td></tr>`;
+                    return;
                 }
 
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-900/40 transition">
-                        <td class="p-5">
-                            <p class="font-bold text-white font-mono">${order.customerName}</p>
-                            <span class="text-slate-500 text-[9px] block font-mono mt-1">${order.id}</span>
-                            <span class="text-slate-600 text-[10px] block">${order.date}</span>
-                        </td>
-                        <td class="p-5 text-xs text-slate-300 leading-relaxed">${itemsText}</td>
-                        <td class="p-5 font-mono font-bold text-cyber-gold text-base">${order.total.toFixed(2)}$</td>
-                        <td class="p-5">
-                            <a href="${order.receiptImg}" target="_blank" class="text-cyber-green hover:underline flex items-center gap-1 text-xs font-bold font-mono">
-                                <i class="fa-solid fa-eye"></i> إثبات جيب
-                            </a>
-                        </td>
-                        <td class="p-5 text-center">${actionHtml}</td>
-                    </tr>
-                `;
-            });
-        }
-
-        // قبول المعاملة وترقية رتبة العضوية تلقائياً للعميل
-        function changeOrderStatus(orderId, status) {
-            const index = orders.findIndex(o => o.id === orderId);
-            if (index !== -1) {
-                orders[index].status = status;
-                
-                if (status === 'accepted') {
-                    // ترقية العضوية للعميل
-                    const userIndex = users.findIndex(u => u.id === orders[index].userId);
-                    if (userIndex !== -1) {
-                        users[userIndex].purchasesCount++;
-                        users[userIndex].totalSpent += orders[index].total;
-                        localStorage.setItem('tarzan_users', JSON.stringify(users));
-                        
-                        // تحديث الجلسة إذا كان العميل النشط هو نفسه
-                        if (currentUser && currentUser.id === users[userIndex].id) {
-                            currentUser = users[userIndex];
-                            sessionStorage.setItem('tarzan_logged_user', JSON.stringify(currentUser));
-                            renderUserProfile();
-                        }
+                data.slice().reverse().forEach(order => {
+                    const itemsText = order.items.map(i => `${i.product.title} (x${i.quantity})`).join('<br>');
+                    
+                    let actionHtml = '';
+                    if (order.status === 'pending') {
+                        actionHtml = `
+                            <div class="flex gap-2 justify-center">
+                                <button onclick="changeOrderStatus('${order.id}', 'accepted')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-xs transition">موافقة وتنشيط التنزيل</button>
+                                <button onclick="changeOrderStatus('${order.id}', 'rejected')" class="bg-red-600 hover:bg-red-500 text-white font-bold px-4 py-2 rounded-xl text-xs transition">رفض</button>
+                            </div>
+                        `;
+                    } else if (order.status === 'accepted') {
+                        actionHtml = `<span class="text-cyber-green bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-cyber-green/30 text-xs font-black">مقبول والتحميل نشط</span>`;
+                    } else {
+                        actionHtml = `<span class="text-red-500 bg-red-500/10 px-3 py-1.5 rounded-lg border border-red-500/30 text-xs font-bold">مرفوض وملغي</span>`;
                     }
-                }
 
-                localStorage.setItem('tarzan_orders', JSON.stringify(orders));
-                showToast(`تم قبول المعاملة وتنشيط التحميل للعميل.`, 'success');
-                renderAdminOrders();
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-900/40 transition">
+                            <td class="p-5">
+                                <p class="font-bold text-white font-mono">${order.customerName}</p>
+                                <span class="text-slate-500 text-[9px] block font-mono mt-1">${order.id}</span>
+                                <span class="text-slate-600 text-[10px] block">${order.date}</span>
+                            </td>
+                            <td class="p-5 text-xs text-slate-300 leading-relaxed">${itemsText}</td>
+                            <td class="p-5 font-mono font-bold text-cyber-gold text-base">${order.total.toFixed(2)}$</td>
+                            <td class="p-5">
+                                <a href="${order.receiptImg}" target="_blank" class="text-cyber-green hover:underline flex items-center gap-1 text-xs font-bold font-mono">
+                                    <i class="fa-solid fa-eye"></i> إثبات جيب
+                                </a>
+                            </td>
+                            <td class="p-5 text-center">${actionHtml}</td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                console.error(err);
             }
         }
 
-        // عرض وحذف المنتجات الحالية في الإدارة
-        function renderAdminProducts() {
+        // معالجة ترقيات العضويات وقبول المبيعات في الإدارة
+        async function changeOrderStatus(orderId, status) {
+            try {
+                const response = await fetch(`/api/orders/${orderId}/status`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'x-user-id': currentUser.id 
+                    },
+                    body: JSON.stringify({ status })
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast(result.message, 'success');
+                    renderAdminOrders();
+                } else {
+                    showToast(result.message, 'error');
+                }
+            } catch (err) {
+                showToast('خطأ في الاتصال بالخادم.', 'error');
+            }
+        }
+
+        // عرض قائمة المنتجات المعروضة في الإدارة مع إمكانية الحذف الفوري
+        async function renderAdminProducts() {
             const tbody = document.getElementById('admin-products-rows');
             tbody.innerHTML = '';
 
-            products.forEach(product => {
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-900/40 transition">
-                        <td class="p-4 flex items-center gap-3">
-                            <img src="${product.image}" class="w-10 h-10 object-cover rounded-lg border border-slate-800" alt="">
-                            <span class="font-bold text-white font-mono">${product.title}</span>
-                        </td>
-                        <td class="p-4 text-xs font-mono">
-                            ${product.type === 'code' ? '<span class="text-cyber-green">كود</span>' : '<span class="text-cyan-500">ملف</span>'}
-                        </td>
-                        <td class="p-4 font-mono text-xs text-slate-400">${product.fileName || 'لا يوجد ملف مرفق'}</td>
-                        <td class="p-4 font-mono font-bold text-cyber-gold">${product.price.toFixed(2)}$</td>
-                        <td class="p-4 text-center">
-                            <button onclick="adminDeleteProduct('${product.id}')" class="bg-red-600/10 text-red-500 hover:bg-red-600 hover:text-white px-3 py-1.5 rounded-xl text-xs font-bold transition">إزالة</button>
-                        </td>
-                    </tr>
-                `;
-            });
+            try {
+                const response = await fetch('/api/products');
+                const data = await response.json();
+
+                data.forEach(product => {
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-900/40 transition">
+                            <td class="p-4 flex items-center gap-3">
+                                <img src="${product.image}" class="w-10 h-10 object-cover rounded-lg border border-slate-800" alt="">
+                                <span class="font-bold text-white font-mono">${product.title}</span>
+                            </td>
+                            <td class="p-4 text-xs font-mono">
+                                ${product.type === 'code' ? '<span class="text-cyber-green">كود</span>' : '<span class="text-cyan-500">ملف</span>'}
+                            </td>
+                            <td class="p-4 font-mono text-xs text-slate-400">${product.fileName || 'لا يوجد ملف مرفق'}</td>
+                            <td class="p-4 font-mono font-bold text-cyber-gold">${product.price.toFixed(2)}$</td>
+                            <td class="p-4 text-center">
+                                <button onclick="adminDeleteProduct('${product.id}')" class="bg-red-600/10 text-red-500 hover:bg-red-600 hover:text-white px-3 py-1.5 rounded-xl text-xs font-bold transition">إزالة</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                console.error(err);
+            }
         }
 
+        // حذف المنتجات من الخادم
         function adminDeleteProduct(prodId) {
             showCustomModal(
                 `<i class="fa-solid fa-triangle-exclamation text-red-500"></i> تأكيد الحذف النهائي`,
@@ -1366,12 +1324,21 @@
                     {
                         text: 'حذف المنتج',
                         class: 'bg-red-600 text-white hover:bg-red-700',
-                        action: () => {
-                            products = products.filter(p => p.id !== prodId);
-                            localStorage.setItem('tarzan_products', JSON.stringify(products));
-                            showToast('تمت إزالة الكود وملفه بالكامل بنجاح.', 'success');
-                            renderAdminProducts();
-                            renderProducts(products);
+                        action: async () => {
+                            try {
+                                const response = await fetch(`/api/products/${prodId}`, {
+                                    method: 'DELETE',
+                                    headers: { 'x-user-id': currentUser.id }
+                                });
+                                const result = await response.json();
+                                if (result.success) {
+                                    showToast(result.message, 'success');
+                                    renderAdminProducts();
+                                    fetchProducts();
+                                }
+                            } catch (err) {
+                                showToast('خطأ في إرسال طلب الحذف للسيرفر.', 'error');
+                            }
                         }
                     },
                     {
@@ -1382,133 +1349,143 @@
             );
         }
 
-        // إضافة منتج جديد ورفع ملفه الحقيقي المشفر كـ Base64
-        function adminAddProduct(e) {
+        // رفع منتج جديد مشفر بالكامل وملفه المعزول الحقيقي
+        async function adminAddProduct(e) {
             e.preventDefault();
             const title = document.getElementById('new-prod-title').value.trim();
             const price = parseFloat(document.getElementById('new-prod-price').value);
             const type = document.getElementById('new-prod-type').value;
-            const desc = document.getElementById('new-prod-desc').value.trim();
+            const description = document.getElementById('new-prod-desc').value.trim();
             
             const fileInput = document.getElementById('new-prod-file');
-            const targetFile = fileInput.files[0];
+            const file = fileInput.files[0];
 
             const imageInput = document.getElementById('new-prod-image-file');
             const imageFile = imageInput.files[0];
 
-            if (!targetFile) {
-                showToast('يرجى إرفاق الملف الحقيقي للمنتج.', 'error');
+            if (!file) {
+                showToast('يرجى رفع الملف البرمجي الحقيقي للعملية.', 'error');
                 return;
             }
 
-            // قارئ الملفات لتحويلها لبيانات مشفرة
-            const fileReader = new FileReader();
-            fileReader.onload = function(event) {
-                const encodedFileData = event.target.result;
-                const fileName = targetFile.name;
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('price', price);
+            formData.append('type', type);
+            formData.append('description', description);
+            formData.append('new-prod-file', file);
+            if (imageFile) {
+                formData.append('new-prod-image-file', imageFile);
+            }
 
-                const saveProductData = (imgUrl) => {
-                    const newProd = {
-                        id: 'tarzan-prod-' + Date.now(),
-                        title,
-                        description: desc,
-                        price,
-                        type,
-                        image: imgUrl,
-                        fileName: fileName,
-                        fileData: encodedFileData
-                    };
+            try {
+                const response = await fetch('/api/products', {
+                    method: 'POST',
+                    headers: { 'x-user-id': currentUser.id },
+                    body: formData
+                });
+                const result = await response.json();
 
-                    products.push(newProd);
-                    localStorage.setItem('tarzan_products', JSON.stringify(products));
-                    showToast(`تم تشفير ونشر "${title}" بنجاح في المعرض السيبراني!`, 'success');
-                    
+                if (result.success) {
+                    showToast(result.message, 'success');
                     document.getElementById('product-form').reset();
                     renderAdminProducts();
-                    renderProducts(products);
-                };
-
-                if (imageFile) {
-                    const imgReader = new FileReader();
-                    imgReader.onload = function(imgEvent) {
-                        saveProductData(imgEvent.target.result);
-                    };
-                    imgReader.readAsDataURL(imageFile);
+                    fetchProducts();
                 } else {
-                    // صورة سيبرانية افتراضية عالية الجودة
-                    saveProductData("https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=600&q=80");
+                    showToast(result.message, 'error');
                 }
-            };
-            fileReader.readAsDataURL(targetFile);
+            } catch (err) {
+                showToast('حدث خطأ في الشبكة أثناء رفع وتشفير الملف.', 'error');
+            }
         }
 
-        // إدارة وعرض طلبات تصميم البرمجيات الخاصة بالإدارة
-        function renderAdminCustomRequests() {
+        // عرض طلبات تصميم البرمجيات الخاصة المرفوعة للإدارة للمراجعة والتسعير
+        async function renderAdminCustomRequests() {
             const container = document.getElementById('admin-custom-reqs-rows');
             container.innerHTML = '';
 
-            if (customRequests.length === 0) {
-                container.innerHTML = `<p class="text-xs text-slate-500 text-center py-6">لا توجد طلبات خاصة من العملاء بعد.</p>`;
-                return;
-            }
+            try {
+                const response = await fetch('/api/requests', {
+                    headers: { 'x-user-id': currentUser.id }
+                });
+                const data = await response.json();
 
-            customRequests.slice().reverse().forEach(req => {
-                let actionHtml = '';
-                if (req.status === 'pending') {
-                    actionHtml = `
-                        <div class="flex gap-2 mt-4">
-                            <button onclick="priceCustomRequest('${req.id}')" class="px-4 py-2 bg-cyber-gold text-cyber-950 font-bold text-xs rounded-lg transition hover:bg-yellow-500">قبول وتحديد السعر</button>
-                            <button onclick="rejectCustomRequest('${req.id}')" class="px-4 py-2 bg-red-600/20 text-red-400 border border-red-500/30 font-bold text-xs rounded-lg transition hover:bg-red-600 hover:text-white">رفض</button>
-                        </div>
-                    `;
-                } else if (req.status === 'rejected') {
-                    actionHtml = `<span class="text-red-500 font-bold text-xs block mt-4"><i class="fa-solid fa-circle-xmark"></i> تم الرفض</span>`;
-                } else {
-                    actionHtml = `<span class="text-cyber-green font-bold text-xs block mt-4"><i class="fa-solid fa-circle-check"></i> تم القبول بسعر: ${req.price}$</span>`;
+                if (data.length === 0) {
+                    container.innerHTML = `<p class="text-xs text-slate-500 text-center py-6">لا توجد طلبات خاصة من العملاء بعد.</p>`;
+                    return;
                 }
 
-                container.innerHTML += `
-                    <div class="cyber-glass p-6 rounded-2xl border border-cyber-gold/15">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <h4 class="font-bold text-white text-base font-mono">${req.title}</h4>
-                                <p class="text-[10px] text-slate-500 mt-1">العميل العضو: <span class="text-cyber-green font-mono font-bold">${req.username}</span></p>
+                data.slice().reverse().forEach(req => {
+                    let actionHtml = '';
+                    if (req.status === 'pending') {
+                        actionHtml = `
+                            <div class="flex gap-2 mt-4">
+                                <button onclick="priceCustomRequest('${req.id}')" class="px-4 py-2 bg-cyber-gold text-cyber-950 font-bold text-xs rounded-lg transition hover:bg-yellow-500">قبول وتحديد السعر</button>
+                                <button onclick="rejectCustomRequest('${req.id}')" class="px-4 py-2 bg-red-600/20 text-red-400 border border-red-500/30 font-bold text-xs rounded-lg transition hover:bg-red-600 hover:text-white">رفض</button>
                             </div>
-                            <span class="text-[10px] text-slate-500 font-mono">${req.date}</span>
+                        `;
+                    } else if (req.status === 'rejected') {
+                        actionHtml = `<span class="text-red-500 font-bold text-xs block mt-4"><i class="fa-solid fa-circle-xmark"></i> تم الرفض</span>`;
+                    } else {
+                        actionHtml = `<span class="text-cyber-green font-bold text-xs block mt-4"><i class="fa-solid fa-circle-check"></i> تم القبول بسعر: ${req.price}$</span>`;
+                    }
+
+                    container.innerHTML += `
+                        <div class="cyber-glass p-6 rounded-2xl border border-cyber-gold/15">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-bold text-white text-base font-mono">${req.title}</h4>
+                                    <p class="text-[10px] text-slate-500 mt-1">العميل العضو: <span class="text-cyber-green font-mono font-bold">${req.username}</span></p>
+                                </div>
+                                <span class="text-[10px] text-slate-500 font-mono">${req.date}</span>
+                            </div>
+                            <p class="text-slate-300 text-xs leading-relaxed mt-4 bg-cyber-950 p-4 rounded-xl border border-slate-900">${req.description}</p>
+                            ${actionHtml}
                         </div>
-                        <p class="text-slate-300 text-xs leading-relaxed mt-4 bg-cyber-950 p-4 rounded-xl border border-slate-900">${req.description}</p>
-                        ${actionHtml}
-                    </div>
-                `;
-            });
+                    `;
+                });
+            } catch (err) {
+                console.error(err);
+            }
         }
 
         function priceCustomRequest(reqId) {
             const price = prompt('الرجاء إدخال السعر المقترح لتصميم هذه البرمجية بالدولار ($):');
             if (price !== null && !isNaN(price) && price !== "") {
-                const idx = customRequests.findIndex(r => r.id === reqId);
-                if (idx !== -1) {
-                    customRequests[idx].status = 'priced';
-                    customRequests[idx].price = parseFloat(price);
-                    localStorage.setItem('tarzan_custom_requests', JSON.stringify(customRequests));
-                    showToast('تم قبول الطلب وتحديد السعر المقترح بنجاح!', 'success');
-                    renderAdminCustomRequests();
-                }
+                updateCustomRequestStatus(reqId, 'priced', parseFloat(price));
             }
         }
 
         function rejectCustomRequest(reqId) {
-            const idx = customRequests.findIndex(r => r.id === reqId);
-            if (idx !== -1) {
-                customRequests[idx].status = 'rejected';
-                localStorage.setItem('tarzan_custom_requests', JSON.stringify(customRequests));
-                showToast('تم رفض طلب العميل وتحديث الحالة.', 'success');
-                renderAdminCustomRequests();
+            updateCustomRequestStatus(reqId, 'rejected', 0);
+        }
+
+        // تحديث حالة الطلبات الخاصة للعملاء بالتسعير أو الرفض
+        async function updateCustomRequestStatus(reqId, status, price) {
+            try {
+                const response = await fetch(`/api/requests/${reqId}/status`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'x-user-id': currentUser.id 
+                    },
+                    body: JSON.stringify({ status, price })
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast(result.message, 'success');
+                    renderAdminCustomRequests();
+                } else {
+                    showToast(result.message, 'error');
+                }
+            } catch (err) {
+                showToast('خطأ في إرسال الرد للخادم.', 'error');
             }
         }
 
-        // تهيئة المتجر الفخمة الفورية
-        renderProducts(products);
+        // تهيئة المتجر والمنتجات الفورية عند التشغيل لأول مرة
+        fetchProducts();
         renderUserProfile();
     </script>
 </body>
