@@ -15,43 +15,41 @@ const io = new Server(server, {
     origin: "*",
     methods: ["GET", "POST"]
   },
-  maxHttpBufferSize: 1e7 // 10MB limit for attachment previews/uploads
+  maxHttpBufferSize: 1e7 // 10MB file limit
 });
 
-const JWT_SECRET = 'tarzanalwaqdiy_super_secret_key_2026';
+const JWT_SECRET = 'tarzanalwaqdiy_premium_wa_key_2026';
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json({ limit: '10mb' }));
 app.use(cors());
 
-// Helmet configuration with content security policy updates for inline styles/scripts & web sockets
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdn.tailwindcss.com", "https://cdnjs.cloudflare.com"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
       imgSrc: ["'self'", "data:", "https://images.unsplash.com", "https://placehold.co"],
       connectSrc: ["'self'", "ws:", "wss:", "http:", "https:"]
     }
   }
 }));
 
-// Rate limiting to protect against DDoS / brute force
 const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per window
-  message: { error: 'Too many requests, please try again later.' }
+  windowMs: 15 * 60 * 1000,
+  max: 150,
+  message: { error: 'طلبات مفرطة، يرجى المحاولة لاحقاً.' }
 });
 app.use('/api/', apiLimiter);
 
 const users = new Map(); // userId -> userData
-const messages = []; // Array of message objects
+const messages = []; // Array of premium messages
 const groups = new Map(); // groupId -> groupData
-const statuses = []; // Array of status objects
+const statuses = []; // Array of statuses
+const pinnedChats = new Map(); // userId -> Set of pinned targetIds (userIds/groupIds)
 
-// Helper functions
 const findUserByUsername = (username) => {
   for (const user of users.values()) {
     if (user.username.toLowerCase() === username.toLowerCase()) return user;
@@ -62,22 +60,17 @@ const findUserByUsername = (username) => {
 app.get('/manifest.json', (req, res) => {
   res.json({
     "short_name": "Tarzanalwaqdiy",
-    "name": "Tarzanalwaqdiy Messenger",
+    "name": "Tarzanalwaqdiy WhatsApp Premium",
     "icons": [
       {
-        "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='192' height='192' viewBox='0 0 192 192'><rect width='192' height='192' rx='40' fill='%232563EB'/><text x='50%' y='55%' font-family='sans-serif' font-size='80' font-weight='bold' fill='white' text-anchor='middle' dominant-baseline='middle'>T</text></svg>",
+        "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='192' height='192' viewBox='0 0 192 192'><rect width='192' height='192' rx='42' fill='%2300a884'/><path d='M96 35c-33.7 0-61 27.3-61 61 0 10.8 2.8 21 7.7 29.8L35 157l32.2-7.5c8.5 4.6 18.1 7.2 28.8 7.2 33.7 0 61-27.3 61-61s-27.3-61-61-61zm0 109.8c-9.5 0-18.7-2.5-26.8-7.2l-1.9-1.1-19.9 4.6 4.7-19.1-1.3-2c-5.1-8.1-7.8-17.5-7.8-27.2 0-29.3 23.8-53 53-53s53 23.8 53 53-23.8 53-53 53z' fill='white'/></svg>",
         "type": "image/svg+xml",
         "sizes": "192x192"
-      },
-      {
-        "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512'><rect width='512' height='512' rx='110' fill='%232563EB'/><text x='50%' y='55%' font-family='sans-serif' font-size='220' font-weight='bold' fill='white' text-anchor='middle' dominant-baseline='middle'>T</text></svg>",
-        "type": "image/svg+xml",
-        "sizes": "512x512"
       }
     ],
     "start_url": "/",
-    "background_color": "#0F172A",
-    "theme_color": "#2563EB",
+    "background_color": "#0b141a",
+    "theme_color": "#00a884",
     "display": "standalone",
     "orientation": "portrait"
   });
@@ -86,26 +79,12 @@ app.get('/manifest.json', (req, res) => {
 app.get('/service-worker.js', (req, res) => {
   res.setHeader('Content-Type', 'application/javascript');
   res.send(`
-    const CACHE_NAME = 'tarzanalwaqdiy-cache-v1';
-    const ASSETS = [
-      '/',
-      '/manifest.json'
-    ];
-
+    const CACHE_NAME = 'tarzanalwaqdiy-premium-v2';
     self.addEventListener('install', (e) => {
-      e.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => {
-          return cache.addAll(ASSETS);
-        })
-      );
+      e.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(['/', '/manifest.json'])));
     });
-
     self.addEventListener('fetch', (e) => {
-      e.respondWith(
-        caches.match(e.request).then((cachedResponse) => {
-          return cachedResponse || fetch(e.request);
-        })
-      );
+      e.respondWith(caches.match(e.request).then((res) => res || fetch(e.request)));
     });
   `);
 });
@@ -114,10 +93,10 @@ app.post('/api/auth/register', async (req, res) => {
   try {
     const { username, displayName, password } = req.body;
     if (!username || !displayName || !password) {
-      return res.status(400).json({ error: 'Please fill in all fields' });
+      return res.status(400).json({ error: 'يرجى إدخال جميع البيانات المطلوبة.' });
     }
     if (findUserByUsername(username)) {
-      return res.status(400).json({ error: 'Username already exists' });
+      return res.status(400).json({ error: 'اسم المستخدم مسجل بالفعل.' });
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
@@ -128,18 +107,18 @@ app.post('/api/auth/register', async (req, res) => {
       username,
       displayName,
       passwordHash,
-      avatar: `https://placehold.co/150/2563eb/ffffff?text=${displayName.charAt(0).toUpperCase()}`,
-      bio: 'أنا أستخدم Tarzanalwaqdiy!',
+      avatar: `https://placehold.co/150/00a884/ffffff?text=${encodeURIComponent(displayName.charAt(0).toUpperCase())}`,
+      bio: 'متوفر في تطبيق Tarzanalwaqdiy!',
       status: 'online',
       lastSeen: new Date()
     };
 
     users.set(userId, newUser);
-    const token = jwt.sign({ userId }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ userId }, JWT_SECRET, { expiresIn: '15d' });
 
     res.status(201).json({ token, user: { id: userId, username, displayName, avatar: newUser.avatar, bio: newUser.bio } });
   } catch (err) {
-    res.status(500).json({ error: 'Server error during registration' });
+    res.status(500).json({ error: 'حدث خطأ في النظام أثناء التسجيل.' });
   }
 });
 
@@ -147,44 +126,43 @@ app.post('/api/auth/login', async (req, res) => {
   try {
     const { username, password } = req.body;
     if (!username || !password) {
-      return res.status(400).json({ error: 'Please enter username and password' });
+      return res.status(400).json({ error: 'يرجى إدخال اسم المستخدم وكلمة المرور.' });
     }
 
     const user = findUserByUsername(username);
     if (!user) {
-      return res.status(400).json({ error: 'Invalid credentials' });
+      return res.status(400).json({ error: 'خطأ في اسم المستخدم أو كلمة المرور.' });
     }
 
     const isMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch) {
-      return res.status(400).json({ error: 'Invalid credentials' });
+      return res.status(400).json({ error: 'خطأ في اسم المستخدم أو كلمة المرور.' });
     }
 
     user.status = 'online';
     user.lastSeen = new Date();
 
-    const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '15d' });
     res.json({ token, user: { id: user.id, username: user.username, displayName: user.displayName, avatar: user.avatar, bio: user.bio } });
   } catch (err) {
-    res.status(500).json({ error: 'Server error during login' });
+    res.status(500).json({ error: 'حدث خطأ في النظام أثناء تسجيل الدخول.' });
   }
 });
 
 app.get('/api/users/me', (req, res) => {
   const authHeader = req.headers.authorization;
-  if (!authHeader) return res.status(401).json({ error: 'No token provided' });
+  if (!authHeader) return res.status(401).json({ error: 'غير مصرح.' });
   const token = authHeader.split(' ')[1];
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     const user = users.get(decoded.userId);
-    if (!user) return res.status(404).json({ error: 'User not found' });
+    if (!user) return res.status(404).json({ error: 'المستخدم غير موجود.' });
     res.json({ user: { id: user.id, username: user.username, displayName: user.displayName, avatar: user.avatar, bio: user.bio } });
   } catch (err) {
-    res.status(401).json({ error: 'Invalid token' });
+    res.status(401).json({ error: 'جلسة منتهية الصلاحية.' });
   }
 });
 
-// Primary html delivery route
 app.get('*', (req, res, next) => {
   if (req.path.startsWith('/api') || req.path === '/manifest.json' || req.path === '/service-worker.js') {
     return next();
@@ -196,13 +174,13 @@ const activeConnections = new Map(); // userId -> socketId
 
 io.use((socket, next) => {
   const token = socket.handshake.auth.token;
-  if (!token) return next(new Error('Authentication error: Token missing'));
+  if (!token) return next(new Error('Authentication error'));
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     socket.userId = decoded.userId;
     next();
   } catch (err) {
-    next(new Error('Authentication error: Token invalid'));
+    next(new Error('Authentication error'));
   }
 });
 
@@ -210,87 +188,51 @@ io.on('connection', (socket) => {
   const currentUserId = socket.userId;
   activeConnections.set(currentUserId, socket.id);
 
-  // Update status to online
   const currentUser = users.get(currentUserId);
   if (currentUser) {
     currentUser.status = 'online';
     io.emit('user-status-changed', { userId: currentUserId, status: 'online' });
   }
 
-  // Join personal user room
   socket.join(`user_${currentUserId}`);
 
-  // Send list of users & active group objects
-  const userList = Array.from(users.values()).map(u => ({
-    id: u.id,
-    displayName: u.displayName,
-    username: u.username,
-    avatar: u.avatar,
-    bio: u.bio,
-    status: u.status,
-    lastSeen: u.lastSeen
-  }));
-  socket.emit('sync-users', userList);
+  // Sync state helpers
+  const emitUsersSync = () => {
+    const userList = Array.from(users.values()).map(u => ({
+      id: u.id,
+      displayName: u.displayName,
+      username: u.username,
+      avatar: u.avatar,
+      bio: u.bio,
+      status: u.status,
+      lastSeen: u.lastSeen
+    }));
+    socket.emit('sync-users', userList);
+  };
 
-  const groupList = Array.from(groups.values()).filter(g => g.members.includes(currentUserId));
-  socket.emit('sync-groups', groupList);
+  emitUsersSync();
 
-  const initialMsgs = messages.filter(m => m.senderId === currentUserId || m.receiverId === currentUserId || (m.groupId && groups.get(m.groupId)?.members.includes(currentUserId)));
-  socket.emit('sync-messages', initialMsgs);
+  const syncAndSendGroups = () => {
+    const groupList = Array.from(groups.values()).filter(g => g.members.includes(currentUserId));
+    socket.emit('sync-groups', groupList);
+  };
+  syncAndSendGroups();
 
-  const validStatuses = statuses.filter(s => (new Date() - new Date(s.timestamp)) < 24 * 60 * 60 * 1000);
-  socket.emit('sync-statuses', validStatuses);
+  const syncMessages = () => {
+    const initialMsgs = messages.filter(m => m.senderId === currentUserId || m.receiverId === currentUserId || (m.groupId && groups.get(m.groupId)?.members.includes(currentUserId)));
+    socket.emit('sync-messages', initialMsgs);
+  };
+  syncMessages();
 
-  socket.on('update-profile', (data) => {
-    const user = users.get(currentUserId);
-    if (user) {
-      if (data.displayName) user.displayName = data.displayName;
-      if (data.bio) user.bio = data.bio;
-      if (data.avatar) user.avatar = data.avatar;
-      
-      io.emit('user-profile-updated', {
-        id: user.id,
-        displayName: user.displayName,
-        bio: user.bio,
-        avatar: user.avatar
-      });
-    }
-  });
+  const syncStatuses = () => {
+    const validStatuses = statuses.filter(s => (new Date() - new Date(s.timestamp)) < 24 * 60 * 60 * 1000);
+    socket.emit('sync-statuses', validStatuses);
+  };
+  syncStatuses();
 
-  socket.on('change-password', async (data, callback) => {
-    const user = users.get(currentUserId);
-    if (user) {
-      const isMatch = await bcrypt.compare(data.oldPassword, user.passwordHash);
-      if (!isMatch) {
-        return callback({ success: false, error: 'كلمة المرور القديمة غير صحيحة' });
-      }
-      user.passwordHash = await bcrypt.hash(data.newPassword, 10);
-      callback({ success: true });
-    } else {
-      callback({ success: false, error: 'المستخدم غير موجود' });
-    }
-  });
-
-  socket.on('delete-account', (callback) => {
-    const user = users.get(currentUserId);
-    if (user) {
-      users.delete(currentUserId);
-      // Leave group memberships
-      for (const [gId, gData] of groups.entries()) {
-        if (gData.members.includes(currentUserId)) {
-          gData.members = gData.members.filter(id => id !== currentUserId);
-          if (gData.ownerId === currentUserId && gData.members.length > 0) {
-            gData.ownerId = gData.members[0];
-          }
-          io.to(`group_${gId}`).emit('group-updated', gData);
-        }
-      }
-      io.emit('user-account-deleted', currentUserId);
-      callback({ success: true });
-    } else {
-      callback({ success: false, error: 'حدث خطأ ما أثناء محاولة حذف الحساب' });
-    }
-  });
+  // Send user's pins
+  const pins = pinnedChats.get(currentUserId) || new Set();
+  socket.emit('sync-pins', Array.from(pins));
 
   socket.on('send-message', (msgData) => {
     const messageId = 'm_' + Math.random().toString(36).substr(2, 9);
@@ -300,11 +242,11 @@ io.on('connection', (socket) => {
       receiverId: msgData.receiverId || null,
       groupId: msgData.groupId || null,
       content: msgData.content,
-      type: msgData.type || 'text', // text, image, video, file, audio
+      type: msgData.type || 'text',
       fileName: msgData.fileName || null,
       replyTo: msgData.replyTo || null,
       timestamp: new Date(),
-      readBy: [currentUserId],
+      status: 'delivered', // Standard mock WhatsApp tick transition
       edited: false
     };
 
@@ -314,8 +256,31 @@ io.on('connection', (socket) => {
       io.to(`group_${newMsg.groupId}`).emit('new-message', newMsg);
     } else if (newMsg.receiverId) {
       io.to(`user_${newMsg.receiverId}`).emit('new-message', newMsg);
-      socket.emit('new-message', newMsg); // Echo back to sender
+      socket.emit('new-message', newMsg);
     }
+  });
+
+  socket.on('mark-as-read', (data) => {
+    // data: { senderId }
+    messages.forEach(m => {
+      if (!m.groupId && m.senderId === data.senderId && m.receiverId === currentUserId && m.status !== 'read') {
+        m.status = 'read';
+        io.to(`user_${data.senderId}`).emit('message-status-updated', { messageId: m.id, status: 'read' });
+      }
+    });
+  });
+
+  socket.on('toggle-pin-chat', (targetId) => {
+    if (!pinnedChats.has(currentUserId)) {
+      pinnedChats.set(currentUserId, new Set());
+    }
+    const userPins = pinnedChats.get(currentUserId);
+    if (userPins.has(targetId)) {
+      userPins.delete(targetId);
+    } else {
+      userPins.add(targetId);
+    }
+    socket.emit('sync-pins', Array.from(userPins));
   });
 
   socket.on('edit-message', (data) => {
@@ -347,25 +312,8 @@ io.on('connection', (socket) => {
           socket.emit('message-deleted', { messageId: msg.id, forEveryone: true, updatedMsg: msg });
         }
       } else {
-        // Just remove from sender view locally via event
         socket.emit('message-deleted', { messageId: msg.id, forEveryone: false });
       }
-    }
-  });
-
-  socket.on('typing-status', (data) => {
-    // data: { targetId, isGroup, action: 'typing' | 'recording' | 'uploading' | 'idle' }
-    if (data.isGroup) {
-      socket.to(`group_${data.targetId}`).emit('user-activity-indicator', {
-        userId: currentUserId,
-        groupId: data.targetId,
-        action: data.action
-      });
-    } else {
-      io.to(`user_${data.targetId}`).emit('user-activity-indicator', {
-        userId: currentUserId,
-        action: data.action
-      });
     }
   });
 
@@ -375,7 +323,7 @@ io.on('connection', (socket) => {
     const newGroup = {
       id: groupId,
       name: data.name,
-      avatar: data.avatar || `https://placehold.co/150/ef4444/ffffff?text=${data.name.charAt(0).toUpperCase()}`,
+      avatar: data.avatar || `https://placehold.co/150/00a884/ffffff?text=${encodeURIComponent(data.name.charAt(0).toUpperCase())}`,
       ownerId: currentUserId,
       admins: [currentUserId],
       members: [currentUserId, ...(data.members || [])],
@@ -384,13 +332,12 @@ io.on('connection', (socket) => {
 
     groups.set(groupId, newGroup);
 
-    // Make all present members join group socket room
     newGroup.members.forEach(mId => {
       const mSocketId = activeConnections.get(mId);
       if (mSocketId) {
         io.sockets.sockets.get(mSocketId)?.join(`group_${groupId}`);
       }
-      io.to(`user_${mId}`).emit('sync-groups', [newGroup]);
+      io.to(`user_${mId}`).emit('sync-groups', Array.from(groups.values()).filter(g => g.members.includes(mId)));
     });
 
     callback({ success: true, group: newGroup });
@@ -406,7 +353,7 @@ io.on('connection', (socket) => {
     }
 
     if (!targetGroup) {
-      return callback({ success: false, error: 'رابط الدعوة هذا غير صالح أو منتهي الصلاحية' });
+      return callback({ success: false, error: 'رابط الدعوة هذا منتهي أو غير صالح.' });
     }
 
     if (targetGroup.members.includes(currentUserId)) {
@@ -416,18 +363,15 @@ io.on('connection', (socket) => {
     targetGroup.members.push(currentUserId);
     socket.join(`group_${targetGroup.id}`);
 
-    // Update group layout for everyone
     io.to(`group_${targetGroup.id}`).emit('group-updated', targetGroup);
     
-    // Alert members inside group chat
     const sysMsg = {
       id: 'sys_' + Math.random().toString(36).substr(2, 9),
       senderId: 'system',
       groupId: targetGroup.id,
-      content: `انضم ${currentUser?.displayName || 'مستخدم جديد'} إلى المجموعة باستخدام رابط الدعوة.`,
+      content: `انضم ${currentUser?.displayName || 'مستخدم جديد'} باستخدام الرابط.`,
       type: 'text',
-      timestamp: new Date(),
-      readBy: [currentUserId]
+      timestamp: new Date()
     };
     messages.push(sysMsg);
     io.to(`group_${targetGroup.id}`).emit('new-message', sysMsg);
@@ -435,36 +379,43 @@ io.on('connection', (socket) => {
     callback({ success: true, group: targetGroup });
   });
 
-  socket.on('update-group-settings', (data) => {
-    const group = groups.get(data.groupId);
-    if (group && group.admins.includes(currentUserId)) {
-      if (data.name) group.name = data.name;
-      if (data.avatar) group.avatar = data.avatar;
-      if (data.admins) group.admins = data.admins;
-      if (data.members) {
-        // Adjust memberships & handle socket joins/leaves
-        const oldMembers = [...group.members];
-        group.members = data.members;
-        
-        // Handle leaves
-        oldMembers.forEach(mId => {
-          if (!group.members.includes(mId)) {
-            const mSocketId = activeConnections.get(mId);
-            if (mSocketId) io.sockets.sockets.get(mSocketId)?.leave(`group_${group.id}`);
-            io.to(`user_${mId}`).emit('group-removed', group.id);
-          }
-        });
+  socket.on('update-profile', (data) => {
+    const user = users.get(currentUserId);
+    if (user) {
+      if (data.displayName) user.displayName = data.displayName;
+      if (data.bio) user.bio = data.bio;
+      if (data.avatar) user.avatar = data.avatar;
+      
+      io.emit('user-profile-updated', {
+        id: user.id,
+        displayName: user.displayName,
+        bio: user.bio,
+        avatar: user.avatar
+      });
+    }
+  });
 
-        // Handle joins
-        group.members.forEach(mId => {
-          if (!oldMembers.includes(mId)) {
-            const mSocketId = activeConnections.get(mId);
-            if (mSocketId) io.sockets.sockets.get(mSocketId)?.join(`group_${group.id}`);
-            io.to(`user_${mId}`).emit('sync-groups', [group]);
-          }
-        });
+  socket.on('change-password', async (data, callback) => {
+    const user = users.get(currentUserId);
+    if (user) {
+      const isMatch = await bcrypt.compare(data.oldPassword, user.passwordHash);
+      if (!isMatch) return callback({ success: false, error: 'كلمة المرور القديمة غير صحيحة.' });
+      user.passwordHash = await bcrypt.hash(data.newPassword, 10);
+      callback({ success: true });
+    }
+  });
+
+  socket.on('delete-account', (callback) => {
+    const user = users.get(currentUserId);
+    if (user) {
+      users.delete(currentUserId);
+      for (const [gId, gData] of groups.entries()) {
+        if (gData.members.includes(currentUserId)) {
+          gData.members = gData.members.filter(id => id !== currentUserId);
+          io.to(`group_${gId}`).emit('group-updated', gData);
+        }
       }
-      io.to(`group_${group.id}`).emit('group-updated', group);
+      callback({ success: true });
     }
   });
 
@@ -475,7 +426,7 @@ io.on('connection', (socket) => {
       userId: currentUserId,
       displayName: currentUser.displayName,
       avatar: currentUser.avatar,
-      type: statusData.type, // 'text', 'image', 'video'
+      type: statusData.type,
       content: statusData.content,
       timestamp: new Date(),
       views: []
@@ -502,7 +453,6 @@ io.on('connection', (socket) => {
   });
 
   socket.on('call-user', (data) => {
-    // data: { receiverId, callType: 'voice' | 'video' }
     const receiverSocketId = activeConnections.get(data.receiverId);
     if (receiverSocketId) {
       io.to(receiverSocketId).emit('incoming-call', {
@@ -515,7 +465,6 @@ io.on('connection', (socket) => {
   });
 
   socket.on('call-response', (data) => {
-    // data: { callerId, accepted: boolean }
     const callerSocketId = activeConnections.get(data.callerId);
     if (callerSocketId) {
       io.to(callerSocketId).emit('call-response', {
@@ -526,7 +475,6 @@ io.on('connection', (socket) => {
   });
 
   socket.on('webrtc-signal', (data) => {
-    // data: { targetId, signal }
     const targetSocketId = activeConnections.get(data.targetId);
     if (targetSocketId) {
       io.to(targetSocketId).emit('webrtc-signal', {
@@ -537,10 +485,24 @@ io.on('connection', (socket) => {
   });
 
   socket.on('hangup-call', (data) => {
-    // data: { targetId }
     const targetSocketId = activeConnections.get(data.targetId);
     if (targetSocketId) {
       io.to(targetSocketId).emit('call-hungup');
+    }
+  });
+
+  socket.on('typing-status', (data) => {
+    if (data.isGroup) {
+      socket.to(`group_${data.targetId}`).emit('user-activity-indicator', {
+        userId: currentUserId,
+        groupId: data.targetId,
+        action: data.action
+      });
+    } else {
+      io.to(`user_${data.targetId}`).emit('user-activity-indicator', {
+        userId: currentUserId,
+        action: data.action
+      });
     }
   });
 
@@ -556,5 +518,5 @@ io.on('connection', (socket) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`Tarzanalwaqdiy running on port http://localhost:${PORT}`);
+  console.log(`Tarzanalwaqdiy WhatsApp Premium running on http://localhost:${PORT}`);
 });
