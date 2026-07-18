@@ -1,14 +1,22 @@
 {
-  "name": "remote-control-system",
-  "version": "2.0.0",
-  "main": "server.js",
-  "dependencies": {
-    "express": "^4.18.2",
-    "ws": "^8.14.2",
-    "node-telegram-bot-api": "^0.64.0",
-    "uuid": "^9.0.0",
-    "multer": "^1.4.5-lts.1",
-    "body-parser": "^1.20.2",
-    "axios": "^1.5.0"
-  }
+"name": "tarzanalwaqdiy",
+"version": "1.0.0",
+"description": "Tarzanalwaqdiy - Modern and Professional Instant Messaging Platform",
+"main": "index.js",
+"scripts": {
+"start": "node index.js"
+},
+"dependencies": {
+"express": "^4.19.2",
+"socket.io": "^4.7.5",
+"bcryptjs": "^2.4.3",
+"jsonwebtoken": "^9.0.2",
+"cors": "^2.8.5",
+"helmet": "^7.1.0",
+"express-rate-limit": "^7.2.0"
+},
+"engines": {
+"node": ">=18.0.0"
+},
+"private": true
 }
