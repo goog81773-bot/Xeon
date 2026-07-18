@@ -1,7 +1,7 @@
 {
 "name": "tarzanalwaqdiy",
-"version": "1.0.0",
-"description": "Tarzanalwaqdiy - Modern and Professional Instant Messaging Platform",
+"version": "1.1.0",
+"description": "Tarzanalwaqdiy - Ultimate Premium WhatsApp Clone Web App",
 "main": "index.js",
 "scripts": {
 "start": "node index.js"
