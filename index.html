@@ -1,64 +1,95 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" class="h-full bg-slate-900 text-slate-100">
+<html lang="ar" dir="rtl" class="h-full bg-[#0b141a] text-[#e9edef]">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tarzanalwaqdiy - مراسلة فورية احترافية</title>
+  <title>واتساب Tarzanalwaqdiy - فخامة متكاملة</title>
   <!-- Load Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Load Inter & Cairo fonts -->
+  <!-- Load Google Cairo & Inter Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <!-- Load FontAwesome and Socket.IO client -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="/socket.io/socket.io.js"></script>
-  <!-- PWA Manifest support -->
   <link rel="manifest" href="/manifest.json">
 
-  <style>
-    body {
-      font-family: 'Cairo', 'Inter', sans-serif;
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            wa: {
+              green: '#00a884',
+              teal: '#005c4b',
+              lightGreen: '#00e676',
+              bgDark: '#0b141a',
+              panelDark: '#111b21',
+              activeDark: '#202c33',
+              borderDark: '#222e35',
+              messageIn: '#202c33',
+              messageOut: '#005c4b'
+            }
+          },
+          fontFamily: {
+            sans: ['Cairo', 'Inter', 'sans-serif']
+          }
+        }
+      }
     }
+  </script>
+
+  <style>
+    /* Custom premium transitions and authentic styles */
     ::-webkit-scrollbar {
       width: 6px;
       height: 6px;
     }
     ::-webkit-scrollbar-track {
-      background: #1e293b;
+      background: #111b21;
     }
     ::-webkit-scrollbar-thumb {
-      background: #475569;
+      background: #374248;
       border-radius: 3px;
     }
     ::-webkit-scrollbar-thumb:hover {
-      background: #64748b;
+      background: #4f5d64;
+    }
+
+    /* Premium slide drawers (just like WhatsApp profile & chat options) */
+    .drawer-slide {
+      transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
+    }
+
+    /* Classic WhatsApp wallpaper pattern generator in style */
+    .wa-wallpaper {
+      background-color: #0b141a;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M10 10h10v10H10zm30 0h10v10H40zM10 40h10v10H10zm30 0h10v10H40zm-20 20h10v10H20zm40 0h10v10H60z' fill='%23222e35' fill-opacity='0.15'/%3E%3C/svg%3E");
     }
   </style>
 </head>
-<body class="h-full overflow-hidden select-none">
+<body class="h-full overflow-hidden select-none font-sans text-[#e9edef]">
 
-  <!-- -->
-  
-  <!-- Splash Screen -->
-  <div id="splashScreen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-950 transition-all duration-500">
-    <div class="relative flex items-center justify-center">
-      <div class="absolute h-32 w-32 animate-ping rounded-full bg-blue-600/30"></div>
-      <div class="relative flex h-24 w-24 items-center justify-center rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 shadow-lg shadow-blue-500/50">
-        <span class="text-4xl font-black text-white">T</span>
+  <div id="splashScreen" class="fixed inset-0 z-50 flex flex-col items-center justify-between bg-wa-bgDark p-8 transition-all duration-500">
+    <div></div>
+    <div class="flex flex-col items-center">
+      <div class="relative flex h-24 w-24 items-center justify-center rounded-full bg-wa-green shadow-xl shadow-wa-green/20 animate-pulse">
+        <i class="fa-brands fa-whatsapp text-white text-6xl"></i>
       </div>
+      <h1 class="mt-6 text-2xl font-bold tracking-wide text-white">Tarzanalwaqdiy</h1>
+      <p class="mt-1 text-sm text-slate-400">مراسلة مشفرة وآمنة وفخمة للغاية</p>
     </div>
-    <h1 class="mt-8 text-3xl font-extrabold tracking-wide text-white">Tarzanalwaqdiy</h1>
-    <p class="mt-2 text-sm text-slate-400">تطبيق المراسلة الفورية الأسرع والأكثر أماناً</p>
-    <!-- Custom PWA Installation banner inside Splash for seamless flow -->
-    <button id="pwaInstallBtn" class="mt-8 hidden rounded-full bg-emerald-600 px-6 py-2.5 text-sm font-semibold text-white shadow-md hover:bg-emerald-500 transition-all focus:outline-none focus:ring-2 focus:ring-emerald-400">
-      <i class="fa-solid fa-download ml-2"></i> تثبيت Tarzanalwaqdiy
-    </button>
-    <div class="absolute bottom-10 flex flex-col items-center">
-      <div class="h-1.5 w-32 overflow-hidden rounded-full bg-slate-800">
-        <div class="h-full w-1/2 animate-infinite-loading rounded-full bg-blue-500" style="animation: loadingBar 1.5s infinite ease-in-out;"></div>
+    
+    <div class="flex flex-col items-center w-full max-w-xs">
+      <button id="pwaInstallBtn" class="mb-6 hidden w-full rounded-full bg-wa-green px-6 py-3 text-sm font-bold text-white shadow-lg hover:bg-[#008f70] transition-all focus:outline-none">
+        <i class="fa-solid fa-download ml-2 animate-bounce"></i> تثبيت واتساب Tarzanalwaqdiy
+      </button>
+      
+      <div class="h-1 w-48 overflow-hidden rounded-full bg-wa-borderDark">
+        <div class="h-full w-1/3 animate-infinite-loading rounded-full bg-wa-green" style="animation: loadingBar 1.2s infinite ease-in-out;"></div>
       </div>
-      <span class="mt-3 text-xs text-slate-500">جاري تحميل المنصة...</span>
+      <span class="mt-3 text-xs text-slate-500">جاري إعداد بيئة آمنة...</span>
     </div>
   </div>
 
@@ -69,403 +100,384 @@
     }
   </style>
 
-  <!-- AUTHENTICATION PANELS (Hidden initially) -->
-  <!-- -->
-  <div id="authScreen" class="fixed inset-0 z-40 hidden flex items-center justify-center bg-slate-950 px-4">
-    <div class="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-8 shadow-2xl">
+  <div id="authScreen" class="fixed inset-0 z-40 hidden flex items-center justify-center bg-wa-bgDark px-4 wa-wallpaper">
+    <div class="w-full max-w-md rounded-2xl border border-wa-borderDark bg-wa-panelDark p-8 shadow-2xl">
       <div class="text-center">
-        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-xl bg-blue-600">
-          <span class="text-3xl font-extrabold text-white">T</span>
+        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-wa-green text-white shadow-lg shadow-wa-green/20">
+          <i class="fa-brands fa-whatsapp text-4xl"></i>
         </div>
-        <h2 id="authTitle" class="mt-5 text-2xl font-bold text-white">تسجيل الدخول</h2>
-        <p id="authSubtitle" class="mt-2 text-sm text-slate-400">مرحباً بك مجدداً في Tarzanalwaqdiy</p>
+        <h2 id="authTitle" class="mt-5 text-2xl font-bold text-white">تسجيل الدخول إلى واتساب</h2>
+        <p id="authSubtitle" class="mt-2 text-sm text-slate-400">أدخل حسابك لبدء المحادثات الفخمة</p>
       </div>
 
-      <!-- General Notification Area inside Modal -->
-      <div id="authAlert" class="mt-4 hidden rounded-lg bg-red-900/40 p-3 text-xs text-red-200 border border-red-800"></div>
+      <div id="authAlert" class="mt-4 hidden rounded-lg bg-red-950/40 p-3 text-xs text-red-200 border border-red-900/60 text-center"></div>
 
-      <!-- Auth Form -->
       <form id="authForm" class="mt-6 space-y-4">
         <div>
           <label class="block text-xs font-semibold text-slate-400">اسم المستخدم</label>
-          <input id="authUsername" type="text" required placeholder="مثال: ahmad_1" class="mt-1 w-full rounded-lg border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm text-white placeholder-slate-600 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+          <input id="authUsername" type="text" required placeholder="مثال: custom_user" class="mt-1.5 w-full rounded-lg border border-wa-borderDark bg-wa-bgDark px-4 py-2.5 text-sm text-white placeholder-slate-600 focus:border-wa-green focus:outline-none">
         </div>
 
-        <div id="displayNameGroup" class="hidden">
+        <div id="displayNameGroup" class="hidden animate-fadeIn">
           <label class="block text-xs font-semibold text-slate-400">الاسم التعريفي</label>
-          <input id="authDisplayName" type="text" placeholder="مثال: أحمد العلي" class="mt-1 w-full rounded-lg border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm text-white placeholder-slate-600 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+          <input id="authDisplayName" type="text" placeholder="مثال: أحمد عبد الله" class="mt-1.5 w-full rounded-lg border border-wa-borderDark bg-wa-bgDark px-4 py-2.5 text-sm text-white placeholder-slate-600 focus:border-wa-green focus:outline-none">
         </div>
 
         <div>
           <label class="block text-xs font-semibold text-slate-400">كلمة المرور</label>
-          <input id="authPassword" type="password" required placeholder="••••••••" class="mt-1 w-full rounded-lg border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm text-white placeholder-slate-600 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+          <input id="authPassword" type="password" required placeholder="••••••••" class="mt-1.5 w-full rounded-lg border border-wa-borderDark bg-wa-bgDark px-4 py-2.5 text-sm text-white placeholder-slate-600 focus:border-wa-green focus:outline-none">
         </div>
 
-        <button type="submit" id="authSubmitBtn" class="w-full rounded-lg bg-blue-600 py-2.5 text-sm font-semibold text-white transition-all hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400">تسجيل الدخول</button>
+        <button type="submit" id="authSubmitBtn" class="w-full rounded-lg bg-wa-green py-3 text-sm font-bold text-white transition-all hover:bg-[#008f70] focus:outline-none shadow-md">تسجيل الدخول</button>
       </form>
 
       <div class="mt-6 text-center text-xs text-slate-400">
         <span id="authToggleText">ليس لديك حساب؟</span>
-        <button id="authToggleBtn" class="mr-1 font-bold text-blue-500 hover:underline">إنشاء حساب جديد</button>
+        <button id="authToggleBtn" class="mr-1 font-bold text-wa-green hover:underline">إنشاء حساب جديد</button>
       </div>
     </div>
   </div>
 
-  <!-- MAIN CHAT APPLICATION SPACE -->
-  <!-- -->
-  <div id="appContainer" class="hidden h-full flex flex-col md:flex-row bg-slate-950">
+  <div id="appContainer" class="hidden h-full flex flex-col md:flex-row bg-wa-bgDark overflow-hidden">
     
-    <!-- LEFT SIDEBAR / MAIN MENU -->
-    <div id="sideNav" class="w-full md:w-24 bg-slate-900 border-l border-slate-800 flex md:flex-col justify-between items-center p-3 md:py-6 order-2 md:order-1">
-      
-      <!-- Logo or User profile status -->
-      <div class="hidden md:flex flex-col items-center space-y-4">
-        <div class="h-12 w-12 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center shadow-md">
-          <span class="text-xl font-bold text-white">T</span>
-        </div>
-        <div id="currentUserStatusIndicator" class="flex items-center space-x-1 space-x-reverse bg-slate-800 px-2 py-1 rounded-full">
-          <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
-          <span class="text-[10px] text-slate-300">متصل</span>
+    <!-- LEFT SIDEBAR NAV: Navigation Icons -->
+    <div id="sideNav" class="w-full md:w-16 bg-[#111b21] border-l border-wa-borderDark flex md:flex-col justify-between items-center p-2.5 md:py-6 order-2 md:order-1 shadow-lg">
+      <div class="hidden md:flex flex-col items-center space-y-5">
+        <div class="h-10 w-10 rounded-full bg-wa-green/10 flex items-center justify-center text-wa-green shadow-sm">
+          <i class="fa-brands fa-whatsapp text-2xl"></i>
         </div>
       </div>
 
-      <!-- Navigation tabs -->
+      <!-- Tab Buttons with realistic WhatsApp icons -->
       <div class="flex md:flex-col w-full justify-around md:justify-center md:space-y-6">
-        <button onclick="switchTab('chats')" class="tab-btn p-3 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition-all active-tab" data-tab="chats" title="المحادثات">
-          <i class="fa-regular fa-comment-dots text-xl"></i>
+        <button onclick="switchTab('chats')" class="tab-btn p-3 rounded-xl text-slate-400 hover:bg-wa-activeDark hover:text-white transition-all active-tab bg-wa-activeDark text-wa-green" data-tab="chats" title="الدردشات">
+          <i class="fa-solid fa-message text-xl"></i>
         </button>
-        <button onclick="switchTab('groups')" class="tab-btn p-3 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition-all" data-tab="groups" title="المجموعات">
+        <button onclick="switchTab('groups')" class="tab-btn p-3 rounded-xl text-slate-400 hover:bg-wa-activeDark hover:text-white transition-all" data-tab="groups" title="المجموعات">
           <i class="fa-solid fa-users text-xl"></i>
         </button>
-        <button onclick="switchTab('status')" class="tab-btn p-3 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition-all" data-tab="status" title="الحالات">
+        <button onclick="switchTab('status')" class="tab-btn p-3 rounded-xl text-slate-400 hover:bg-wa-activeDark hover:text-white transition-all" data-tab="status" title="الحالات">
           <i class="fa-solid fa-circle-notch text-xl"></i>
         </button>
-        <button onclick="switchTab('calls')" class="tab-btn p-3 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition-all" data-tab="calls" title="المكالمات">
-          <i class="fa-solid fa-phone text-xl"></i>
-        </button>
-        <button onclick="switchTab('settings')" class="tab-btn p-3 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition-all" data-tab="settings" title="الإعدادات">
-          <i class="fa-solid fa-sliders text-xl"></i>
+        <button onclick="switchTab('settings')" class="tab-btn p-3 rounded-xl text-slate-400 hover:bg-wa-activeDark hover:text-white transition-all" data-tab="settings" title="الإعدادات">
+          <i class="fa-solid fa-gear text-xl"></i>
         </button>
       </div>
 
-      <!-- Mini Profile Avatar / Action -->
       <div class="flex md:flex-col items-center md:space-y-4">
-        <button onclick="openProfileViewer()" class="relative focus:outline-none">
-          <img id="myAvatar" src="https://placehold.co/100" class="h-10 w-10 md:h-12 md:w-12 rounded-full border-2 border-blue-500 object-cover" alt="My Profile">
+        <!-- Self User Profile Trigger -->
+        <button onclick="openLeftDrawer('profile')" class="relative focus:outline-none hover:scale-105 transition-transform">
+          <img id="myAvatar" src="https://placehold.co/100" class="h-10 w-10 rounded-full border-2 border-wa-green object-cover" alt="My Profile">
+          <span class="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-wa-panelDark bg-emerald-500"></span>
         </button>
       </div>
     </div>
 
-    <!-- MAIN MIDDLE SECTION (Conversations list / Statuses list / settings dashboard) -->
-    <!-- -->
-    <div id="middlePanel" class="w-full md:w-96 bg-slate-900 border-l border-slate-800 flex flex-col order-1 md:order-2 h-[calc(100vh-64px)] md:h-full">
+    <!-- MIDDLE COLUMN: Chat Feed / Dynamic list -->
+    <div id="middlePanel" class="w-full md:w-[410px] bg-wa-panelDark border-l border-wa-borderDark flex flex-col order-1 md:order-2 h-[calc(100vh-64px)] md:h-full relative overflow-hidden">
       
-      <!-- Dynamic header based on tab -->
-      <div class="p-4 border-b border-slate-800 flex items-center justify-between">
-        <h2 id="middlePanelTitle" class="text-xl font-bold text-white">المحادثات</h2>
-        <!-- Quick search & Add trigger buttons -->
+      <!-- WA Feed Header -->
+      <div class="p-4 bg-wa-panelDark border-b border-wa-borderDark flex items-center justify-between">
+        <h2 id="middlePanelTitle" class="text-xl font-bold text-white">الدردشات</h2>
         <div class="flex items-center space-x-2 space-x-reverse">
-          <button id="addNewActionBtn" onclick="triggerTabAction()" class="h-9 w-9 bg-blue-600 hover:bg-blue-500 text-white rounded-lg flex items-center justify-center transition-all">
-            <i class="fa-solid fa-plus text-sm"></i>
+          <button id="addNewActionBtn" onclick="triggerTabAction()" class="h-9 w-9 bg-wa-green hover:bg-[#008f70] text-white rounded-full flex items-center justify-center transition-all shadow" title="إجراء جديد">
+            <i class="fa-solid fa-plus"></i>
           </button>
         </div>
       </div>
 
-      <!-- Search Box inside feed panel -->
-      <div class="p-3">
+      <!-- Feed Search -->
+      <div class="p-3 bg-wa-panelDark">
         <div class="relative">
-          <input id="feedSearchInput" type="text" placeholder="البحث..." oninput="filterFeed()" class="w-full bg-slate-950 border border-slate-800 rounded-lg py-2 pl-4 pr-10 text-xs text-white focus:outline-none focus:border-blue-500 placeholder-slate-600">
+          <input id="feedSearchInput" type="text" placeholder="البحث أو بدء دردشة جديدة..." oninput="filterFeed()" class="w-full bg-wa-bgDark border border-transparent rounded-lg py-2 pl-4 pr-10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-wa-green transition-all">
           <i class="fa-solid fa-magnifying-glass absolute top-3 right-3 text-slate-500 text-xs"></i>
         </div>
       </div>
 
-      <!-- LIST AREA (Scrollable) -->
-      <div id="middleFeedList" class="flex-1 overflow-y-auto p-2 space-y-1">
-        <!-- Rendered dynamically -->
+      <!-- Scrollable lists -->
+      <div id="middleFeedList" class="flex-1 overflow-y-auto p-2 space-y-0.5 bg-wa-panelDark">
+        <!-- Loaded via javascript -->
+      </div>
+
+      <!-- SLIDE DRAWER LEFT: Profiles, Group creation slide-ins -->
+      <div id="leftDrawer" class="absolute inset-0 bg-wa-panelDark z-20 translate-x-full drawer-slide flex flex-col">
+        <!-- Drawer Header -->
+        <div class="p-4 bg-[#202c33] flex items-center space-x-3 space-x-reverse border-b border-wa-borderDark">
+          <button onclick="closeLeftDrawer()" class="text-slate-300 hover:text-white p-1">
+            <i class="fa-solid fa-arrow-right text-lg"></i>
+          </button>
+          <h3 id="leftDrawerTitle" class="text-md font-bold text-white">الملف الشخصي</h3>
+        </div>
+        <!-- Drawer dynamic content -->
+        <div id="leftDrawerContent" class="flex-1 overflow-y-auto p-4 space-y-6">
+          <!-- Loaded dynamically -->
+        </div>
       </div>
     </div>
 
-    <!-- RIGHT SECTION (Chat/Group Details, Empty space or active caller) -->
-    <!-- -->
-    <div id="chatWindow" class="flex-1 bg-slate-950 flex flex-col order-3 h-[calc(100vh-64px)] md:h-full relative">
+    <div id="chatWindow" class="flex-1 bg-wa-bgDark flex flex-col order-3 h-[calc(100vh-64px)] md:h-full relative">
       
-      <!-- No Chat Selected State -->
-      <div id="noChatSelected" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-950 p-6 text-center z-10">
-        <div class="h-28 w-28 bg-slate-900/60 rounded-full flex items-center justify-center text-blue-500 mb-6 border border-slate-800 animate-pulse">
-          <i class="fa-regular fa-comments text-5xl"></i>
+      <!-- WA Default Placeholder -->
+      <div id="noChatSelected" class="absolute inset-0 flex flex-col items-center justify-center bg-wa-bgDark wa-wallpaper p-6 text-center z-10 border-r border-wa-borderDark">
+        <div class="h-32 w-32 bg-wa-panelDark rounded-full flex items-center justify-center text-wa-green/30 mb-6 border border-wa-borderDark">
+          <i class="fa-solid fa-lock text-5xl"></i>
         </div>
-        <h3 class="text-xl font-bold text-white mb-2">تطبيق Tarzanalwaqdiy</h3>
-        <p class="text-sm text-slate-400 max-w-sm">قم باختيار محادثة من القائمة الجانبية أو ابدأ محادثة جديدة الآن، يمكنك إرسال النصوص والمقاطع الصوتية والمرئية، وإجراء المكالمات المباشرة بجودة عالية.</p>
-        <button onclick="triggerTabAction()" class="mt-6 bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-lg text-xs font-semibold transition-all">
-          <i class="fa-solid fa-user-plus ml-1.5"></i> بدء مراسلة جديدة
-        </button>
+        <h3 class="text-xl font-bold text-white mb-2">واتساب Tarzanalwaqdiy للويب</h3>
+        <p class="text-xs text-slate-400 max-w-sm leading-relaxed">أرسل واستقبل الرسائل دون إبقاء هاتفك متصلاً بالإنترنت.<br>استخدم واتساب على ما يصل إلى 4 أجهزة مرتبطة في نفس الوقت.</p>
+        <div class="mt-8 flex items-center space-x-1 space-x-reverse text-[10px] text-slate-500">
+          <i class="fa-solid fa-lock text-slate-600"></i>
+          <span>مشمول بالتشفير التام بين الأطراف</span>
+        </div>
       </div>
 
-      <!-- Active Chat Frame Header -->
-      <div id="chatHeader" class="p-4 bg-slate-900 border-b border-slate-800 flex items-center justify-between hidden">
+      <!-- WA Chat Header -->
+      <div id="chatHeader" class="p-3 bg-[#202c33] border-b border-wa-borderDark flex items-center justify-between hidden z-10 shadow-sm">
         <div class="flex items-center space-x-3 space-x-reverse">
-          <button onclick="closeActiveChat()" class="md:hidden text-slate-400 hover:text-white p-1">
+          <button onclick="closeActiveChat()" class="md:hidden text-slate-300 hover:text-white p-1">
             <i class="fa-solid fa-arrow-right text-lg"></i>
           </button>
           <div class="relative">
-            <img id="chatHeaderAvatar" src="https://placehold.co/100" class="h-10 w-10 rounded-full object-cover border border-slate-800">
-            <span id="chatHeaderStatusDot" class="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-slate-900 bg-slate-500"></span>
+            <img id="chatHeaderAvatar" src="https://placehold.co/100" class="h-10 w-10 rounded-full object-cover border border-wa-borderDark">
+            <span id="chatHeaderStatusDot" class="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-[#202c33] bg-slate-500"></span>
           </div>
           <div>
             <h4 id="chatHeaderName" class="text-sm font-bold text-white">أحمد العلي</h4>
-            <span id="chatHeaderStatusText" class="text-[10px] text-slate-400">آخر ظهور: منذ قليل</span>
+            <span id="chatHeaderStatusText" class="text-[10px] text-[#8696a0] block">متصل الآن</span>
           </div>
         </div>
 
-        <!-- WebRTC Calls triggers and features -->
-        <div class="flex items-center space-x-1 space-x-reverse">
-          <button id="voiceCallBtn" class="h-9 w-9 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg flex items-center justify-center transition-all" title="مكالمة صوتية">
+        <!-- WA Header Tools -->
+        <div class="flex items-center space-x-2 space-x-reverse">
+          <button id="voiceCallBtn" class="h-9 w-9 text-slate-300 hover:text-white hover:bg-wa-activeDark rounded-full flex items-center justify-center transition-all" title="مكالمة صوتية">
             <i class="fa-solid fa-phone text-sm"></i>
           </button>
-          <button id="videoCallBtn" class="h-9 w-9 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg flex items-center justify-center transition-all" title="مكالمة مرئية">
+          <button id="videoCallBtn" class="h-9 w-9 text-slate-300 hover:text-white hover:bg-wa-activeDark rounded-full flex items-center justify-center transition-all" title="مكالمة مرئية">
             <i class="fa-solid fa-video text-sm"></i>
           </button>
-          <button id="toggleGroupSettingsBtn" class="h-9 w-9 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg flex items-center justify-center transition-all hidden" title="إعدادات المجموعة">
+          <button id="chatSearchTriggerBtn" onclick="toggleChatSearch()" class="h-9 w-9 text-slate-300 hover:text-white hover:bg-wa-activeDark rounded-full flex items-center justify-center transition-all" title="بحث في الرسائل">
+            <i class="fa-solid fa-magnifying-glass text-sm"></i>
+          </button>
+          <button id="toggleGroupSettingsBtn" class="h-9 w-9 text-slate-300 hover:text-white hover:bg-wa-activeDark rounded-full flex items-center justify-center transition-all hidden" title="تفاصيل المجموعة">
             <i class="fa-solid fa-circle-info text-sm"></i>
           </button>
         </div>
       </div>
 
-      <!-- Search Inside Chat Panel -->
-      <div id="chatSearchPanel" class="bg-slate-900 px-4 py-2 border-b border-slate-800 hidden flex items-center justify-between">
+      <!-- Pinned Message Bar -->
+      <div id="pinnedMessageBar" class="hidden px-4 py-2 bg-[#182229] border-b border-wa-borderDark flex items-center justify-between text-xs z-10 text-wa-green">
+        <div class="flex items-center space-x-2 space-x-reverse">
+          <i class="fa-solid fa-thumbtack"></i>
+          <span class="font-semibold">رسالة مثبتة: </span>
+          <span id="pinnedMessageText" class="text-slate-300 truncate max-w-md"></span>
+        </div>
+        <button onclick="unpinCurrentMessage()" class="text-slate-500 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <!-- Dynamic Chat search overlay -->
+      <div id="chatSearchPanel" class="bg-[#182229] px-4 py-2 border-b border-wa-borderDark hidden flex items-center justify-between z-10">
         <div class="flex items-center space-x-2 space-x-reverse flex-1">
-          <input id="chatSearchInput" type="text" placeholder="البحث عن كلمة أو عبارة داخل المحادثة..." class="bg-slate-950 border border-slate-800 rounded-lg py-1 px-3 text-xs text-white focus:outline-none focus:border-blue-500 w-full">
-          <button onclick="executeChatSearch()" class="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1 rounded-lg text-xs">بحث</button>
+          <input id="chatSearchInput" type="text" placeholder="البحث في هذه الدردشة..." oninput="handleChatSearchLocal()" class="bg-wa-bgDark border border-wa-borderDark rounded-lg py-1 px-3 text-xs text-white focus:outline-none w-full">
+          <span id="chatSearchCount" class="text-[10px] text-slate-500">0 نتائج</span>
         </div>
         <button onclick="toggleChatSearch()" class="text-slate-400 hover:text-white mr-4"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
-      <!-- MESSAGES THREAD (Scrollable) -->
-      <!-- -->
-      <div id="messagesContainer" class="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-950 hidden">
-        <!-- Rendered dynamically -->
+      <div id="messagesContainer" class="flex-1 overflow-y-auto p-4 space-y-4 wa-wallpaper hidden">
+        <!-- Loaded via javascript -->
       </div>
 
-      <!-- REPLY PREVIEW BAR -->
-      <div id="replyPreviewBar" class="hidden px-4 py-2 bg-slate-900/80 border-t border-slate-800 flex items-center justify-between">
+      <!-- Active Message Reply Drawer -->
+      <div id="replyPreviewBar" class="hidden px-4 py-2 bg-[#1f2c34] border-t border-wa-borderDark flex items-center justify-between z-10">
         <div class="flex items-center space-x-2 space-x-reverse text-xs">
-          <i class="fa-solid fa-reply text-blue-500"></i>
-          <div class="border-r-2 border-blue-500 pr-2">
-            <p id="replyPreviewSender" class="font-bold text-blue-400">أحمد العلي</p>
-            <p id="replyPreviewText" class="text-slate-400 truncate max-w-md">الرسالة المراد الرد عليها</p>
+          <i class="fa-solid fa-reply text-wa-green"></i>
+          <div class="border-r-2 border-wa-green pr-2">
+            <p id="replyPreviewSender" class="font-bold text-wa-green">أحمد العلي</p>
+            <p id="replyPreviewText" class="text-slate-400 truncate max-w-md"></p>
           </div>
         </div>
         <button onclick="cancelReply()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-circle-xmark"></i></button>
       </div>
 
-      <!-- ACTIVITY INDICATOR BAR -->
-      <div id="activityIndicator" class="hidden px-4 py-1 text-[10px] text-blue-400 bg-slate-950">
-        <!-- user is typing... -->
-      </div>
+      <div id="activityIndicator" class="hidden px-4 py-1 text-[10px] text-wa-green bg-wa-bgDark"></div>
 
-      <!-- INPUT UTILITIES & COMPOSER -->
-      <!-- -->
-      <div id="messageComposer" class="p-3 bg-slate-900 border-t border-slate-800 hidden flex items-center space-x-2 space-x-reverse">
+      <div id="messageComposer" class="p-3 bg-[#202c33] border-t border-[#111b21] hidden items-center space-x-2 space-x-reverse z-10">
         
-        <!-- File/Media Attachment Button -->
-        <button id="composerAttachBtn" onclick="toggleAttachmentMenu()" class="h-10 w-10 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl flex items-center justify-center transition-all">
-          <i class="fa-solid fa-paperclip text-lg"></i>
+        <button id="composerAttachBtn" onclick="toggleAttachmentMenu()" class="h-10 w-10 text-slate-400 hover:text-white hover:bg-wa-activeDark rounded-full flex items-center justify-center transition-all" title="إرفاق">
+          <i class="fa-solid fa-plus text-lg"></i>
         </button>
 
-        <!-- Dynamic inline media upload targets -->
-        <input type="file" id="mediaFileInput" onchange="handleComposerAttachment(this)" class="hidden" accept="image/*,video/*,audio/*,application/pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
+        <input type="file" id="mediaFileInput" onchange="handleComposerAttachment(this)" class="hidden">
 
-        <!-- Voice Note Recording Controls -->
-        <div id="audioRecordingControls" class="hidden flex-1 flex items-center justify-between bg-red-950/30 border border-red-900/50 px-4 py-1.5 rounded-xl text-red-200">
+        <!-- Voice note elements -->
+        <div id="audioRecordingControls" class="hidden flex-1 flex items-center justify-between bg-red-950/20 border border-red-900/50 px-4 py-1.5 rounded-full text-red-200">
           <div class="flex items-center space-x-2 space-x-reverse">
-            <span class="animate-pulse h-2.5 w-2.5 rounded-full bg-red-500"></span>
-            <span class="text-xs">جاري تسجيل مذكرة صوتية...</span>
+            <span class="animate-ping h-2.5 w-2.5 rounded-full bg-red-500"></span>
+            <span class="text-xs">جاري تسجيل رسالة صوتية...</span>
             <span id="recordingDuration" class="text-xs font-semibold mr-2">00:00</span>
           </div>
           <div class="flex items-center space-x-2 space-x-reverse">
-            <button onclick="cancelVoiceRecording()" class="text-slate-400 hover:text-white hover:bg-slate-800 p-1.5 rounded-lg"><i class="fa-solid fa-trash-can"></i></button>
-            <button onclick="finishAndSendVoiceRecording()" class="bg-red-600 hover:bg-red-500 text-white h-7 w-7 rounded-full flex items-center justify-center"><i class="fa-solid fa-stop text-xs"></i></button>
+            <button onclick="cancelVoiceRecording()" class="text-slate-400 hover:text-white p-1.5"><i class="fa-solid fa-trash-can"></i></button>
+            <button onclick="finishAndSendVoiceRecording()" class="bg-red-600 hover:bg-red-500 text-white h-7 w-7 rounded-full flex items-center justify-center"><i class="fa-solid fa-check text-xs"></i></button>
           </div>
         </div>
 
-        <!-- Text input or text field -->
-        <input id="composerTextInput" type="text" oninput="sendTypingIndicator()" placeholder="اكتب رسالة..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl py-2.5 px-4 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-blue-500">
+        <input id="composerTextInput" type="text" oninput="sendTypingIndicator()" placeholder="اكتب رسالة..." class="flex-1 bg-[#2a3942] border-none rounded-lg py-2.5 px-4 text-sm text-white placeholder-slate-400 focus:outline-none">
 
-        <!-- Voice Recorder Activation Trigger / Send Trigger -->
-        <button id="composerSendBtn" onclick="sendActiveMessage()" class="h-10 w-10 bg-blue-600 hover:bg-blue-500 text-white rounded-xl flex items-center justify-center shadow-lg transition-all">
-          <i id="sendIcon" class="fa-solid fa-paper-plane text-md"></i>
+        <!-- Quick actions buttons -->
+        <button id="composerSendBtn" onclick="sendActiveMessage()" class="h-10 w-10 bg-wa-green hover:bg-[#008f70] text-white rounded-full flex items-center justify-center shadow-lg transition-all">
+          <i class="fa-solid fa-paper-plane text-md"></i>
         </button>
 
-        <button id="composerRecordVoiceBtn" onclick="startVoiceRecording()" class="h-10 w-10 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl flex items-center justify-center transition-all" title="تسجيل رسالة صوتية">
+        <button id="composerRecordVoiceBtn" onclick="startVoiceRecording()" class="h-10 w-10 text-slate-400 hover:text-white hover:bg-wa-activeDark rounded-full flex items-center justify-center transition-all" title="تسجيل صوتي">
           <i class="fa-solid fa-microphone text-lg"></i>
         </button>
       </div>
     </div>
   </div>
 
-  <!-- POPUPS, DIALOGS, MODALS -->
-  <!-- -->
 
-  <!-- Attachment Overlay Menu -->
-  <div id="attachmentMenu" class="absolute bottom-16 right-4 hidden z-20 bg-slate-900 border border-slate-800 p-2 rounded-xl shadow-2xl flex flex-col space-y-1">
-    <button onclick="selectAttachment('image')" class="flex items-center space-x-2 space-x-reverse px-4 py-2 hover:bg-slate-800 rounded-lg text-slate-200 text-xs text-right">
+  <!-- Attachment Drawer -->
+  <div id="attachmentMenu" class="absolute bottom-16 right-4 hidden z-30 bg-[#233138] border border-wa-borderDark p-2 rounded-xl shadow-2xl flex flex-col space-y-1">
+    <button onclick="selectAttachment('image')" class="flex items-center space-x-2 space-x-reverse px-4 py-2 hover:bg-wa-activeDark rounded-lg text-slate-200 text-xs">
       <i class="fa-regular fa-image text-emerald-500"></i><span>صورة</span>
     </button>
-    <button onclick="selectAttachment('video')" class="flex items-center space-x-2 space-x-reverse px-4 py-2 hover:bg-slate-800 rounded-lg text-slate-200 text-xs text-right">
+    <button onclick="selectAttachment('video')" class="flex items-center space-x-2 space-x-reverse px-4 py-2 hover:bg-wa-activeDark rounded-lg text-slate-200 text-xs">
       <i class="fa-regular fa-circle-play text-red-500"></i><span>فيديو</span>
     </button>
-    <button onclick="selectAttachment('audio')" class="flex items-center space-x-2 space-x-reverse px-4 py-2 hover:bg-slate-800 rounded-lg text-slate-200 text-xs text-right">
-      <i class="fa-solid fa-music text-blue-500"></i><span>ملف صوتي</span>
-    </button>
-    <button onclick="selectAttachment('file')" class="flex items-center space-x-2 space-x-reverse px-4 py-2 hover:bg-slate-800 rounded-lg text-slate-200 text-xs text-right">
-      <i class="fa-regular fa-file-lines text-amber-500"></i><span>مستند / ملف</span>
+    <button onclick="selectAttachment('file')" class="flex items-center space-x-2 space-x-reverse px-4 py-2 hover:bg-wa-activeDark rounded-lg text-slate-200 text-xs">
+      <i class="fa-regular fa-file-lines text-blue-500"></i><span>مستند</span>
     </button>
   </div>
 
-  <!-- Main System Actions Modal (Create Groups, Search users to message) -->
-  <div id="actionModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-30 hidden px-4">
-    <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
-        <h3 id="actionModalTitle" class="text-md font-bold text-white">إضافة اتصال جديد</h3>
+  <!-- General Purpose Modal Box -->
+  <div id="actionModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center z-40 hidden px-4">
+    <div class="w-full max-w-md bg-wa-panelDark border border-wa-borderDark rounded-2xl p-6 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-wa-borderDark pb-3 mb-4">
+        <h3 id="actionModalTitle" class="text-md font-bold text-white">مربع حوار</h3>
         <button onclick="closeActionModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <div id="actionModalContent" class="space-y-4">
-        <!-- Loaded dynamically based on execution profile -->
-      </div>
+      <div id="actionModalContent" class="space-y-4"></div>
     </div>
   </div>
 
-  <!-- Audio/Video Calling Screen (Absolute overlay when call initiated/incoming) -->
-  <!-- -->
-  <div id="callScreen" class="fixed inset-0 z-50 bg-slate-950 flex flex-col justify-between items-center hidden p-6">
+  <div id="statusViewer" class="fixed inset-0 z-50 bg-black flex flex-col justify-between hidden p-4">
+    <!-- Story indicator bars -->
+    <div class="w-full flex space-x-1 space-x-reverse px-2 mb-2">
+      <div class="h-1 bg-wa-green flex-1 rounded"></div>
+    </div>
+    
+    <div class="flex items-center justify-between border-b border-wa-borderDark pb-3">
+      <div class="flex items-center space-x-3 space-x-reverse">
+        <img id="statusViewerAvatar" src="https://placehold.co/100" class="h-10 w-10 rounded-full border border-wa-green object-cover">
+        <div>
+          <h4 id="statusViewerName" class="text-sm font-bold text-white">الاسم</h4>
+          <span id="statusViewerTime" class="text-[10px] text-slate-400">منذ ساعة</span>
+        </div>
+      </div>
+      <div class="flex items-center space-x-2 space-x-reverse">
+        <button id="deleteStatusBtn" class="text-red-500 hover:text-red-400 p-2 hidden"><i class="fa-solid fa-trash-can"></i></button>
+        <button onclick="closeStatusViewer()" class="text-slate-400 hover:text-white p-2 text-lg"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+
+    <div class="flex-1 flex items-center justify-center p-6 text-center">
+      <div id="statusTextContent" class="text-2xl font-bold text-white max-w-md whitespace-pre-wrap leading-relaxed"></div>
+      <img id="statusImageContent" src="" class="hidden max-h-[70vh] rounded-xl object-contain shadow-2xl">
+    </div>
+
+    <div class="p-3 bg-wa-panelDark rounded-xl flex items-center space-x-2 space-x-reverse max-w-lg mx-auto w-full">
+      <input id="statusReplyInput" type="text" placeholder="الرد على هذه الحالة..." class="flex-1 bg-wa-bgDark border-none rounded-lg py-2 px-3 text-xs text-white focus:outline-none">
+      <button onclick="sendStatusReply()" class="bg-wa-green hover:bg-[#008f70] text-white px-4 py-2 rounded-lg text-xs font-semibold">إرسال</button>
+    </div>
+  </div>
+
+  <div id="callScreen" class="fixed inset-0 z-50 bg-[#111b21] flex flex-col justify-between items-center hidden p-6 wa-wallpaper">
     <div class="text-center mt-12">
       <div class="relative inline-block">
-        <div class="absolute inset-0 rounded-full bg-blue-500/20 animate-ping"></div>
-        <img id="callScreenAvatar" src="https://placehold.co/150" class="relative h-28 w-28 rounded-full border-4 border-slate-800 object-cover">
+        <div class="absolute inset-0 rounded-full bg-wa-green/20 animate-ping"></div>
+        <img id="callScreenAvatar" src="https://placehold.co/150" class="relative h-28 w-28 rounded-full border-4 border-wa-green object-cover shadow-2xl">
       </div>
       <h3 id="callScreenName" class="text-2xl font-bold text-white mt-6">أحمد العلي</h3>
-      <p id="callScreenStatus" class="text-sm text-blue-400 mt-2">مكالمة واردة...</p>
-      <span id="callDuration" class="hidden text-xs text-slate-400 bg-slate-900 px-3 py-1 rounded-full mt-4 inline-block">00:00</span>
+      <p id="callScreenStatus" class="text-sm text-wa-green mt-2">مكالمة جارية...</p>
+      <span id="callDuration" class="hidden text-xs text-slate-400 bg-wa-activeDark px-3 py-1 rounded-full mt-4 inline-block">00:00</span>
     </div>
 
-    <!-- Video Streams Area -->
-    <div id="videoStreamsArea" class="hidden w-full max-w-md aspect-video relative rounded-xl overflow-hidden bg-slate-900 my-4">
+    <!-- Video track layout -->
+    <div id="videoStreamsArea" class="hidden w-full max-w-md aspect-video relative rounded-xl overflow-hidden bg-black shadow-2xl border border-wa-borderDark my-4">
       <video id="remoteVideo" autoplay playsinline class="w-full h-full object-cover"></video>
-      <video id="localVideo" autoplay playsinline muted class="absolute bottom-3 left-3 w-1/4 aspect-video object-cover rounded-lg border border-slate-700"></video>
+      <video id="localVideo" autoplay playsinline muted class="absolute bottom-3 left-3 w-1/4 aspect-video object-cover rounded-lg border border-wa-borderDark"></video>
     </div>
 
-    <!-- Audio Element for WebRTC audio calls -->
     <audio id="remoteAudio" autoplay></audio>
 
-    <!-- Call Control Actions -->
     <div class="flex items-center space-x-4 space-x-reverse mb-12">
-      <!-- Mute mic -->
-      <button id="toggleMicBtn" onclick="toggleMic()" class="h-14 w-14 rounded-full bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center transition-all">
-        <i class="fa-solid fa-microphone-slash text-xl"></i>
+      <button id="toggleMicBtn" onclick="toggleMic()" class="h-14 w-14 rounded-full bg-wa-activeDark hover:bg-slate-700 text-white flex items-center justify-center transition-all">
+        <i class="fa-solid fa-microphone text-xl"></i>
       </button>
-      <!-- Camera toggle -->
-      <button id="toggleCameraBtn" onclick="toggleCamera()" class="h-14 w-14 rounded-full bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center transition-all hidden">
-        <i class="fa-solid fa-video-slash text-xl"></i>
+      <button id="toggleCameraBtn" onclick="toggleCamera()" class="h-14 w-14 rounded-full bg-wa-activeDark hover:bg-slate-700 text-white flex items-center justify-center transition-all hidden">
+        <i class="fa-solid fa-video text-xl"></i>
       </button>
-      <!-- Screen share -->
-      <button id="shareScreenBtn" onclick="toggleScreenShare()" class="h-14 w-14 rounded-full bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center transition-all hidden" title="مشاركة الشاشة">
-        <i class="fa-solid fa-desktop text-xl"></i>
+      <button id="shareScreenBtn" onclick="toggleScreenShare()" class="h-14 w-14 rounded-full bg-wa-activeDark hover:bg-slate-700 text-white flex items-center justify-center transition-all hidden" title="مشاركة الشاشة">
+        <i class="fa-solid fa-display text-xl"></i>
       </button>
-      <!-- Decline/Hangup -->
-      <button id="declineCallBtn" onclick="hangupCall()" class="h-14 w-14 rounded-full bg-red-600 hover:bg-red-500 text-white flex items-center justify-center transition-all" title="إنهاء المكالمة">
+      <button id="declineCallBtn" onclick="hangupCall()" class="h-14 w-14 rounded-full bg-red-600 hover:bg-red-500 text-white flex items-center justify-center transition-all" title="إنهاء">
         <i class="fa-solid fa-phone-slash text-xl"></i>
       </button>
-      <!-- Accept Call -->
-      <button id="acceptCallBtn" onclick="acceptIncomingCall()" class="h-14 w-14 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center transition-all" title="رد">
+      <button id="acceptCallBtn" onclick="acceptIncomingCall()" class="h-14 w-14 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center transition-all animate-bounce" title="قبول">
         <i class="fa-solid fa-phone text-xl"></i>
       </button>
     </div>
   </div>
 
-  <!-- Status Viewer Modal Overlay -->
-  <div id="statusViewer" class="fixed inset-0 z-50 bg-slate-950 flex flex-col justify-between hidden p-4">
-    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-      <div class="flex items-center space-x-3 space-x-reverse">
-        <img id="statusViewerAvatar" src="https://placehold.co/100" class="h-10 w-10 rounded-full border border-slate-700 object-cover">
-        <div>
-          <h4 id="statusViewerName" class="text-sm font-bold text-white">أحمد العلي</h4>
-          <span id="statusViewerTime" class="text-[10px] text-slate-400">منذ ساعة</span>
-        </div>
-      </div>
-      <div class="flex items-center space-x-2 space-x-reverse">
-        <button id="deleteStatusBtn" onclick="deleteMyActiveStatus()" class="text-red-500 hover:text-red-400 p-2 hidden"><i class="fa-solid fa-trash-can"></i></button>
-        <button onclick="closeStatusViewer()" class="text-slate-400 hover:text-white p-2 text-lg"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-    </div>
-
-    <!-- Status content view -->
-    <div class="flex-1 flex items-center justify-center p-6 text-center">
-      <div id="statusTextContent" class="text-2xl font-bold text-white max-w-md whitespace-pre-wrap leading-relaxed"></div>
-      <img id="statusImageContent" src="" class="hidden max-h-[70vh] rounded-xl object-contain shadow-2xl">
-      <video id="statusVideoContent" src="" controls class="hidden max-h-[70vh] rounded-xl shadow-2xl"></video>
-    </div>
-
-    <!-- Status Quick reply bar -->
-    <div class="p-3 bg-slate-900 rounded-xl flex items-center space-x-2 space-x-reverse max-w-lg mx-auto w-full">
-      <input id="statusReplyInput" type="text" placeholder="الرد على هذه الحالة..." class="flex-1 bg-slate-950 border border-slate-800 rounded-lg py-2 px-3 text-xs text-white focus:outline-none">
-      <button onclick="sendStatusReply()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-xs font-semibold">إرسال</button>
-    </div>
-  </div>
-
-  <!-- Notification Banner Overlay -->
-  <div id="appNotification" class="fixed top-4 left-4 right-4 md:right-auto md:w-96 bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-2xl z-50 transform -translate-y-32 transition-all duration-300 pointer-events-none">
+  <!-- Notification bar -->
+  <div id="appNotification" class="fixed top-4 left-4 right-4 md:right-auto md:w-96 bg-[#202c33] border border-wa-borderDark rounded-xl p-4 shadow-2xl z-50 transform -translate-y-48 transition-all duration-300 pointer-events-none">
     <div class="flex items-start space-x-3 space-x-reverse">
-      <img id="notifAvatar" src="https://placehold.co/100" class="h-10 w-10 rounded-full border border-slate-800 object-cover">
+      <img id="notifAvatar" src="https://placehold.co/100" class="h-10 w-10 rounded-full border border-wa-borderDark object-cover">
       <div class="flex-1">
-        <h4 id="notifTitle" class="text-xs font-bold text-white">إشعار جديد</h4>
-        <p id="notifBody" class="text-xs text-slate-400 mt-1 truncate">جسم الإشعار هنا...</p>
+        <h4 id="notifTitle" class="text-xs font-bold text-white">تنبيه</h4>
+        <p id="notifBody" class="text-xs text-[#8696a0] mt-1 truncate"></p>
       </div>
     </div>
   </div>
 
-  <!-- Real Audio elements for sound notifications -->
   <audio id="notifSound" src="data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAA=="></audio>
 
-
-  <!-- JAVASCRIPT SYSTEM ENGINE -->
-  <!-- -->
   <script>
-    // System Wide States
     let socket = null;
     let currentUser = null;
     let usersList = [];
     let groupsList = [];
     let messagesList = [];
     let statusesList = [];
+    let pinnedList = [];
     
-    let activeTab = 'chats'; // chats, groups, status, calls, settings
-    let activeChat = null; // { id, isGroup }
-    let activeReplyTo = null; // messageId
-    
-    // WebRTC connection variables
+    let activeTab = 'chats'; 
+    let activeChat = null; 
+    let activeReplyTo = null; 
+    let activePinText = null;
+    let localChatSearchMatches = [];
+    let currentSearchMatchIndex = -1;
+
+    // WebRTC connection
     let peerConnection = null;
     let localStream = null;
-    let currentCallData = null; // { callerId, callType }
+    let currentCallData = null; 
     let callTimerInterval = null;
     let callStartTime = null;
 
-    // Media recorder helper
+    // Recorder
     let mediaRecorder = null;
     let audioChunks = [];
     let audioDurationTimer = null;
     let audioDurationSeconds = 0;
 
-    // PWA Support variables
     let deferredInstallPrompt = null;
 
-    // Run systems on windows onload
     window.onload = function() {
-      // Setup UI/Auth events
       setupAuthForms();
       setupPWAListeners();
       
-      // Auto-login if localstorage token exists
-      const savedToken = localStorage.getItem('tarzanalwaqdiy_token');
+      const savedToken = localStorage.getItem('tarzanalwaqdiy_premium_token');
       if (savedToken) {
         initiateSystemWithToken(savedToken);
       } else {
@@ -476,7 +488,6 @@
       }
     };
 
-    /* */
     function setupAuthForms() {
       const authToggleBtn = document.getElementById('authToggleBtn');
       const authToggleText = document.getElementById('authToggleText');
@@ -493,14 +504,14 @@
         isSignUp = !isSignUp;
         if (isSignUp) {
           authTitle.innerText = 'إنشاء حساب جديد';
-          authSubtitle.innerText = 'انضم إلى مجتمع Tarzanalwaqdiy اليوم';
+          authSubtitle.innerText = 'انضم إلى مجتمع واتساب الفخم اليوم';
           displayNameGroup.classList.remove('hidden');
           authSubmitBtn.innerText = 'إنشاء الحساب';
           authToggleText.innerText = 'لديك حساب بالفعل؟';
           authToggleBtn.innerText = 'تسجيل الدخول';
         } else {
-          authTitle.innerText = 'تسجيل الدخول';
-          authSubtitle.innerText = 'مرحباً بك مجدداً في Tarzanalwaqdiy';
+          authTitle.innerText = 'تسجيل الدخول إلى واتساب';
+          authSubtitle.innerText = 'أدخل حسابك لبدء المحادثات الفخمة';
           displayNameGroup.classList.add('hidden');
           authSubmitBtn.innerText = 'تسجيل الدخول';
           authToggleText.innerText = 'ليس لديك حساب؟';
@@ -529,28 +540,25 @@
           const data = await response.json();
 
           if (!response.ok) {
-            alertBox.innerText = data.error || 'حدث خطأ غير متوقع';
+            alertBox.innerText = data.error || 'خطأ غير معروف';
             alertBox.classList.remove('hidden');
             return;
           }
 
-          localStorage.setItem('tarzanalwaqdiy_token', data.token);
+          localStorage.setItem('tarzanalwaqdiy_premium_token', data.token);
           initiateSystemWithToken(data.token);
         } catch (err) {
-          alertBox.innerText = 'تعذر الاتصال بالخادم. يرجى التحقق من اتصالك بالإنترنت.';
+          alertBox.innerText = 'تعذر الاتصال بالخادم الرئيسي.';
           alertBox.classList.remove('hidden');
         }
       });
     }
 
-    /* */
     function initiateSystemWithToken(token) {
       document.getElementById('splashScreen').classList.remove('hidden');
       document.getElementById('authScreen').classList.add('hidden');
 
-      socket = io({
-        auth: { token }
-      });
+      socket = io({ auth: { token } });
 
       socket.on('connect', () => {
         fetch('/api/users/me', {
@@ -568,16 +576,11 @@
             handleLogout();
           }
         })
-        .catch(() => {
-          handleLogout();
-        });
+        .catch(() => handleLogout());
       });
 
-      socket.on('connect_error', (err) => {
-        handleLogout();
-      });
+      socket.on('connect_error', () => handleLogout());
 
-      /* Synchronize Realtime Data Packets */
       socket.on('sync-users', (users) => {
         usersList = users.filter(u => u.id !== currentUser.id);
         renderActiveFeed();
@@ -590,7 +593,10 @@
 
       socket.on('sync-messages', (messages) => {
         messagesList = messages;
-        if (activeChat) renderMessages();
+        if (activeChat) {
+          renderMessages();
+          markActiveMessagesRead();
+        }
         renderActiveFeed();
       });
 
@@ -599,18 +605,30 @@
         renderActiveFeed();
       });
 
+      socket.on('sync-pins', (pins) => {
+        pinnedList = pins;
+        renderActiveFeed();
+      });
+
       socket.on('new-message', (msg) => {
         messagesList.push(msg);
         if (activeChat && ((!activeChat.isGroup && msg.senderId === activeChat.id) || (activeChat.isGroup && msg.groupId === activeChat.id) || msg.senderId === currentUser.id)) {
           renderMessages();
-          // Scroll to bottom
+          markActiveMessagesRead();
           const container = document.getElementById('messagesContainer');
           container.scrollTop = container.scrollHeight;
         } else {
-          // Play notification sound
           triggerInAppNotification(msg);
         }
         renderActiveFeed();
+      });
+
+      socket.on('message-status-updated', (data) => {
+        const msg = messagesList.find(m => m.id === data.messageId);
+        if (msg) {
+          msg.status = data.status;
+          if (activeChat) renderMessages();
+        }
       });
 
       socket.on('message-edited', (editedMsg) => {
@@ -626,7 +644,7 @@
         const msg = messagesList.find(m => m.id === data.messageId);
         if (msg) {
           if (data.forEveryone) {
-            msg.content = 'تم حذف هذه الرسالة';
+            msg.content = 'تم حذف هذه الرسالة للجميع';
             msg.type = 'text';
             msg.deletedForEveryone = true;
           } else {
@@ -665,11 +683,8 @@
 
       socket.on('group-updated', (group) => {
         const idx = groupsList.findIndex(g => g.id === group.id);
-        if (idx !== -1) {
-          groupsList[idx] = group;
-        } else {
-          groupsList.push(group);
-        }
+        if (idx !== -1) groupsList[idx] = group;
+        else groupsList.push(group);
         renderActiveFeed();
         if (activeChat && activeChat.isGroup && activeChat.id === group.id) {
           document.getElementById('chatHeaderName').innerText = group.name;
@@ -677,31 +692,8 @@
         }
       });
 
-      socket.on('group-removed', (groupId) => {
-        groupsList = groupsList.filter(g => g.id !== groupId);
-        if (activeChat && activeChat.isGroup && activeChat.id === groupId) {
-          closeActiveChat();
-        }
-        renderActiveFeed();
-      });
-
       socket.on('new-status', (status) => {
         statusesList.push(status);
-        renderActiveFeed();
-      });
-
-      socket.on('status-view-updated', (data) => {
-        const s = statusesList.find(st => st.id === data.statusId);
-        if (s) {
-          s.views = data.views;
-          if (document.getElementById('statusViewer').classList.contains('hidden') === false) {
-            // Update views label dynamically if viewing own
-          }
-        }
-      });
-
-      socket.on('status-deleted', (statusId) => {
-        statusesList = statusesList.filter(s => s.id !== statusId);
         renderActiveFeed();
       });
 
@@ -712,8 +704,6 @@
           if (usr && data.action !== 'idle') {
             let actionText = 'يكتب الآن...';
             if (data.action === 'recording') actionText = 'يسجل رسالة صوتية...';
-            if (data.action === 'uploading') actionText = 'يرفع ملفاً...';
-            
             indicator.innerText = activeChat.isGroup ? `${usr.displayName}: ${actionText}` : actionText;
             indicator.classList.remove('hidden');
           } else {
@@ -722,20 +712,15 @@
         }
       });
 
-      /* WebRTC Calling Sockets */
-      socket.on('incoming-call', (data) => {
-        handleIncomingCall(data);
-      });
-
+      // Signaling
+      socket.on('incoming-call', (data) => handleIncomingCall(data));
       socket.on('call-response', (data) => {
-        if (data.accepted) {
-          startWebRTCConnection(data.receiverId);
-        } else {
-          showCallStatus('تم رفض المكالمة من الطرف الآخر');
+        if (data.accepted) startWebRTCConnection(data.receiverId);
+        else {
+          showCallStatus('تم رفض المكالمة.');
           setTimeout(() => hangupCall(), 2000);
         }
       });
-
       socket.on('webrtc-signal', async (data) => {
         if (peerConnection) {
           await peerConnection.setRemoteDescription(new RTCSessionDescription(data.signal));
@@ -746,43 +731,33 @@
           }
         }
       });
-
       socket.on('call-hungup', () => {
         stopWebRTCConnection();
-        showCallStatus('انتهت المكالمة');
-        setTimeout(() => {
-          document.getElementById('callScreen').classList.add('hidden');
-        }, 1500);
+        showCallStatus('انتهت المكالمة.');
+        setTimeout(() => document.getElementById('callScreen').classList.add('hidden'), 1500);
       });
     }
 
-    /* */
     function switchTab(tab) {
       activeTab = tab;
       const buttons = document.querySelectorAll('.tab-btn');
       buttons.forEach(btn => {
         if (btn.getAttribute('data-tab') === tab) {
-          btn.classList.add('bg-slate-800', 'text-white');
+          btn.className = "tab-btn p-3 rounded-xl hover:bg-wa-activeDark transition-all bg-wa-activeDark text-wa-green";
         } else {
-          btn.classList.remove('bg-slate-800', 'text-white');
+          btn.className = "tab-btn p-3 rounded-xl text-slate-400 hover:bg-wa-activeDark hover:text-white transition-all";
         }
       });
 
-      const feedTitle = document.getElementById('middlePanelTitle');
+      const title = document.getElementById('middlePanelTitle');
       const addBtn = document.getElementById('addNewActionBtn');
-      
       addBtn.classList.remove('hidden');
-      if (tab === 'chats') {
-        feedTitle.innerText = 'المحادثات';
-      } else if (tab === 'groups') {
-        feedTitle.innerText = 'المجموعات';
-      } else if (tab === 'status') {
-        feedTitle.innerText = 'الحالات';
-      } else if (tab === 'calls') {
-        feedTitle.innerText = 'المكالمات';
-        addBtn.classList.add('hidden');
-      } else if (tab === 'settings') {
-        feedTitle.innerText = 'الإعدادات';
+
+      if (tab === 'chats') title.innerText = 'الدردشات';
+      else if (tab === 'groups') title.innerText = 'المجموعات';
+      else if (tab === 'status') title.innerText = 'الحالات';
+      else if (tab === 'settings') {
+        title.innerText = 'الإعدادات';
         addBtn.classList.add('hidden');
       }
 
@@ -794,72 +769,102 @@
       feed.innerHTML = '';
 
       if (activeTab === 'chats') {
-        // Direct messages
-        usersList.forEach(user => {
+        // Render Direct conversations with premium indicators
+        const sortedUsers = [...usersList].sort((a, b) => {
+          const pinA = pinnedList.includes(a.id) ? 1 : 0;
+          const pinB = pinnedList.includes(b.id) ? 1 : 0;
+          return pinB - pinA;
+        });
+
+        sortedUsers.forEach(user => {
           const lastMsg = getLastMessageWith(user.id);
           const lastText = lastMsg ? (lastMsg.type === 'text' ? lastMsg.content : '[وسائط]') : user.bio;
           const statusBg = user.status === 'online' ? 'bg-emerald-500' : 'bg-slate-500';
-          
+          const isPinned = pinnedList.includes(user.id);
+
           const div = document.createElement('div');
-          div.className = `flex items-center space-x-3 space-x-reverse p-3 hover:bg-slate-800 rounded-xl cursor-pointer transition-all ${activeChat && !activeChat.isGroup && activeChat.id === user.id ? 'bg-slate-800/80 border border-slate-700' : ''}`;
+          div.className = `flex items-center space-x-3 space-x-reverse p-3 hover:bg-wa-activeDark rounded-lg cursor-pointer transition-all ${activeChat && !activeChat.isGroup && activeChat.id === user.id ? 'bg-[#222e35]' : ''}`;
           div.onclick = () => openDirectChat(user);
           div.innerHTML = `
-            <div class="relative">
-              <img src="${user.avatar}" class="h-11 w-11 rounded-full object-cover">
-              <span class="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-slate-900 ${statusBg}"></span>
+            <div class="relative flex-shrink-0">
+              <img src="${user.avatar}" class="h-12 w-12 rounded-full object-cover">
+              <span class="absolute bottom-0.5 right-0.5 h-3.5 w-3.5 rounded-full border-2 border-wa-panelDark ${statusBg}"></span>
             </div>
-            <div class="flex-1 min-w-0">
+            <div class="flex-1 min-w-0 border-b border-wa-borderDark/40 pb-2">
               <div class="flex items-center justify-between">
-                <h4 class="text-xs font-bold text-white truncate">${user.displayName}</h4>
-                <span class="text-[9px] text-slate-500">${lastMsg ? formatTime(lastMsg.timestamp) : ''}</span>
+                <h4 class="text-sm font-bold text-white truncate">${user.displayName}</h4>
+                <span class="text-[10px] text-slate-400">${lastMsg ? formatTime(lastMsg.timestamp) : ''}</span>
               </div>
-              <p class="text-xs text-slate-400 truncate mt-1">${lastText}</p>
+              <div class="flex items-center justify-between mt-1">
+                <p class="text-xs text-slate-400 truncate max-w-[200px]">${lastText}</p>
+                <div class="flex items-center space-x-1.5 space-x-reverse">
+                  ${isPinned ? '<i class="fa-solid fa-thumbtack text-[10px] text-slate-500 rotate-45"></i>' : ''}
+                  <button onclick="event.stopPropagation(); togglePinChat('${user.id}')" class="text-[10px] text-slate-600 hover:text-white p-1" title="تثبيت الدردشة">
+                    <i class="fa-solid fa-thumbtack"></i>
+                  </button>
+                </div>
+              </div>
             </div>
           `;
           feed.appendChild(div);
         });
       } else if (activeTab === 'groups') {
-        // Groups feed
-        groupsList.forEach(group => {
+        const sortedGroups = [...groupsList].sort((a, b) => {
+          const pinA = pinnedList.includes(a.id) ? 1 : 0;
+          const pinB = pinnedList.includes(b.id) ? 1 : 0;
+          return pinB - pinA;
+        });
+
+        sortedGroups.forEach(group => {
           const lastMsg = getLastGroupMessage(group.id);
-          const lastText = lastMsg ? `${lastMsg.senderId === currentUser.id ? 'أنا' : 'عضو'}: ${lastMsg.content}` : 'لا يوجد رسائل بعد';
+          const lastText = lastMsg ? `${lastMsg.senderId === currentUser.id ? 'أنت' : 'عضو'}: ${lastMsg.content}` : 'لا يوجد رسائل بعد';
+          const isPinned = pinnedList.includes(group.id);
 
           const div = document.createElement('div');
-          div.className = `flex items-center space-x-3 space-x-reverse p-3 hover:bg-slate-800 rounded-xl cursor-pointer transition-all ${activeChat && activeChat.isGroup && activeChat.id === group.id ? 'bg-slate-800/80 border border-slate-700' : ''}`;
+          div.className = `flex items-center space-x-3 space-x-reverse p-3 hover:bg-wa-activeDark rounded-lg cursor-pointer transition-all ${activeChat && activeChat.isGroup && activeChat.id === group.id ? 'bg-[#222e35]' : ''}`;
           div.onclick = () => openGroupChat(group);
           div.innerHTML = `
-            <img src="${group.avatar}" class="h-11 w-11 rounded-full object-cover border border-slate-800">
-            <div class="flex-1 min-w-0">
+            <img src="${group.avatar}" class="h-12 w-12 rounded-full object-cover border border-wa-borderDark">
+            <div class="flex-1 min-w-0 border-b border-wa-borderDark/40 pb-2">
               <div class="flex items-center justify-between">
-                <h4 class="text-xs font-bold text-white truncate">${group.name}</h4>
-                <span class="text-[9px] text-slate-500">${lastMsg ? formatTime(lastMsg.timestamp) : ''}</span>
+                <h4 class="text-sm font-bold text-white truncate">${group.name}</h4>
+                <span class="text-[10px] text-slate-400">${lastMsg ? formatTime(lastMsg.timestamp) : ''}</span>
               </div>
-              <p class="text-xs text-slate-400 truncate mt-1">${lastText}</p>
+              <div class="flex items-center justify-between mt-1">
+                <p class="text-xs text-slate-400 truncate max-w-[200px]">${lastText}</p>
+                <div class="flex items-center space-x-1.5 space-x-reverse">
+                  ${isPinned ? '<i class="fa-solid fa-thumbtack text-[10px] text-slate-500 rotate-45"></i>' : ''}
+                  <button onclick="event.stopPropagation(); togglePinChat('${group.id}')" class="text-[10px] text-slate-600 hover:text-white p-1">
+                    <i class="fa-solid fa-thumbtack"></i>
+                  </button>
+                </div>
+              </div>
             </div>
           `;
           feed.appendChild(div);
         });
       } else if (activeTab === 'status') {
-        // Render custom self status post option
+        // Status list with ring
         const myActiveStatus = statusesList.filter(s => s.userId === currentUser.id);
         const divMy = document.createElement('div');
-        divMy.className = 'p-3 border-b border-slate-800/50 mb-2 flex items-center justify-between';
+        divMy.className = 'p-3 border-b border-wa-borderDark flex items-center justify-between';
         divMy.innerHTML = `
           <div class="flex items-center space-x-3 space-x-reverse">
-            <img src="${currentUser.avatar}" class="h-11 w-11 rounded-full object-cover border-2 border-dashed border-blue-500">
+            <div class="relative">
+              <img src="${currentUser.avatar}" class="h-12 w-12 rounded-full object-cover border-2 border-dashed ${myActiveStatus.length > 0 ? 'border-wa-green' : 'border-slate-600'}">
+            </div>
             <div>
-              <h4 class="text-xs font-bold text-white">حالتي الشخصية</h4>
-              <p class="text-[10px] text-slate-400 mt-0.5">${myActiveStatus.length > 0 ? `لديك ${myActiveStatus.length} حالة نشطة` : 'لم تقم بنشر أي حالة بعد'}</p>
+              <h4 class="text-sm font-bold text-white">حالتي الشخصية</h4>
+              <p class="text-[11px] text-slate-400 mt-0.5">${myActiveStatus.length > 0 ? `لديك ${myActiveStatus.length} حالة نشطة` : 'انقر على علامة (+) لنشر حالة جديدة'}</p>
             </div>
           </div>
           <div class="flex items-center space-x-2 space-x-reverse">
-            ${myActiveStatus.length > 0 ? `<button onclick="viewUserStatuses('${currentUser.id}')" class="bg-slate-800 hover:bg-slate-700 p-2 rounded-lg text-xs text-white"><i class="fa-regular fa-eye"></i></button>` : ''}
-            <button onclick="openStatusCreator()" class="bg-blue-600 hover:bg-blue-500 p-2 rounded-lg text-xs text-white"><i class="fa-solid fa-plus"></i></button>
+            ${myActiveStatus.length > 0 ? `<button onclick="viewUserStatuses('${currentUser.id}')" class="bg-wa-activeDark hover:bg-[#2a3942] p-2 rounded-lg text-xs text-white"><i class="fa-solid fa-eye text-wa-green"></i></button>` : ''}
+            <button onclick="openStatusCreator()" class="bg-wa-green hover:bg-[#008f70] p-2 rounded-lg text-xs text-white"><i class="fa-solid fa-plus"></i></button>
           </div>
         `;
         feed.appendChild(divMy);
 
-        // Others statuses
         const uniqueUsers = [];
         statusesList.forEach(s => {
           if (s.userId !== currentUser.id && !uniqueUsers.includes(s.userId)) {
@@ -868,49 +873,45 @@
             const latest = userStatuses[userStatuses.length - 1];
 
             const div = document.createElement('div');
-            div.className = 'flex items-center space-x-3 space-x-reverse p-3 hover:bg-slate-800 rounded-xl cursor-pointer transition-all';
+            div.className = 'flex items-center space-x-3 space-x-reverse p-3 hover:bg-wa-activeDark rounded-lg cursor-pointer transition-all';
             div.onclick = () => viewUserStatuses(s.userId);
             div.innerHTML = `
               <div class="relative">
-                <img src="${latest.avatar}" class="h-11 w-11 rounded-full object-cover border-2 border-blue-500">
+                <!-- Segmented circle ring representing active stories -->
+                <div class="h-13 w-13 rounded-full flex items-center justify-center p-0.5 border-2 border-wa-green">
+                  <img src="${latest.avatar}" class="h-11 w-11 rounded-full object-cover">
+                </div>
               </div>
               <div class="flex-1 min-w-0">
-                <h4 class="text-xs font-bold text-white">${latest.displayName}</h4>
+                <h4 class="text-sm font-bold text-white">${latest.displayName}</h4>
                 <p class="text-[10px] text-slate-400 mt-1">${formatTime(latest.timestamp)}</p>
               </div>
             `;
             feed.appendChild(div);
           }
         });
-      } else if (activeTab === 'calls') {
-        // Simple calls tab overview
-        const div = document.createElement('div');
-        div.className = 'p-4 text-center text-slate-400 text-xs';
-        div.innerHTML = `
-          <i class="fa-solid fa-phone-slash text-4xl text-slate-600 mb-3 block"></i>
-          لا توجد مكالمات جارية حالياً.
-        `;
-        feed.appendChild(div);
       } else if (activeTab === 'settings') {
-        // App Settings
         const div = document.createElement('div');
         div.className = 'p-4 space-y-4';
         div.innerHTML = `
-          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-3">
-            <h4 class="text-xs font-bold text-blue-500">حسابي</h4>
+          <div class="bg-wa-bgDark p-4 rounded-xl border border-wa-borderDark space-y-3">
+            <h4 class="text-xs font-bold text-wa-green uppercase">إعدادات الحساب</h4>
             <div class="space-y-2">
-              <button onclick="openEditProfileDialog()" class="w-full text-right text-xs text-slate-300 hover:text-white flex items-center justify-between"><span class="flex items-center"><i class="fa-regular fa-user ml-2 text-slate-400"></i> تعديل الملف الشخصي</span><i class="fa-solid fa-chevron-left text-[10px] text-slate-600"></i></button>
-              <button onclick="openChangePasswordDialog()" class="w-full text-right text-xs text-slate-300 hover:text-white flex items-center justify-between"><span class="flex items-center"><i class="fa-solid fa-key ml-2 text-slate-400"></i> تغيير كلمة المرور</span><i class="fa-solid fa-chevron-left text-[10px] text-slate-600"></i></button>
-              <button onclick="confirmDeleteAccount()" class="w-full text-right text-xs text-red-400 hover:text-red-300 flex items-center justify-between"><span class="flex items-center"><i class="fa-solid fa-trash-can ml-2 text-red-500"></i> حذف الحساب نهائياً</span><i class="fa-solid fa-chevron-left text-[10px] text-red-600"></i></button>
+              <button onclick="openLeftDrawer('profile')" class="w-full text-right text-xs text-slate-300 hover:text-white flex items-center justify-between py-1"><span class="flex items-center"><i class="fa-solid fa-user ml-2 text-slate-400"></i> تعديل البيانات الشخصية</span><i class="fa-solid fa-chevron-left text-[10px] text-slate-600"></i></button>
+              <button onclick="openChangePasswordDialog()" class="w-full text-right text-xs text-slate-300 hover:text-white flex items-center justify-between py-1"><span class="flex items-center"><i class="fa-solid fa-key ml-2 text-slate-400"></i> تغيير كلمة المرور</span><i class="fa-solid fa-chevron-left text-[10px] text-slate-600"></i></button>
+              <button onclick="confirmDeleteAccount()" class="w-full text-right text-xs text-red-400 hover:text-red-300 flex items-center justify-between py-1"><span class="flex items-center"><i class="fa-solid fa-trash-can ml-2 text-red-500"></i> حذف الحساب بشكل نهائي</span><i class="fa-solid fa-chevron-left text-[10px] text-red-900"></i></button>
             </div>
           </div>
-          <button onclick="handleLogout()" class="w-full bg-red-600 hover:bg-red-500 text-white text-xs py-2.5 rounded-xl font-bold transition-all mt-4"><i class="fa-solid fa-arrow-right-from-bracket ml-2"></i> تسجيل الخروج</button>
+          <button onclick="handleLogout()" class="w-full bg-red-600 hover:bg-red-500 text-white text-xs py-3 rounded-xl font-bold transition-all"><i class="fa-solid fa-arrow-right-from-bracket ml-2"></i> تسجيل الخروج</button>
         `;
         feed.appendChild(div);
       }
     }
 
-    /* */
+    function togglePinChat(targetId) {
+      socket.emit('toggle-pin-chat', targetId);
+    }
+
     function getLastMessageWith(userId) {
       const msgs = messagesList.filter(m => !m.groupId && ((m.senderId === currentUser.id && m.receiverId === userId) || (m.senderId === userId && m.receiverId === currentUser.id)));
       return msgs.length > 0 ? msgs[msgs.length - 1] : null;
@@ -930,37 +931,32 @@
       const term = document.getElementById('feedSearchInput').value.toLowerCase();
       const items = document.getElementById('middleFeedList').children;
       for (const item of items) {
-        const text = item.innerText.toLowerCase();
-        if (text.includes(term)) {
-          item.style.display = '';
-        } else {
-          item.style.display = 'none';
-        }
+        if (item.innerText.toLowerCase().includes(term)) item.style.display = '';
+        else item.style.display = 'none';
       }
     }
 
-    /* */
     function openDirectChat(user) {
       activeChat = { id: user.id, isGroup: false };
       
       document.getElementById('noChatSelected').classList.add('hidden');
       document.getElementById('chatHeader').classList.remove('hidden');
       document.getElementById('messagesContainer').classList.remove('hidden');
-      document.getElementById('messageComposer').classList.remove('hidden');
+      document.getElementById('messageComposer').style.display = 'flex';
       
       document.getElementById('chatHeaderName').innerText = user.displayName;
       document.getElementById('chatHeaderAvatar').src = user.avatar;
       updateChatHeaderStatus(user);
 
-      // Show action call buttons
+      // WebRTC actions
       document.getElementById('voiceCallBtn').classList.remove('hidden');
       document.getElementById('videoCallBtn').classList.remove('hidden');
       document.getElementById('toggleGroupSettingsBtn').classList.add('hidden');
 
-      // Set custom action listener for calls
       document.getElementById('voiceCallBtn').onclick = () => initiateAudioCall(user.id);
       document.getElementById('videoCallBtn').onclick = () => initiateVideoCall(user.id);
 
+      markActiveMessagesRead();
       renderMessages();
       renderActiveFeed();
     }
@@ -971,14 +967,13 @@
       document.getElementById('noChatSelected').classList.add('hidden');
       document.getElementById('chatHeader').classList.remove('hidden');
       document.getElementById('messagesContainer').classList.remove('hidden');
-      document.getElementById('messageComposer').classList.remove('hidden');
+      document.getElementById('messageComposer').style.display = 'flex';
 
       document.getElementById('chatHeaderName').innerText = group.name;
       document.getElementById('chatHeaderAvatar').src = group.avatar;
       document.getElementById('chatHeaderStatusDot').className = "hidden";
       document.getElementById('chatHeaderStatusText').innerText = `${group.members.length} عضو`;
 
-      // Hide individual calls but show group specs
       document.getElementById('voiceCallBtn').classList.add('hidden');
       document.getElementById('videoCallBtn').classList.add('hidden');
       document.getElementById('toggleGroupSettingsBtn').classList.remove('hidden');
@@ -988,10 +983,16 @@
       renderActiveFeed();
     }
 
+    function markActiveMessagesRead() {
+      if (activeChat && !activeChat.isGroup) {
+        socket.emit('mark-as-read', { senderId: activeChat.id });
+      }
+    }
+
     function updateChatHeaderStatus(user) {
       const dot = document.getElementById('chatHeaderStatusDot');
       const text = document.getElementById('chatHeaderStatusText');
-      dot.className = "absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-slate-900";
+      dot.className = "absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-[#202c33]";
       if (user.status === 'online') {
         dot.classList.add('bg-emerald-500');
         text.innerText = 'متصل الآن';
@@ -1006,40 +1007,49 @@
       document.getElementById('noChatSelected').classList.remove('hidden');
       document.getElementById('chatHeader').classList.add('hidden');
       document.getElementById('messagesContainer').classList.add('hidden');
-      document.getElementById('messageComposer').classList.add('hidden');
+      document.getElementById('messageComposer').style.display = 'none';
       renderActiveFeed();
     }
 
-    /* */
     function renderMessages() {
       const container = document.getElementById('messagesContainer');
       container.innerHTML = '';
 
       const filtered = messagesList.filter(m => {
-        if (activeChat.isGroup) {
-          return m.groupId === activeChat.id;
-        } else {
-          return !m.groupId && ((m.senderId === currentUser.id && m.receiverId === activeChat.id) || (m.senderId === activeChat.id && m.receiverId === currentUser.id));
-        }
+        if (activeChat.isGroup) return m.groupId === activeChat.id;
+        else return !m.groupId && ((m.senderId === currentUser.id && m.receiverId === activeChat.id) || (m.senderId === activeChat.id && m.receiverId === currentUser.id));
       });
 
       filtered.forEach(msg => {
         const isMe = msg.senderId === currentUser.id;
         const msgDiv = document.createElement('div');
-        msgDiv.className = `flex ${isMe ? 'justify-end' : 'justify-start'} w-full mb-3`;
-        
+        msgDiv.className = `flex ${isMe ? 'justify-end' : 'justify-start'} w-full mb-2 px-2`;
+        msgDiv.id = `msg_${msg.id}`;
+
         let mediaHtml = '';
         if (msg.type === 'image') {
-          mediaHtml = `<img src="${msg.content}" class="max-w-xs rounded-xl border border-slate-800/50 mb-2 cursor-pointer object-cover max-h-60" onclick="window.open('${msg.content}')">`;
+          mediaHtml = `<img src="${msg.content}" class="max-w-xs rounded-xl border border-wa-borderDark mb-2 cursor-pointer max-h-60" onclick="window.open('${msg.content}')">`;
         } else if (msg.type === 'video') {
-          mediaHtml = `<video src="${msg.content}" controls class="max-w-xs rounded-xl border border-slate-800/50 mb-2 max-h-60"></video>`;
+          mediaHtml = `<video src="${msg.content}" controls class="max-w-xs rounded-xl border border-wa-borderDark mb-2 max-h-60"></video>`;
         } else if (msg.type === 'audio') {
-          mediaHtml = `<audio src="${msg.content}" controls class="max-w-xs rounded-xl mb-2"></audio>`;
+          mediaHtml = `
+            <div class="flex items-center space-x-3 space-x-reverse bg-wa-bgDark/40 p-2.5 rounded-lg border border-wa-borderDark/40 max-w-xs mb-2">
+              <button onclick="playMediaAudio(this, '${msg.content}')" class="h-9 w-9 rounded-full bg-wa-green text-white flex items-center justify-center shadow">
+                <i class="fa-solid fa-play"></i>
+              </button>
+              <div class="flex-1">
+                <div class="h-1 bg-slate-700 rounded-full overflow-hidden w-32 relative">
+                  <div class="h-full bg-wa-green w-0 absolute left-0" id="audio_progress"></div>
+                </div>
+                <span class="text-[9px] text-slate-400 mt-1 block">رسالة صوتية</span>
+              </div>
+            </div>
+          `;
         } else if (msg.type === 'file') {
           mediaHtml = `
-            <a href="${msg.content}" download="${msg.fileName || 'file'}" class="flex items-center space-x-2 space-x-reverse bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-xs text-blue-400 hover:underline mb-2">
-              <i class="fa-regular fa-file-pdf text-lg"></i>
-              <span>${msg.fileName || 'ملف مرفق'}</span>
+            <a href="${msg.content}" download="${msg.fileName || 'file'}" class="flex items-center space-x-3 space-x-reverse bg-wa-bgDark p-3 rounded-xl border border-wa-borderDark text-xs text-wa-green hover:underline mb-2">
+              <i class="fa-solid fa-file-pdf text-xl"></i>
+              <span class="truncate max-w-[150px]">${msg.fileName || 'ملف مرفق'}</span>
             </a>
           `;
         }
@@ -1048,8 +1058,8 @@
         let replyHtml = '';
         if (replyRef) {
           replyHtml = `
-            <div class="bg-slate-900/60 border-r-2 border-blue-500 pr-2 pl-4 py-1 rounded-md mb-2 text-[10px] text-slate-400">
-              <p class="font-bold text-blue-400">الرد على:</p>
+            <div class="bg-wa-bgDark/60 border-r-2 border-wa-green pr-2 pl-4 py-1.5 rounded-md mb-2 text-[11px] text-slate-300">
+              <p class="font-bold text-wa-green text-[9px]">الرد على:</p>
               <p class="truncate max-w-xs">${replyRef.content}</p>
             </div>
           `;
@@ -1058,25 +1068,34 @@
         const senderUser = msg.senderId === 'system' ? { displayName: 'تنبيه النظام' } : (isMe ? currentUser : usersList.find(u => u.id === msg.senderId));
         const senderName = senderUser ? senderUser.displayName : 'مستخدم';
 
+        // Ticks Logic
+        let tickIcon = '<i class="fa-solid fa-check text-[10px] text-slate-500"></i>';
+        if (msg.status === 'delivered') {
+          tickIcon = '<i class="fa-solid fa-check-double text-[10px] text-slate-500"></i>';
+        } else if (msg.status === 'read') {
+          tickIcon = '<i class="fa-solid fa-check-double text-[10px] text-sky-400"></i>';
+        }
+
         msgDiv.innerHTML = `
-          <div class="max-w-[75%]">
-            ${activeChat.isGroup && !isMe && msg.senderId !== 'system' ? `<span class="text-[10px] text-slate-400 block mb-1 mr-2">${senderName}</span>` : ''}
-            <div class="relative group p-3.5 rounded-2xl ${isMe ? 'bg-blue-600 text-white rounded-br-none' : 'bg-slate-900 text-slate-100 rounded-bl-none'} shadow-md">
+          <div class="max-w-[80%] relative group">
+            ${activeChat.isGroup && !isMe && msg.senderId !== 'system' ? `<span class="text-[10px] text-[#8696a0] block mb-1 mr-2">${senderName}</span>` : ''}
+            <div class="relative p-2.5 rounded-2xl ${isMe ? 'bg-[#005c4b] text-white rounded-br-none' : 'bg-[#202c33] text-slate-100 rounded-bl-none'} shadow">
               ${replyHtml}
               ${mediaHtml}
               <p class="text-xs whitespace-pre-wrap leading-relaxed">${msg.type === 'text' ? msg.content : ''}</p>
-              <div class="flex items-center justify-end space-x-1.5 space-x-reverse mt-2">
-                <span class="text-[9px] ${isMe ? 'text-blue-200' : 'text-slate-500'}">${formatTime(msg.timestamp)}</span>
-                ${msg.edited ? `<span class="text-[8px] ${isMe ? 'text-blue-300' : 'text-slate-600'}">(معدلة)</span>` : ''}
+              <div class="flex items-center justify-end space-x-1.5 space-x-reverse mt-1.5">
+                <span class="text-[8px] text-slate-400">${formatTime(msg.timestamp)}</span>
+                ${msg.edited ? `<span class="text-[8px] text-slate-500">(معدلة)</span>` : ''}
+                ${isMe ? tickIcon : ''}
               </div>
 
-              <!-- Message utilities action overlay on hover/longpress -->
-              <div class="absolute top-1/2 -translate-y-1/2 ${isMe ? '-left-12' : '-right-12'} hidden group-hover:flex items-center space-x-1 space-x-reverse bg-slate-900 border border-slate-800 p-1 rounded-lg shadow-lg z-10">
+              <!-- Sliding quick actions popup on message hover -->
+              <div class="absolute top-1/2 -translate-y-1/2 ${isMe ? '-left-12' : '-right-12'} hidden group-hover:flex items-center space-x-1 space-x-reverse bg-[#233138] border border-wa-borderDark p-1 rounded-lg shadow-lg z-20">
                 <button onclick="replyToMessage('${msg.id}')" class="p-1 text-slate-400 hover:text-white text-[10px]" title="رد"><i class="fa-solid fa-reply"></i></button>
-                <button onclick="copyMessageText('${msg.content}')" class="p-1 text-slate-400 hover:text-white text-[10px]" title="نسخ"><i class="fa-regular fa-copy"></i></button>
+                <button onclick="pinMessageLocally('${msg.id}')" class="p-1 text-slate-400 hover:text-white text-[10px]" title="تثبيت"><i class="fa-solid fa-thumbtack"></i></button>
                 ${isMe && !msg.deletedForEveryone ? `
                   <button onclick="openEditMessageDialog('${msg.id}', '${msg.content}')" class="p-1 text-slate-400 hover:text-white text-[10px]" title="تعديل"><i class="fa-solid fa-pen-to-square"></i></button>
-                  <button onclick="deleteMessage('${msg.id}')" class="p-1 text-red-400 hover:text-red-300 text-[10px]" title="حذف للجميع"><i class="fa-regular fa-trash-can"></i></button>
+                  <button onclick="deleteMessage('${msg.id}')" class="p-1 text-red-500 hover:text-red-400 text-[10px]" title="حذف"><i class="fa-solid fa-trash-can"></i></button>
                 ` : ''}
               </div>
             </div>
@@ -1088,7 +1107,31 @@
       container.scrollTop = container.scrollHeight;
     }
 
-    /* */
+    function playMediaAudio(btn, audioUrl) {
+      const audio = new Audio(audioUrl);
+      const icon = btn.querySelector('i');
+      icon.className = 'fa-solid fa-pause';
+      audio.play();
+
+      audio.onended = () => {
+        icon.className = 'fa-solid fa-play';
+      };
+    }
+
+    function pinMessageLocally(messageId) {
+      const msg = messagesList.find(m => m.id === messageId);
+      if (msg) {
+        activePinText = msg.type === 'text' ? msg.content : '[وسائط]';
+        document.getElementById('pinnedMessageBar').classList.remove('hidden');
+        document.getElementById('pinnedMessageText').innerText = activePinText;
+      }
+    }
+
+    function unpinCurrentMessage() {
+      activePinText = null;
+      document.getElementById('pinnedMessageBar').classList.add('hidden');
+    }
+
     function replyToMessage(messageId) {
       const msg = messagesList.find(m => m.id === messageId);
       if (msg) {
@@ -1106,16 +1149,6 @@
       document.getElementById('replyPreviewBar').classList.add('hidden');
     }
 
-    function copyMessageText(content) {
-      const tempInput = document.createElement('textarea');
-      tempInput.value = content;
-      document.body.appendChild(tempInput);
-      tempInput.select();
-      document.execCommand('copy');
-      document.body.removeChild(tempInput);
-      triggerSimpleNotification('تم نسخ نص الرسالة إلى الحافظة');
-    }
-
     function openEditMessageDialog(messageId, currentText) {
       const newText = prompt('تعديل الرسالة:', currentText);
       if (newText && newText.trim() !== '' && newText !== currentText) {
@@ -1124,163 +1157,71 @@
     }
 
     function deleteMessage(messageId) {
-      if (confirm('هل أنت متأكد من رغبتك في حذف هذه الرسالة للجميع؟')) {
+      if (confirm('حذف هذه الرسالة للجميع؟')) {
         socket.emit('delete-message', { messageId, forEveryone: true });
       }
     }
 
-    /* */
-    function toggleAttachmentMenu() {
-      const menu = document.getElementById('attachmentMenu');
-      menu.classList.toggle('hidden');
-    }
+    function openLeftDrawer(profileType) {
+      const drawer = document.getElementById('leftDrawer');
+      const title = document.getElementById('leftDrawerTitle');
+      const content = document.getElementById('leftDrawerContent');
 
-    function selectAttachment(type) {
-      const input = document.getElementById('mediaFileInput');
-      input.click();
-      toggleAttachmentMenu();
-    }
+      drawer.classList.remove('translate-x-full');
 
-    function handleComposerAttachment(input) {
-      const file = input.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const base64Data = e.target.result;
-        let type = 'file';
-        if (file.type.startsWith('image/')) type = 'image';
-        if (file.type.startsWith('video/')) type = 'video';
-        if (file.type.startsWith('audio/')) type = 'audio';
-
-        socket.emit('send-message', {
-          receiverId: !activeChat.isGroup ? activeChat.id : null,
-          groupId: activeChat.isGroup ? activeChat.id : null,
-          content: base64Data,
-          type,
-          fileName: file.name,
-          replyTo: activeReplyTo
-        });
-
-        cancelReply();
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function sendActiveMessage() {
-      const text = document.getElementById('composerTextInput').value.trim();
-      if (text === '') return;
-
-      socket.emit('send-message', {
-        receiverId: !activeChat.isGroup ? activeChat.id : null,
-        groupId: activeChat.isGroup ? activeChat.id : null,
-        content: text,
-        type: 'text',
-        replyTo: activeReplyTo
-      });
-
-      document.getElementById('composerTextInput').value = '';
-      cancelReply();
-    }
-
-    // Typing activity helpers
-    let typingTimeout = null;
-    function sendTypingIndicator() {
-      if (!activeChat) return;
-      socket.emit('typing-status', {
-        targetId: activeChat.id,
-        isGroup: activeChat.isGroup,
-        action: 'typing'
-      });
-
-      clearTimeout(typingTimeout);
-      typingTimeout = setTimeout(() => {
-        socket.emit('typing-status', {
-          targetId: activeChat.id,
-          isGroup: activeChat.isGroup,
-          action: 'idle'
-        });
-      }, 2000);
-    }
-
-    /* */
-    function startVoiceRecording() {
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        return alert('متصفحك لا يدعم تسجيل الصوت.');
+      if (profileType === 'profile') {
+        title.innerText = 'الملف الشخصي';
+        content.innerHTML = `
+          <div class="flex flex-col items-center space-y-4">
+            <div class="relative group">
+              <img id="drawerAvatar" src="${currentUser.avatar}" class="h-28 w-28 rounded-full object-cover border-4 border-wa-borderDark">
+              <button onclick="triggerAvatarUpdate()" class="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all text-white text-sm">
+                <i class="fa-solid fa-camera"></i>
+              </button>
+            </div>
+            <div class="w-full space-y-3">
+              <div>
+                <label class="text-xs text-wa-green font-semibold">اسمك التعريفي</label>
+                <input id="drawerDisplayName" type="text" value="${currentUser.displayName}" class="w-full bg-wa-bgDark border-b border-slate-700 py-1.5 px-1 text-sm text-white focus:outline-none focus:border-wa-green mt-1">
+              </div>
+              <div>
+                <label class="text-xs text-wa-green font-semibold">الأخبار والنبذة</label>
+                <textarea id="drawerBio" class="w-full bg-wa-bgDark border-b border-slate-700 py-1.5 px-1 text-sm text-white focus:outline-none focus:border-wa-green h-16 resize-none mt-1">${currentUser.bio}</textarea>
+              </div>
+            </div>
+            <button onclick="saveProfileChangesFromDrawer()" class="w-full bg-wa-green hover:bg-[#008f70] text-white py-2.5 rounded-lg text-xs font-bold transition-all shadow-md">حفظ التغييرات</button>
+          </div>
+        `;
       }
-
-      navigator.mediaDevices.getUserMedia({ audio: true })
-      .then(stream => {
-        mediaRecorder = new MediaRecorder(stream);
-        audioChunks = [];
-        audioDurationSeconds = 0;
-
-        mediaRecorder.ondataavailable = e => {
-          audioChunks.push(e.data);
-        };
-
-        mediaRecorder.onstop = () => {
-          const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-          const reader = new FileReader();
-          reader.onload = function(e) {
-            socket.emit('send-message', {
-              receiverId: !activeChat.isGroup ? activeChat.id : null,
-              groupId: activeChat.isGroup ? activeChat.id : null,
-              content: e.target.result,
-              type: 'audio',
-              replyTo: activeReplyTo
-            });
-            cancelReply();
-          };
-          reader.readAsDataURL(audioBlob);
-        };
-
-        mediaRecorder.start();
-        socket.emit('typing-status', { targetId: activeChat.id, isGroup: activeChat.isGroup, action: 'recording' });
-        
-        // UI Updates
-        document.getElementById('audioRecordingControls').classList.remove('hidden');
-        document.getElementById('composerTextInput').classList.add('hidden');
-        document.getElementById('composerSendBtn').classList.add('hidden');
-        document.getElementById('composerRecordVoiceBtn').classList.add('hidden');
-
-        audioDurationTimer = setInterval(() => {
-          audioDurationSeconds++;
-          const mins = Math.floor(audioDurationSeconds / 60).toString().padStart(2, '0');
-          const secs = (audioDurationSeconds % 60).toString().padStart(2, '0');
-          document.getElementById('recordingDuration').innerText = `${mins}:${secs}`;
-        }, 1000);
-      });
     }
 
-    function cancelVoiceRecording() {
-      if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-        mediaRecorder.stop();
-        mediaRecorder = null;
+    function closeLeftDrawer() {
+      document.getElementById('leftDrawer').classList.add('translate-x-full');
+    }
+
+    function triggerAvatarUpdate() {
+      const newUrl = prompt('أدخل رابط الصورة الشخصية الجديد:', currentUser.avatar);
+      if (newUrl && newUrl.startsWith('http')) {
+        document.getElementById('drawerAvatar').src = newUrl;
       }
-      clearInterval(audioDurationTimer);
-      socket.emit('typing-status', { targetId: activeChat.id, isGroup: activeChat.isGroup, action: 'idle' });
-      
-      document.getElementById('audioRecordingControls').classList.add('hidden');
-      document.getElementById('composerTextInput').classList.remove('hidden');
-      document.getElementById('composerSendBtn').classList.remove('hidden');
-      document.getElementById('composerRecordVoiceBtn').classList.remove('hidden');
     }
 
-    function finishAndSendVoiceRecording() {
-      if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-        mediaRecorder.stop();
-      }
-      clearInterval(audioDurationTimer);
-      socket.emit('typing-status', { targetId: activeChat.id, isGroup: activeChat.isGroup, action: 'idle' });
+    function saveProfileChangesFromDrawer() {
+      const displayName = document.getElementById('drawerDisplayName').value.trim();
+      const bio = document.getElementById('drawerBio').value.trim();
+      const avatar = document.getElementById('drawerAvatar').src;
 
-      document.getElementById('audioRecordingControls').classList.add('hidden');
-      document.getElementById('composerTextInput').classList.remove('hidden');
-      document.getElementById('composerSendBtn').classList.remove('hidden');
-      document.getElementById('composerRecordVoiceBtn').classList.remove('hidden');
+      socket.emit('update-profile', { displayName, bio, avatar });
+      currentUser.displayName = displayName;
+      currentUser.bio = bio;
+      currentUser.avatar = avatar;
+      document.getElementById('myAvatar').src = avatar;
+
+      closeLeftDrawer();
+      triggerSimpleNotification('تم تحديث الملف الشخصي بنجاح.');
+      renderActiveFeed();
     }
 
-    /* */
     function triggerTabAction() {
       const modal = document.getElementById('actionModal');
       const title = document.getElementById('actionModalTitle');
@@ -1289,13 +1230,13 @@
       modal.classList.remove('hidden');
 
       if (activeTab === 'chats') {
-        title.innerText = 'بدء محادثة مع مستخدم';
+        title.innerText = 'مراسلة مستخدم جديد';
         content.innerHTML = `
           <div class="space-y-2 max-h-60 overflow-y-auto">
-            ${usersList.length === 0 ? '<p class="text-xs text-slate-500 text-center">لا يوجد مستخدمين آخرين مسجلين حالياً</p>' : ''}
+            ${usersList.length === 0 ? '<p class="text-xs text-slate-500 text-center">لا توجد جهات اتصال أخرى متاحة.</p>' : ''}
             ${usersList.map(u => `
-              <div onclick="initiateChatWith('${u.id}')" class="flex items-center space-x-3 space-x-reverse p-2 hover:bg-slate-800 rounded-lg cursor-pointer">
-                <img src="${u.avatar}" class="h-9 w-9 rounded-full object-cover">
+              <div onclick="initiateChatWith('${u.id}')" class="flex items-center space-x-3 space-x-reverse p-2 hover:bg-wa-activeDark rounded-lg cursor-pointer transition-all">
+                <img src="${u.avatar}" class="h-10 w-10 rounded-full object-cover">
                 <div>
                   <h4 class="text-xs font-bold text-white">${u.displayName}</h4>
                   <p class="text-[10px] text-slate-400 mt-0.5">@${u.username}</p>
@@ -1310,27 +1251,27 @@
           <form onsubmit="handleCreateGroupForm(event)" class="space-y-4">
             <div>
               <label class="block text-xs font-semibold text-slate-400">اسم المجموعة</label>
-              <input id="newGroupName" type="text" required class="mt-1 w-full rounded-lg border border-slate-800 bg-slate-950 px-4 py-2 text-sm text-white focus:outline-none">
+              <input id="newGroupName" type="text" required class="mt-1.5 w-full rounded-lg border border-wa-borderDark bg-wa-bgDark px-4 py-2 text-sm text-white focus:outline-none">
             </div>
             <div>
-              <label class="block text-xs font-semibold text-slate-400 mb-2">تحديد الأعضاء لضمهم</label>
+              <label class="block text-xs font-semibold text-slate-400 mb-2">تحديد الأعضاء</label>
               <div class="space-y-1.5 max-h-40 overflow-y-auto">
                 ${usersList.map(u => `
-                  <label class="flex items-center space-x-2 space-x-reverse p-1.5 hover:bg-slate-800 rounded-lg cursor-pointer">
-                    <input type="checkbox" name="groupMembersCheckbox" value="${u.id}" class="rounded bg-slate-950 border-slate-800 text-blue-600 focus:ring-0">
+                  <label class="flex items-center space-x-2 space-x-reverse p-1.5 hover:bg-[#202c33] rounded-lg cursor-pointer">
+                    <input type="checkbox" name="groupMembersCheckbox" value="${u.id}" class="rounded bg-wa-bgDark border-slate-700 text-wa-green focus:ring-0">
                     <img src="${u.avatar}" class="h-7 w-7 rounded-full object-cover">
                     <span class="text-xs text-slate-300">${u.displayName}</span>
                   </label>
                 `).join('')}
               </div>
             </div>
-            <button type="submit" class="w-full rounded-lg bg-blue-600 py-2 text-sm font-semibold text-white hover:bg-blue-500">إنشاء المجموعة</button>
+            <button type="submit" class="w-full rounded-lg bg-wa-green py-2.5 text-xs font-bold text-white hover:bg-[#008f70]">إنشاء المجموعة</button>
           </form>
-          <div class="border-t border-slate-800/60 pt-3 mt-3">
-            <p class="text-[10px] text-slate-400 text-center mb-2">أو الانضمام باستخدام رابط دعوة</p>
+          <div class="border-t border-wa-borderDark pt-3 mt-3">
+            <p class="text-[10px] text-slate-400 text-center mb-2">أو الانضمام عبر رابط دعوة</p>
             <div class="flex space-x-2 space-x-reverse">
-              <input id="groupInviteLinkInput" type="text" placeholder="أدخل رابط الدعوة هنا..." class="flex-1 rounded-lg border border-slate-800 bg-slate-950 px-3 py-1.5 text-xs text-white focus:outline-none">
-              <button onclick="joinGroupByInviteLink()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 rounded-lg text-xs font-semibold">انضمام</button>
+              <input id="groupInviteLinkInput" type="text" placeholder="أدخل رمز الدعوة..." class="flex-1 rounded-lg border border-wa-borderDark bg-wa-bgDark px-3 py-1.5 text-xs text-white focus:outline-none">
+              <button onclick="joinGroupByInviteLink()" class="bg-emerald-600 hover:bg-[#008f70] text-white px-4 rounded-lg text-xs font-semibold">انضمام</button>
             </div>
           </div>
         `;
@@ -1370,7 +1311,7 @@
         if (res.success) {
           closeActionModal();
           openGroupChat(res.group);
-          triggerSimpleNotification('تم الانضمام إلى المجموعة بنجاح');
+          triggerSimpleNotification('تم الانضمام إلى المجموعة.');
         } else {
           alert(res.error);
         }
@@ -1381,7 +1322,6 @@
       document.getElementById('actionModal').classList.add('hidden');
     }
 
-    /* */
     function openGroupSettings(group) {
       const modal = document.getElementById('actionModal');
       const title = document.getElementById('actionModalTitle');
@@ -1390,12 +1330,11 @@
       modal.classList.remove('hidden');
       title.innerText = `إدارة مجموعة: ${group.name}`;
 
-      const isAdmin = group.admins.includes(currentUser.id);
       const inviteUrl = group.inviteToken;
 
       content.innerHTML = `
         <div class="space-y-4">
-          <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 text-center">
+          <div class="bg-wa-bgDark p-3 rounded-lg border border-wa-borderDark text-center">
             <span class="text-[10px] text-slate-400 block mb-1">رمز الدعوة للمجموعة</span>
             <div class="flex items-center space-x-2 space-x-reverse justify-center">
               <span class="text-xs font-mono text-emerald-400 bg-emerald-950/20 border border-emerald-900/50 px-3 py-1 rounded select-all">${inviteUrl}</span>
@@ -1408,21 +1347,14 @@
               ${group.members.map(mId => {
                 const u = mId === currentUser.id ? currentUser : usersList.find(usr => usr.id === mId);
                 if (!u) return '';
-                const isMemberAdmin = group.admins.includes(mId);
                 const isOwner = group.ownerId === mId;
                 return `
-                  <div class="flex items-center justify-between p-1 hover:bg-slate-800 rounded">
+                  <div class="flex items-center justify-between p-1 hover:bg-wa-activeDark rounded">
                     <div class="flex items-center space-x-2 space-x-reverse">
                       <img src="${u.avatar}" class="h-6 w-6 rounded-full object-cover">
                       <span class="text-xs text-white">${u.displayName} ${mId === currentUser.id ? '(أنت)' : ''}</span>
                     </div>
-                    <div class="flex items-center space-x-1.5 space-x-reverse">
-                      ${isOwner ? '<span class="text-[8px] bg-amber-500/20 text-amber-300 border border-amber-900/40 px-1 rounded">المالك</span>' : (isMemberAdmin ? '<span class="text-[8px] bg-blue-500/20 text-blue-300 border border-blue-900/40 px-1 rounded">مشرف</span>' : '')}
-                      ${isAdmin && mId !== currentUser.id && !isOwner ? `
-                        <button onclick="toggleGroupAdminStatus('${group.id}', '${mId}', ${isMemberAdmin})" class="text-[10px] text-blue-400 hover:underline">${isMemberAdmin ? 'تنزيل كعضو' : 'تعيين مشرف'}</button>
-                        <button onclick="removeGroupMember('${group.id}', '${mId}')" class="text-[10px] text-red-500 hover:underline">إزالة</button>
-                      ` : ''}
-                    </div>
+                    ${isOwner ? '<span class="text-[8px] bg-amber-500/20 text-amber-300 border border-amber-900/40 px-1 rounded">المالك</span>' : ''}
                   </div>
                 `;
               }).join('')}
@@ -1432,141 +1364,6 @@
       `;
     }
 
-    function toggleGroupAdminStatus(groupId, memberId, makeMember) {
-      const group = groupsList.find(g => g.id === groupId);
-      if (group) {
-        let newAdmins = [...group.admins];
-        if (makeMember) {
-          newAdmins = newAdmins.filter(id => id !== memberId);
-        } else {
-          newAdmins.push(memberId);
-        }
-        socket.emit('update-group-settings', { groupId, admins: newAdmins });
-        setTimeout(() => {
-          const updated = groupsList.find(g => g.id === groupId);
-          if (updated) openGroupSettings(updated);
-        }, 500);
-      }
-    }
-
-    function removeGroupMember(groupId, memberId) {
-      const group = groupsList.find(g => g.id === groupId);
-      if (group) {
-        const newMembers = group.members.filter(id => id !== memberId);
-        const newAdmins = group.admins.filter(id => id !== memberId);
-        socket.emit('update-group-settings', { groupId, members: newMembers, admins: newAdmins });
-        setTimeout(() => {
-          const updated = groupsList.find(g => g.id === groupId);
-          if (updated) openGroupSettings(updated);
-        }, 500);
-      }
-    }
-
-    /* */
-    function openEditProfileDialog() {
-      const modal = document.getElementById('actionModal');
-      const title = document.getElementById('actionModalTitle');
-      const content = document.getElementById('actionModalContent');
-
-      modal.classList.remove('hidden');
-      title.innerText = 'تعديل الملف الشخصي';
-
-      content.innerHTML = `
-        <form onsubmit="handleEditProfileForm(event)" class="space-y-4">
-          <div>
-            <label class="block text-xs font-semibold text-slate-400">الاسم التعريفي</label>
-            <input id="editProfileDisplayName" type="text" value="${currentUser.displayName}" required class="mt-1 w-full rounded-lg border border-slate-800 bg-slate-950 px-4 py-2 text-sm text-white focus:outline-none">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-400">نبذة تعريفية</label>
-            <textarea id="editProfileBio" required class="mt-1 w-full rounded-lg border border-slate-800 bg-slate-950 px-4 py-2 text-sm text-white focus:outline-none h-20 resize-none">${currentUser.bio}</textarea>
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-400">رابط الصورة الشخصية</label>
-            <input id="editProfileAvatar" type="url" value="${currentUser.avatar}" required class="mt-1 w-full rounded-lg border border-slate-800 bg-slate-950 px-4 py-2 text-sm text-white focus:outline-none">
-          </div>
-          <button type="submit" class="w-full rounded-lg bg-blue-600 py-2 text-sm font-semibold text-white hover:bg-blue-500">حفظ التغييرات</button>
-        </form>
-      `;
-    }
-
-    function handleEditProfileForm(e) {
-      e.preventDefault();
-      const displayName = document.getElementById('editProfileDisplayName').value.trim();
-      const bio = document.getElementById('editProfileBio').value.trim();
-      const avatar = document.getElementById('editProfileAvatar').value.trim();
-
-      socket.emit('update-profile', { displayName, bio, avatar });
-      currentUser.displayName = displayName;
-      currentUser.bio = bio;
-      currentUser.avatar = avatar;
-      document.getElementById('myAvatar').src = avatar;
-
-      closeActionModal();
-      triggerSimpleNotification('تم تحديث ملفك الشخصي بنجاح');
-      renderActiveFeed();
-    }
-
-    function openChangePasswordDialog() {
-      const modal = document.getElementById('actionModal');
-      const title = document.getElementById('actionModalTitle');
-      const content = document.getElementById('actionModalContent');
-
-      modal.classList.remove('hidden');
-      title.innerText = 'تغيير كلمة المرور';
-
-      content.innerHTML = `
-        <form onsubmit="handleChangePasswordForm(event)" class="space-y-4">
-          <div>
-            <label class="block text-xs font-semibold text-slate-400">كلمة المرور القديمة</label>
-            <input id="changePassOld" type="password" required class="mt-1 w-full rounded-lg border border-slate-800 bg-slate-950 px-4 py-2 text-sm text-white focus:outline-none">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-400">كلمة المرور الجديدة</label>
-            <input id="changePassNew" type="password" required class="mt-1 w-full rounded-lg border border-slate-800 bg-slate-950 px-4 py-2 text-sm text-white focus:outline-none">
-          </div>
-          <button type="submit" class="w-full rounded-lg bg-blue-600 py-2 text-sm font-semibold text-white hover:bg-blue-500">تحديث كلمة المرور</button>
-        </form>
-      `;
-    }
-
-    function handleChangePasswordForm(e) {
-      e.preventDefault();
-      const oldPassword = document.getElementById('changePassOld').value;
-      const newPassword = document.getElementById('changePassNew').value;
-
-      socket.emit('change-password', { oldPassword, newPassword }, (res) => {
-        if (res.success) {
-          closeActionModal();
-          triggerSimpleNotification('تم تغيير كلمة المرور بنجاح');
-        } else {
-          alert(res.error);
-        }
-      });
-    }
-
-    function confirmDeleteAccount() {
-      if (confirm('تنبيه: هل أنت متأكد تماماً من رغبتك في حذف حسابك نهائياً؟ سيتم إزالة كافة رسائلك ومجموعاتك ولا يمكن التراجع عن هذا الإجراء.')) {
-        socket.emit('delete-account', (res) => {
-          if (res.success) {
-            handleLogout();
-          } else {
-            alert(res.error);
-          }
-        });
-      }
-    }
-
-    function handleLogout() {
-      localStorage.removeItem('tarzanalwaqdiy_token');
-      if (socket) socket.disconnect();
-      socket = null;
-      currentUser = null;
-      document.getElementById('appContainer').classList.add('hidden');
-      document.getElementById('authScreen').classList.remove('hidden');
-    }
-
-    /* */
     function openStatusCreator() {
       const modal = document.getElementById('actionModal');
       const title = document.getElementById('actionModalTitle');
@@ -1579,20 +1376,20 @@
         <form onsubmit="handlePostStatusForm(event)" class="space-y-4">
           <div>
             <label class="block text-xs font-semibold text-slate-400">نوع الحالة</label>
-            <select id="newStatusType" onchange="toggleStatusComposerFields(this.value)" class="mt-1 w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-xs text-white focus:outline-none">
-              <option value="text">نص</option>
+            <select id="newStatusType" onchange="toggleStatusComposerFields(this.value)" class="mt-1 w-full rounded-lg border border-wa-borderDark bg-wa-bgDark px-3 py-2 text-xs text-white focus:outline-none">
+              <option value="text">نصية</option>
               <option value="image">صورة</option>
             </select>
           </div>
           <div id="statusTextField">
-            <label class="block text-xs font-semibold text-slate-400">نص الحالة</label>
-            <textarea id="newStatusText" placeholder="ماذا يدور في ذهنك؟" class="mt-1 w-full rounded-lg border border-slate-800 bg-slate-950 px-4 py-2 text-sm text-white focus:outline-none h-20 resize-none"></textarea>
+            <label class="block text-xs font-semibold text-slate-400">محتوى الحالة</label>
+            <textarea id="newStatusText" placeholder="اكتب حالتك هنا..." class="mt-1 w-full rounded-lg border border-wa-borderDark bg-wa-bgDark px-4 py-2 text-sm text-white focus:outline-none h-20 resize-none"></textarea>
           </div>
           <div id="statusMediaField" class="hidden">
             <label class="block text-xs font-semibold text-slate-400">رابط الصورة</label>
-            <input id="newStatusMedia" type="url" placeholder="أدخل رابط الصورة..." class="mt-1 w-full rounded-lg border border-slate-800 bg-slate-950 px-4 py-2 text-sm text-white focus:outline-none">
+            <input id="newStatusMedia" type="url" placeholder="أدخل رابط الصورة..." class="mt-1 w-full rounded-lg border border-wa-borderDark bg-wa-bgDark px-4 py-2 text-sm text-white focus:outline-none">
           </div>
-          <button type="submit" class="w-full rounded-lg bg-blue-600 py-2 text-sm font-semibold text-white hover:bg-blue-500">نشر الحالة</button>
+          <button type="submit" class="w-full rounded-lg bg-wa-green py-2.5 text-xs font-bold text-white hover:bg-[#008f70]">نشر الحالة</button>
         </form>
       `;
     }
@@ -1618,7 +1415,7 @@
 
       socket.emit('post-status', { type, content });
       closeActionModal();
-      triggerSimpleNotification('تم نشر حالتك الجديدة بنجاح');
+      triggerSimpleNotification('تم نشر الحالة.');
     }
 
     function viewUserStatuses(userId) {
@@ -1628,9 +1425,7 @@
       const viewer = document.getElementById('statusViewer');
       viewer.classList.remove('hidden');
 
-      // State index viewing tracker
       let currentIdx = 0;
-
       const showStatusAt = (idx) => {
         const status = userStatuses[idx];
         document.getElementById('statusViewerAvatar').src = status.avatar;
@@ -1646,7 +1441,6 @@
           };
         }
 
-        // View content
         const textContainer = document.getElementById('statusTextContent');
         const imgContainer = document.getElementById('statusImageContent');
         
@@ -1661,7 +1455,6 @@
           imgContainer.classList.remove('hidden');
         }
 
-        // Mark viewed
         socket.emit('view-status', status.id);
       };
 
@@ -1677,10 +1470,177 @@
       if (text === '') return;
       document.getElementById('statusReplyInput').value = '';
       closeStatusViewer();
-      triggerSimpleNotification('تم إرسال ردك على الحالة');
+      triggerSimpleNotification('تم إرسال الرد على الحالة.');
     }
 
-    /* */
+    function toggleChatSearch() {
+      const panel = document.getElementById('chatSearchPanel');
+      panel.classList.toggle('hidden');
+      if (panel.classList.contains('hidden')) {
+        document.querySelectorAll('.highlight-chat-text').forEach(el => {
+          el.outerHTML = el.innerHTML;
+        });
+      }
+    }
+
+    function handleChatSearchLocal() {
+      const query = document.getElementById('chatSearchInput').value.trim().toLowerCase();
+      const count = document.getElementById('chatSearchCount');
+      if (query === '') {
+        count.innerText = "0 نتائج";
+        return;
+      }
+
+      const activeMsgs = document.querySelectorAll('#messagesContainer p');
+      let matches = 0;
+      activeMsgs.forEach(p => {
+        if (p.innerText.toLowerCase().includes(query)) {
+          matches++;
+        }
+      });
+      count.innerText = `${matches} نتائج`;
+    }
+
+    function toggleAttachmentMenu() {
+      document.getElementById('attachmentMenu').classList.toggle('hidden');
+    }
+
+    function selectAttachment() {
+      document.getElementById('mediaFileInput').click();
+      toggleAttachmentMenu();
+    }
+
+    function handleComposerAttachment(input) {
+      const file = input.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        let type = 'file';
+        if (file.type.startsWith('image/')) type = 'image';
+        if (file.type.startsWith('video/')) type = 'video';
+        if (file.type.startsWith('audio/')) type = 'audio';
+
+        socket.emit('send-message', {
+          receiverId: !activeChat.isGroup ? activeChat.id : null,
+          groupId: activeChat.isGroup ? activeChat.id : null,
+          content: e.target.result,
+          type,
+          fileName: file.name,
+          replyTo: activeReplyTo
+        });
+
+        cancelReply();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function startVoiceRecording() {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        return alert('الميكروفون غير مدعوم في متصفحك.');
+      }
+
+      navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(stream => {
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+        audioDurationSeconds = 0;
+
+        mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+        mediaRecorder.onstop = () => {
+          const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            socket.emit('send-message', {
+              receiverId: !activeChat.isGroup ? activeChat.id : null,
+              groupId: activeChat.isGroup ? activeChat.id : null,
+              content: e.target.result,
+              type: 'audio',
+              replyTo: activeReplyTo
+            });
+            cancelReply();
+          };
+          reader.readAsDataURL(audioBlob);
+        };
+
+        mediaRecorder.start();
+        socket.emit('typing-status', { targetId: activeChat.id, isGroup: activeChat.isGroup, action: 'recording' });
+        
+        document.getElementById('audioRecordingControls').classList.remove('hidden');
+        document.getElementById('composerTextInput').classList.add('hidden');
+        document.getElementById('composerSendBtn').classList.add('hidden');
+        document.getElementById('composerRecordVoiceBtn').classList.add('hidden');
+
+        audioDurationTimer = setInterval(() => {
+          audioDurationSeconds++;
+          const mins = Math.floor(audioDurationSeconds / 60).toString().padStart(2, '0');
+          const secs = (audioDurationSeconds % 60).toString().padStart(2, '0');
+          document.getElementById('recordingDuration').innerText = `${mins}:${secs}`;
+        }, 1000);
+      });
+    }
+
+    function cancelVoiceRecording() {
+      if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+        mediaRecorder = null;
+      }
+      clearInterval(audioDurationTimer);
+      socket.emit('typing-status', { targetId: activeChat.id, isGroup: activeChat.isGroup, action: 'idle' });
+      resetComposerControls();
+    }
+
+    function finishAndSendVoiceRecording() {
+      if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+      }
+      clearInterval(audioDurationTimer);
+      socket.emit('typing-status', { targetId: activeChat.id, isGroup: activeChat.isGroup, action: 'idle' });
+      resetComposerControls();
+    }
+
+    function resetComposerControls() {
+      document.getElementById('audioRecordingControls').classList.add('hidden');
+      document.getElementById('composerTextInput').classList.remove('hidden');
+      document.getElementById('composerSendBtn').classList.remove('hidden');
+      document.getElementById('composerRecordVoiceBtn').classList.remove('hidden');
+    }
+
+    function sendActiveMessage() {
+      const text = document.getElementById('composerTextInput').value.trim();
+      if (text === '') return;
+
+      socket.emit('send-message', {
+        receiverId: !activeChat.isGroup ? activeChat.id : null,
+        groupId: activeChat.isGroup ? activeChat.id : null,
+        content: text,
+        type: 'text',
+        replyTo: activeReplyTo
+      });
+
+      document.getElementById('composerTextInput').value = '';
+      cancelReply();
+    }
+
+    let typingTimeout = null;
+    function sendTypingIndicator() {
+      if (!activeChat) return;
+      socket.emit('typing-status', {
+        targetId: activeChat.id,
+        isGroup: activeChat.isGroup,
+        action: 'typing'
+      });
+
+      clearTimeout(typingTimeout);
+      typingTimeout = setTimeout(() => {
+        socket.emit('typing-status', {
+          targetId: activeChat.id,
+          isGroup: activeChat.isGroup,
+          action: 'idle'
+        });
+      }, 2000);
+    }
+
     function initiateAudioCall(receiverId) {
       currentCallData = { callerId: currentUser.id, receiverId, callType: 'voice' };
       showCallScreen(receiverId, 'voice', false);
@@ -1707,28 +1667,21 @@
       document.getElementById('callScreenAvatar').src = user ? user.avatar : 'https://placehold.co/150';
 
       document.getElementById('callScreenStatus').innerText = isIncoming ? 'مكالمة واردة...' : 'جاري الاتصال...';
-      
-      // Control accept buttons
       document.getElementById('acceptCallBtn').classList.toggle('hidden', !isIncoming);
 
-      // Reset calling interface parameters
       document.getElementById('videoStreamsArea').classList.add('hidden');
       document.getElementById('toggleCameraBtn').classList.add('hidden');
       document.getElementById('shareScreenBtn').classList.add('hidden');
-      document.getElementById('callDuration').classList.add('hidden');
     }
 
     function acceptIncomingCall() {
       document.getElementById('acceptCallBtn').classList.add('hidden');
-      document.getElementById('callScreenStatus').innerText = 'جاري الاتصال...';
+      document.getElementById('callScreenStatus').innerText = 'متصل';
       socket.emit('call-response', { callerId: currentCallData.callerId, accepted: true });
       startWebRTCConnection(currentCallData.callerId);
     }
 
     async function startWebRTCConnection(targetId) {
-      document.getElementById('callScreenStatus').innerText = 'متصل';
-      
-      // Setup duration counter
       const durationLabel = document.getElementById('callDuration');
       durationLabel.classList.remove('hidden');
       callStartTime = Date.now();
@@ -1740,7 +1693,6 @@
         durationLabel.innerText = `${mins}:${secs}`;
       }, 1000);
 
-      // Gather Media Streams
       const constraints = {
         audio: true,
         video: currentCallData.callType === 'video'
@@ -1748,7 +1700,6 @@
 
       try {
         localStream = await navigator.mediaDevices.getUserMedia(constraints);
-        
         if (currentCallData.callType === 'video') {
           document.getElementById('videoStreamsArea').classList.remove('hidden');
           document.getElementById('toggleCameraBtn').classList.remove('hidden');
@@ -1756,14 +1707,11 @@
           document.getElementById('localVideo').srcObject = localStream;
         }
 
-        // Setup Peer Connections
         peerConnection = new RTCPeerConnection({
           iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
         });
 
-        localStream.getTracks().forEach(track => {
-          peerConnection.addTrack(track, localStream);
-        });
+        localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
 
         peerConnection.ontrack = (event) => {
           if (currentCallData.callType === 'video') {
@@ -1773,19 +1721,13 @@
           }
         };
 
-        peerConnection.onicecandidate = (event) => {
-          if (event.candidate) {
-            // ICE logic handled within RTC
-          }
-        };
-
         if (currentCallData.callerId === currentUser.id) {
           const offer = await peerConnection.createOffer();
           await peerConnection.setLocalDescription(offer);
           socket.emit('webrtc-signal', { targetId, signal: offer });
         }
       } catch (err) {
-        showCallStatus('فشل في الوصول للكاميرا أو الميكروفون');
+        showCallStatus('فشل في الوصول للوسائط.');
         setTimeout(() => hangupCall(), 2500);
       }
     }
@@ -1815,7 +1757,6 @@
       document.getElementById('callScreenStatus').innerText = text;
     }
 
-    // Toggle mute
     let isMuted = false;
     function toggleMic() {
       if (localStream) {
@@ -1825,7 +1766,6 @@
       }
     }
 
-    // Toggle video track
     let isCameraOff = false;
     function toggleCamera() {
       if (localStream && localStream.getVideoTracks().length > 0) {
@@ -1835,37 +1775,79 @@
       }
     }
 
-    // Dynamic screen sharing option
     async function toggleScreenShare() {
       try {
         const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
         const videoTrack = screenStream.getVideoTracks()[0];
-        
         const sender = peerConnection.getSenders().find(s => s.track.kind === 'video');
-        if (sender) {
-          sender.replaceTrack(videoTrack);
-        }
+        if (sender) sender.replaceTrack(videoTrack);
         document.getElementById('localVideo').srcObject = screenStream;
-
-        videoTrack.onended = () => {
-          // Revert to camera if screen share is stopped
-          if (localStream && localStream.getVideoTracks().length > 0) {
-            sender.replaceTrack(localStream.getVideoTracks()[0]);
-            document.getElementById('localVideo').srcObject = localStream;
-          }
-        };
       } catch (err) {
-        console.error('Error starting screen share: ', err);
+        console.error(err);
       }
     }
 
-    /* */
+    function openChangePasswordDialog() {
+      const modal = document.getElementById('actionModal');
+      const title = document.getElementById('actionModalTitle');
+      const content = document.getElementById('actionModalContent');
+
+      modal.classList.remove('hidden');
+      title.innerText = 'تغيير كلمة المرور';
+
+      content.innerHTML = `
+        <form onsubmit="handleChangePasswordForm(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-400">كلمة المرور القديمة</label>
+            <input id="changePassOld" type="password" required class="mt-1.5 w-full rounded-lg border border-wa-borderDark bg-wa-bgDark px-4 py-2 text-sm text-white focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-400">كلمة المرور الجديدة</label>
+            <input id="changePassNew" type="password" required class="mt-1.5 w-full rounded-lg border border-wa-borderDark bg-wa-bgDark px-4 py-2 text-sm text-white focus:outline-none">
+          </div>
+          <button type="submit" class="w-full rounded-lg bg-wa-green py-2.5 text-xs font-bold text-white hover:bg-[#008f70]">تحديث كلمة المرور</button>
+        </form>
+      `;
+    }
+
+    function handleChangePasswordForm(e) {
+      e.preventDefault();
+      const oldPassword = document.getElementById('changePassOld').value;
+      const newPassword = document.getElementById('changePassNew').value;
+
+      socket.emit('change-password', { oldPassword, newPassword }, (res) => {
+        if (res.success) {
+          closeActionModal();
+          triggerSimpleNotification('تم تحديث كلمة المرور بنجاح.');
+        } else {
+          alert(res.error);
+        }
+      });
+    }
+
+    function confirmDeleteAccount() {
+      if (confirm('تنبيه: سيتم حذف حسابك نهائياً وحذف جميع محادثاتك ومجموعاتك. هل أنت متأكد؟')) {
+        socket.emit('delete-account', (res) => {
+          if (res.success) handleLogout();
+        });
+      }
+    }
+
+    function handleLogout() {
+      localStorage.removeItem('tarzanalwaqdiy_premium_token');
+      if (socket) socket.disconnect();
+      socket = null;
+      currentUser = null;
+      document.getElementById('appContainer').classList.add('hidden');
+      document.getElementById('authScreen').classList.remove('hidden');
+    }
+
     function triggerInAppNotification(msg) {
       const sender = usersList.find(u => u.id === msg.senderId);
       const group = msg.groupId ? groupsList.find(g => g.id === msg.groupId) : null;
       
       const avatar = sender ? sender.avatar : 'https://placehold.co/100';
-      const title = group ? `${group.name} - ${sender ? sender.displayName : 'مستخدم'}` : (sender ? sender.displayName : 'مراسلة جديدة');
+      const title = group ? `${group.name} - ${sender?.displayName || 'مستخدم'}` : (sender ? sender.displayName : 'رسالة جديدة');
       const body = msg.type === 'text' ? msg.content : '[وسائط مرفقة]';
 
       const panel = document.getElementById('appNotification');
@@ -1873,32 +1855,34 @@
       document.getElementById('notifTitle').innerText = title;
       document.getElementById('notifBody').innerText = body;
 
-      panel.classList.remove('-translate-y-32');
-      
-      // Sound cue
+      panel.classList.remove('-translate-y-48');
       document.getElementById('notifSound').play().catch(() => {});
 
-      setTimeout(() => {
-        panel.classList.add('-translate-y-32');
-      }, 3500);
+      setTimeout(() => panel.classList.add('-translate-y-48'), 3500);
     }
 
     function triggerSimpleNotification(text) {
       const panel = document.getElementById('appNotification');
-      document.getElementById('notifAvatar').src = `https://placehold.co/100/2563eb/ffffff?text=!`;
+      document.getElementById('notifAvatar').src = `https://placehold.co/100/00a884/ffffff?text=!`;
       document.getElementById('notifTitle').innerText = 'تنبيه النظام';
       document.getElementById('notifBody').innerText = text;
 
-      panel.classList.remove('-translate-y-32');
-      setTimeout(() => {
-        panel.classList.add('-translate-y-32');
-      }, 2500);
+      panel.classList.remove('-translate-y-48');
+      setTimeout(() => panel.classList.add('-translate-y-48'), 2500);
     }
 
-    /* */
+    function copyMessageText(content) {
+      const tempInput = document.createElement('textarea');
+      tempInput.value = content;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+      triggerSimpleNotification('تم نسخ النص إلى الحافظة.');
+    }
+
     function setupPWAListeners() {
       const installBtn = document.getElementById('pwaInstallBtn');
-
       window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredInstallPrompt = e;
@@ -1916,11 +1900,10 @@
         }
       });
 
-      // Register custom dynamically hosted service worker
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/service-worker.js')
-        .then(() => console.log('Tarzanalwaqdiy PWA Service Worker Registered!'))
-        .catch(err => console.log('Service Worker registration failed:', err));
+        .then(() => console.log('Premium Service Worker Ready!'))
+        .catch(err => console.error(err));
       }
     }
   </script>
