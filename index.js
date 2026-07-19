@@ -92,11 +92,13 @@ async function connectToWhatsApp(phoneNumber = null) {
             auth: state,
             printQRInTerminal: false, // Force pairing code mode
             logger: pino({ level: 'silent' }), // Hide messy baileys logs
-            browser: ["Ubuntu", "Chrome", "20.0.04"]
+            // هنا تم التغيير الجذري لمحاكاة متصفح إيدج ويندوز لضمان وصول الإشعار!
+            browser: ["Windows", "Edge", "120.0.0"] 
         });
 
         if (phoneNumber && !sock.authState.creds.registered) {
             logSystem('BOT', `جاري طلب كود الربط للرقم: ${phoneNumber}`);
+            // زيادة التأخير لـ 4 ثوانٍ لضمان استقرار السوكت قبل الطلب
             setTimeout(async () => {
                 try {
                     const cleanPhone = phoneNumber.replace(/[^0-9]/g, '');
@@ -107,7 +109,7 @@ async function connectToWhatsApp(phoneNumber = null) {
                     logSystem('ERROR', `فشل توليد الكود: ${err.message}`);
                     botStatus = 'Disconnected';
                 }
-            }, 3000); // Small delay to ensure socket is ready
+            }, 4000); 
         }
 
         sock.ev.on('connection.update', async (update) => {
