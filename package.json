@@ -1,16 +1,15 @@
 {
 "name": "tarzan-whatsapp-bot",
-"version": "1.0.0",
-"description": "Premium WhatsApp Bot with beautiful dashboard and pairing code connection.",
+"version": "2.0.0",
+"description": "Premium WhatsApp Bot with Dashboard and Pairing Code (Native Flow Buttons).",
 "main": "index.js",
 "scripts": {
 "start": "node index.js"
 },
 "dependencies": {
-"levvleys": "^6.6.0",
+"@whiskeysockets/baileys": "^6.7.7",
 "express": "^4.18.2",
-"pino": "^8.16.1",
-"awesome-phonenumber": "^5.10.0"
+"pino": "^8.16.1"
 },
 "author": "Tarzan Developer",
 "license": "MIT"
