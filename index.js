@@ -9,6 +9,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const pino = require('pino');
+const NodeCache = require('node-cache'); // إضافة الكاش لتحسين أداء السوكت
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -21,6 +22,8 @@ let botStatus = 'Disconnected';
 let pairingCode = null;
 let botLogs = [];
 const commands = new Map();
+// كاش للرسائل لتحسين الأداء وتقليل الاستهلاك
+const msgRetryCounterCache = new NodeCache();
 
 function logSystem(type, message) {
     const time = new Date().toLocaleTimeString('ar-SA');
@@ -84,32 +87,46 @@ async function connectToWhatsApp(phoneNumber = null) {
         logSystem('BOT', 'جاري بدء الاتصال بخوادم واتساب الرسمية (Baileys)...');
         botStatus = 'Connecting';
         
+        // استخدام مجلد الجلسات المتعددة الافتراضي (يمكن تطويره لاحقاً لدعم أرقام متعددة في مجلدات منفصلة)
         const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, 'session'));
         const { version } = await fetchLatestBaileysVersion();
 
         sock = makeWASocket({
             version,
             auth: state,
-            printQRInTerminal: false, // Force pairing code mode
-            logger: pino({ level: 'silent' }), // Hide messy baileys logs
-            // هنا تم التغيير الجذري لمحاكاة متصفح إيدج ويندوز لضمان وصول الإشعار!
-            browser: ["Windows", "Edge", "120.0.0"] 
+            printQRInTerminal: false,
+            logger: pino({ level: 'silent' }),
+            msgRetryCounterCache, // إضافة الكاش
+            generateHighQualityLinkPreview: true, // تحسين الروابط
+            // محاكاة متصفح Chrome على نظام Windows لضمان وصول الإشعار!
+            // تم التغيير من Edge إلى Chrome لأنه أكثر استقراراً مع Baileys حالياً
+            browser: ["Chrome (Windows)", "Chrome", "120.0.0.0"],
+            // إضافة خيارات اتصال متقدمة لتقليل الانقطاعات
+            connectTimeoutMs: 60000,
+            defaultQueryTimeoutMs: 0,
+            keepAliveIntervalMs: 10000,
+            emitOwnEvents: true,
+            fireInitQueries: true,
+            generateHighQualityLinkPreview: true,
+            syncFullHistory: false, // لا حاجة لتحميل كل التاريخ، يسرع الإقلاع
+            markOnlineOnConnect: true
         });
 
         if (phoneNumber && !sock.authState.creds.registered) {
             logSystem('BOT', `جاري طلب كود الربط للرقم: ${phoneNumber}`);
-            // زيادة التأخير لـ 4 ثوانٍ لضمان استقرار السوكت قبل الطلب
+            // زيادة التأخير لـ 6 ثوانٍ لضمان استقرار السوكت وتسجيل المتصفح لدى سيرفرات واتساب قبل الطلب
             setTimeout(async () => {
                 try {
                     const cleanPhone = phoneNumber.replace(/[^0-9]/g, '');
                     const code = await sock.requestPairingCode(cleanPhone);
-                    pairingCode = code;
-                    logSystem('SUCCESS', `كود الربط جاهز: ${code}`);
+                    pairingCode = code?.match(/.{1,4}/g)?.join('-') || code; // تنسيق الكود ليكون أسهل للقراءة (XXXX-XXXX)
+                    logSystem('SUCCESS', `كود الربط جاهز: ${pairingCode}`);
+                    botStatus = 'CodeReady'; // تحديث الحالة ليقرأها الويب
                 } catch (err) {
                     logSystem('ERROR', `فشل توليد الكود: ${err.message}`);
                     botStatus = 'Disconnected';
                 }
-            }, 4000); 
+            }, 6000); 
         }
 
         sock.ev.on('connection.update', async (update) => {
@@ -123,7 +140,7 @@ async function connectToWhatsApp(phoneNumber = null) {
 
                 if (shouldReconnect) {
                     logSystem('BOT', 'جاري إعادة الاتصال تلقائياً...');
-                    connectToWhatsApp(phoneNumber);
+                    setTimeout(() => connectToWhatsApp(), 3000); // تأخير بسيط قبل إعادة الاتصال
                 } else {
                     logSystem('WARNING', 'تم تسجيل الخروج. يرجى مسح مجلد session وبدء ربط جديد.');
                 }
@@ -138,37 +155,13 @@ async function connectToWhatsApp(phoneNumber = null) {
 
         sock.ev.on('messages.upsert', async (chatUpdate) => {
             try {
-                const m = chatUpdate.messages[0];
-                if (!m.message || m.key.fromMe) return;
-
-                const from = m.key.remoteJid;
-                const body = m.message.conversation || 
-                             m.message.extendedTextMessage?.text || 
-                             m.message.imageMessage?.caption || 
-                             m.message.videoMessage?.caption || '';
-
-                const prefix = '.';
-                if (!body.startsWith(prefix)) return;
-
-                const args = body.slice(prefix.length).trim().split(/ +/);
-                const cmdName = args.shift().toLowerCase();
-
-                if (commands.has(cmdName)) {
-                    const command = commands.get(cmdName);
-                    logSystem('EXECUTE', `مستخدم طلب أمر [${command.name}]`);
-                    
-                    const reply = async (text) => {
-                        await sock.sendMessage(from, { text: text }, { quoted: m });
-                    };
-
-                    try {
-                        await command.execute(sock, m, args, reply, commands);
-                    } catch (cmdErr) {
-                        logSystem('ERROR', `خطأ في أمر ${cmdName}: ${cmdErr.message}`);
-                        reply(`❌ حدث خطأ داخلي: \n${cmdErr.message}`);
-                    }
-                }
-            } catch (err) {
+                await command.execute(sock, m, args, reply, commands);
+            } catch (cmdErr) {
+                logSystem('ERROR', `خطأ في أمر ${cmdName}: ${cmdErr.message}`);
+                reply(`❌ حدث خطأ داخلي: \n${cmdErr.message}`);
+            }
+        }
+    } catch (err) {
                 logSystem('ERROR', `خطأ في معالجة الرسالة: ${err.message}`);
             }
         });
@@ -186,6 +179,7 @@ app.post('/api/connect', async (req, res) => {
     const { phone } = req.body;
     if (!phone) return res.status(400).json({ error: 'رقم هاتف غير صالح' });
     pairingCode = null;
+    botStatus = 'Connecting';
     connectToWhatsApp(phone);
     res.json({ message: 'جاري بدء عملية الاتصال وتوليد الكود...' });
 });
