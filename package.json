@@ -1,22 +1,17 @@
 {
-"name": "tarzanalwaqdiy",
-"version": "1.1.0",
-"description": "Tarzanalwaqdiy - Ultimate Premium WhatsApp Clone Web App",
+"name": "tarzan-whatsapp-bot",
+"version": "1.0.0",
+"description": "Premium WhatsApp Bot with beautiful dashboard and pairing code connection.",
 "main": "index.js",
 "scripts": {
 "start": "node index.js"
 },
 "dependencies": {
-"express": "^4.19.2",
-"socket.io": "^4.7.5",
-"bcryptjs": "^2.4.3",
-"jsonwebtoken": "^9.0.2",
-"cors": "^2.8.5",
-"helmet": "^7.1.0",
-"express-rate-limit": "^7.2.0"
+"@whiskeysockets/baileys": "^6.6.0",
+"express": "^4.18.2",
+"pino": "^8.16.1",
+"awesome-phonenumber": "^5.10.0"
 },
-"engines": {
-"node": ">=18.0.0"
-},
-"private": true
+"author": "Tarzan Developer",
+"license": "MIT"
 }
